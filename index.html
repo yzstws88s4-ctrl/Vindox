@@ -143,8 +143,9 @@
     .section-title-container {
       display: flex;
       flex-direction: column;
-      gap: 4px;
-      margin-bottom: 8px;
+      gap: 8px;
+      margin-top: 4px;
+      margin-bottom: 6px;
     }
 
     .section-title {
@@ -155,11 +156,19 @@
       font-weight: 700;
     }
 
+    /* MONUMENTALER BEGRÜSSUNGS-TEXT */
     .section-subtitle-clean {
-      font-size: 1.15rem;
-      font-weight: 800;
+      font-size: 2.3rem;
+      font-weight: 900;
       color: var(--text-main);
-      letter-spacing: -0.01em;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      min-height: 110px;
+      display: flex;
+      align-items: center;
+      background: linear-gradient(180deg, #FFFFFF 30%, #94A3B8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .hero-panel-container {
@@ -1020,7 +1029,7 @@
     <main>
       <div class="section-title-container" id="sectionTitleContainer">
         <div class="section-title" id="sectionTitleText">TOUR ERSTELLEN & IMPORTIEREN</div>
-        <div class="section-subtitle-clean" id="sectionSubtitleText">Guten Morgen, Alex</div>
+        <div class="section-subtitle-clean" id="sectionSubtitleText">Guten Morgen</div>
       </div>
 
       <!-- HERO PANEL -->
@@ -1206,15 +1215,15 @@
       <div class="modal-body-scroll">
         <!-- DIE 3 ERFASSUNGS-BUTTONS -->
         <div class="proof-actions-trio">
-          <button class="btn-proof-trio" onclick="document.getElementById('cameraPhotoInput').click()">
+          <button class="btn-proof-trio" onclick="triggerHaptic(); document.getElementById('cameraPhotoInput').click()">
             <svg viewBox="0 0 24 24"><path d="M4 4h3l2-2h6l2 2h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2m8 3a5 5 0 0 0-5 5a5 5 0 0 0 5 5a5 5 0 0 0 5-5a5 5 0 0 0-5-5z"/></svg>
             Foto
           </button>
-          <button class="btn-proof-trio" onclick="document.getElementById('cameraVideoInput').click()">
+          <button class="btn-proof-trio" onclick="triggerHaptic(); document.getElementById('cameraVideoInput').click()">
             <svg viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg>
             Video
           </button>
-          <button class="btn-proof-trio" onclick="toggleSignatureArea()">
+          <button class="btn-proof-trio" onclick="triggerHaptic(); toggleSignatureArea()">
             <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
             Unterschrift
           </button>
@@ -1227,7 +1236,7 @@
         <div class="signature-container" id="signatureBox">
           <div class="signature-header">
             <span class="signature-label">Kundenunterschrift</span>
-            <button class="btn-clear-sig" onclick="clearSignature()">Zurücksetzen</button>
+            <button class="btn-clear-sig" onclick="triggerHaptic(); clearSignature()">Zurücksetzen</button>
           </div>
           <canvas class="signature-pad" id="sigCanvas"></canvas>
         </div>
@@ -1247,18 +1256,40 @@
 
     let currentStopProofItems = [];
 
+    // HAPTISCHES FEEDBACK HELFER
+    function triggerHaptic(ms = 25) {
+      if (navigator.vibrate) {
+        navigator.vibrate(ms);
+      }
+    }
+
+    // DYNAMISCHE BEGRÜSSUNG NACH UHRZEIT
+    function getTimeBasedGreeting() {
+      const hour = new Date().getHours();
+      if (hour >= 5 && hour < 12) {
+        return "Guten Morgen";
+      } else if (hour >= 12 && hour < 18) {
+        return "Guten Tag";
+      } else {
+        return "Guten Abend";
+      }
+    }
+
     function toggleAccordion() {
+      triggerHaptic();
       const accordion = document.getElementById('addressAccordion');
       accordion.classList.toggle('open');
     }
 
     function setMapProvider(provider) {
+      triggerHaptic();
       selectedMapProvider = provider;
       document.getElementById('btnMapGoogle').className = `provider-btn ${provider === 'google' ? 'active' : ''}`;
       document.getElementById('btnMapApple').className = `provider-btn ${provider === 'apple' ? 'active' : ''}`;
     }
 
     function launchDirectNavigation() {
+      triggerHaptic(40);
       if (tourData.length === 0) {
         alert("Keine aktive Tour oder Stopps vorhanden!");
         return;
@@ -1295,14 +1326,17 @@
     }
 
     function openScreenshotUploader() {
+      triggerHaptic();
       document.getElementById('screenshotInput').click();
     }
 
     function openManualModal() {
+      triggerHaptic();
       document.getElementById('manualModal').classList.add('active');
     }
 
     function closeManualModal() {
+      triggerHaptic();
       document.getElementById('manualModal').classList.remove('active');
     }
 
@@ -1377,6 +1411,7 @@
     }
 
     function addManualStop() {
+      triggerHaptic();
       const title = document.getElementById('manualTitleInput').value;
       const address = document.getElementById('manualAddressInput').value;
       const note = document.getElementById('manualNoteInput').value;
@@ -1402,6 +1437,7 @@
     }
 
     function deleteStop(id) {
+      triggerHaptic();
       const idx = tourData.findIndex(s => s.id === id);
       if (idx !== -1) {
         tourData.splice(idx, 1);
@@ -1441,6 +1477,7 @@
     }
 
     function startTourFromTab1() {
+      triggerHaptic();
       if (tourData.length === 0) {
         alert("Bitte füge zuerst mindestens eine Zieladresse hinzu!");
         return;
@@ -1449,8 +1486,9 @@
     }
 
     function switchNavTab(tabNum) {
+      triggerHaptic();
       const subtitles = [
-        "Guten Morgen, Alex",
+        getTimeBasedGreeting(),
         "Cockpit & Navigation",
         "Touren-Manager"
       ];
@@ -1555,6 +1593,7 @@
 
     /* MODAL UND 3-BUTTON HANDLER */
     function openProofModalForCurrent() {
+      triggerHaptic();
       if (tourData.length === 0) {
         alert("Bitte zuerst eine Tour starten!");
         return;
@@ -1582,6 +1621,7 @@
     }
 
     function closeProofModal() {
+      triggerHaptic();
       document.getElementById('proofModal').classList.remove('active');
     }
 
@@ -1632,6 +1672,7 @@
     }
 
     function removeCapturedItem(id) {
+      triggerHaptic();
       currentStopProofItems = currentStopProofItems.filter(item => item.id !== id);
       renderCapturedGrid();
     }
@@ -1720,12 +1761,13 @@
         tourData[activeIdx + 1].status = 'active';
       }
 
-      if (navigator.vibrate) navigator.vibrate(80);
+      triggerHaptic(80);
       closeProofModal();
       updateCockpitUI();
     }
 
     function prevStop() {
+      triggerHaptic();
       const completedList = tourData.map((s, i) => s.status === 'completed' ? i : -1).filter(i => i !== -1);
       if (completedList.length > 0) {
         const lastCompletedIdx = completedList[completedList.length - 1];
@@ -1737,6 +1779,8 @@
       }
     }
 
+    // INITIALISIERUNG DER AUTOMATISCHEN BEGRÜSSUNG
+    document.getElementById('sectionSubtitleText').innerText = getTimeBasedGreeting();
     renderAddressFrame();
 
     if ('serviceWorker' in navigator) {
