@@ -12,7 +12,7 @@
   <meta name="apple-mobile-web-app-title" content="Vindox">
   
   <!-- Web App Manifest -->
-  <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlZpbmRveCBUb3VyIEFwcCIsCiAgInNob3J0X25hbWUiOiAiVmluZG94IiwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGx5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwNzA5MEUiLAogICJ0aGVtZV9jb2xvciI6ICIjMDcwOTBFIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiNDU3MDczMEUtQTBBMi00NTQ2LUIzMTYtBjE1QkU5REQ1RUU0LnBuZyIsCiAgICAgICJzaXplcyI6ICI1MTJ4NTEyIiwKICAgICAgInR5cGUiOiAiaW1hZ2UvcG5nIiwKICAgICAgInB1cnBvc2UiOiAiYW55IG1hc2thYmxlIgogICAgfQogIF0KfQ==">
+  <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlZpbmRveCBUb3VyIEFwcCIsCiAgInNob3J0X25hbWUiOiAiVmluZG94IiwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGx5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwNzA5MEUiLAogICJ0aGVtZV9jb2xvciI6ICIjMDcwOTBFIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiNDU3MDczMEUtQTBBMi00NTQ2LUIzMTYtBjE1QkU5REQ1RUU0LnBuZyIsCiAgICAgICJzaXplcyI6ICI1MTJ4NTEyIiwKICAgICAgInR5cGUiOiAiaW1hZ2UvcG5nIiwKICAgICAgInB1cnBvc2UiOiAiYW55IG1hc2thYmxlIgogICAgfG59IF0KfQ==">
   <meta name="theme-color" content="#07090E">
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <style>
@@ -216,11 +216,11 @@
       margin-top: 14px;
     }
 
-    button, .btn-import-option, .provider-btn, .nav-item, .manager-card, .btn-reorder, .btn-proof-trio {
+    button, .btn-import-option, .nav-item, .manager-card, .btn-reorder, .btn-proof-trio {
       transition: transform 0.12s cubic-bezier(0.2, 0, 0, 1), background-color 0.15s ease, box-shadow 0.15s ease;
     }
 
-    button:active, .btn-import-option:active, .provider-btn:active, .manager-card:active, .btn-proof-trio:active {
+    button:active, .btn-import-option:active, .manager-card:active, .btn-proof-trio:active {
       transform: scale(0.95) !important;
       box-shadow: 0 0 15px var(--accent-glow) !important;
       filter: brightness(1.2);
@@ -510,32 +510,6 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
-    }
-
-    .nav-provider-switch-top {
-      display: flex;
-      background: rgba(255, 255, 255, 0.035);
-      border-radius: 12px;
-      padding: 3px;
-      border: 1px solid var(--card-border);
-    }
-
-    .provider-btn {
-      flex: 1;
-      padding: 8px;
-      text-align: center;
-      font-size: 0.7rem;
-      font-weight: 700;
-      color: var(--text-sub);
-      border-radius: 9px;
-      cursor: pointer;
-    }
-
-    .provider-btn.active {
-      background: var(--card-bg);
-      color: var(--text-main);
-      border: 1px solid var(--card-border-active);
-      box-shadow: 0 2px 10px rgba(0,0,0,0.5);
     }
 
     .btn-nav-giant {
@@ -1121,14 +1095,9 @@
       <!-- COCKPIT UNTERER BEREICH -->
       <div class="sub-content" id="subTab2">
         <div class="cockpit-action-box">
-          <div class="nav-provider-switch-top">
-            <div class="provider-btn active" id="btnMapGoogle" onclick="setMapProvider('google')">Google Maps</div>
-            <div class="provider-btn" id="btnMapApple" onclick="setMapProvider('apple')">Apple Karten</div>
-          </div>
-
           <button class="btn-nav-giant" onclick="launchDirectNavigation()">
             <svg viewBox="0 0 24 24"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>
-            Jetzt navigieren
+            Jetzt navigieren (Google Maps Autostart)
           </button>
 
           <button class="btn-next-stop-bright" onclick="openProofModalForCurrent()">
@@ -1260,7 +1229,6 @@
 
   <script>
     const tourData = [];
-    let selectedMapProvider = 'google';
     let currentEditingId = null;
 
     let currentGPS = "51.023400, 7.254100";
@@ -1308,7 +1276,7 @@
     }
 
     document.addEventListener('pointerdown', (e) => {
-      const target = e.target.closest('button, .btn-import-option, .provider-btn, .nav-item, .manager-card, .btn-reorder, .btn-proof-trio');
+      const target = e.target.closest('button, .btn-import-option, .nav-item, .manager-card, .btn-reorder, .btn-proof-trio');
       if (target) {
         playClickSound();
         if (navigator.vibrate) {
@@ -1317,7 +1285,6 @@
       }
     }, { passive: true });
 
-    // UHRZEIT SCHRITT 1: EXAKTE ZEITMESSUNG & BEGRÜSSUNG
     function getTimeBasedGreeting() {
       const now = new Date();
       const hour = now.getHours();
@@ -1338,7 +1305,6 @@
       }
     }
 
-    // UHRZEIT SCHRITT 2: KONTINUIERLICHER ABLAUF + DIREKTE AKTUALISIERUNG BEI APP-FOCUS
     setInterval(updateGreetingClock, 1000);
 
     document.addEventListener('visibilitychange', () => {
@@ -1358,13 +1324,7 @@
       accordion.classList.toggle('open');
     }
 
-    function setMapProvider(provider) {
-      selectedMapProvider = provider;
-      document.getElementById('btnMapGoogle').className = `provider-btn ${provider === 'google' ? 'active' : ''}`;
-      document.getElementById('btnMapApple').className = `provider-btn ${provider === 'apple' ? 'active' : ''}`;
-    }
-
-    // DIREKTE NAVIGATION OHNE IN-APP-BROWSER-ZWISCHENSEITE
+    // DIREKTE GOOGLE MAPS NAVIGATION MIT AUTO-START (OHNE AUSWAHL)
     function launchDirectNavigation() {
       if (tourData.length === 0) {
         alert("Keine aktive Tour oder Stopps vorhanden!");
@@ -1374,17 +1334,11 @@
       const currentStop = tourData[activeIdx];
       
       const destinationQuery = `${currentStop.title}, ${currentStop.address}`;
-      let navUrl = "";
+      
+      // dir_action=navigate erzwingt den direkten Start der Navigation im Autopilot-Modus
+      const navUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destinationQuery)}&travelmode=driving&dir_action=navigate`;
 
-      if (selectedMapProvider === 'apple') {
-        navUrl = `maps://?daddr=${encodeURIComponent(destinationQuery)}&dirflg=d&t=m`;
-      } else {
-        navUrl = `comgooglemaps://?daddr=${encodeURIComponent(destinationQuery)}&directionsmode=driving`;
-      }
-
-      // Nutzen von window.location.href anstelle von window.open verhindert weiße Leerseiten
-       window.open(navUrl, '_system');
-
+      window.open(navUrl, '_system');
     }
 
     function openScreenshotUploader() {
