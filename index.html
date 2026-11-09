@@ -144,13 +144,13 @@
       padding: 20px 22px;
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: 22px; /* Schafft mehr generellen Abstand */
     }
 
     .section-title-container {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 4px;
     }
 
     .section-title {
@@ -169,22 +169,23 @@
       line-height: 1.05;
     }
 
-    /* NEU: Monumentaler, edler Gruß für das Cockpit */
-    .monumental-greeting {
-      font-size: 1.8rem;
-      font-weight: 800;
-      color: var(--accent-light);
-      letter-spacing: -0.025em;
-      line-height: 1.15;
-      margin-top: 4px;
+    /* NEU: Edler, dezenter Off-White Look mit feinem Letter-Spacing & perfektem Spacing */
+    .elegant-greeting {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #CBD5E1; /* Edles Off-White / Light Slate */
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-top: 6px;
       display: none;
     }
-    .monumental-greeting.active {
+    .elegant-greeting.active {
       display: block;
     }
 
     .hero-panel-container {
       position: relative;
+      margin-top: 4px; /* Mehr Abstand zum Headerbereich für einen cleaneren Look */
     }
 
     .panel-card {
@@ -508,7 +509,6 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
-      margin-top: 12px; /* Schiebt Kasten & Buttons im Cockpit weiter nach unten */
     }
 
     .nav-provider-switch-top {
@@ -1015,8 +1015,8 @@
       <div class="section-title-container">
         <div class="section-title" id="sectionTitleText">Fahrt & Nachweis</div>
         <div class="section-subtitle-clean" id="sectionSubtitleText">Cockpit</div>
-        <!-- Der monumentale Gruß, der NUR im Cockpit angezeigt wird -->
-        <div class="monumental-greeting" id="monumentalGreetingText">Guten Tag</div>
+        <!-- Elegant verfeinerter, dezenter Gruß im Off-White Look mit feinem Spacing -->
+        <div class="elegant-greeting" id="elegantGreetingText">Guten Abend</div>
       </div>
 
       <!-- HERO PANEL -->
@@ -1118,7 +1118,7 @@
         </button>
       </div>
 
-      <!-- COCKPIT UNTERER BEREICH (Weiter nach unten versetzt) -->
+      <!-- COCKPIT UNTERER BEREICH -->
       <div class="sub-content" id="subTab2">
         <div class="cockpit-action-box">
           <div class="nav-provider-switch-top">
@@ -1571,7 +1571,7 @@
       document.getElementById('sectionTitleText').innerText = sub.top;
       document.getElementById('sectionSubtitleText').innerText = sub.main;
 
-      const greetingEl = document.getElementById('monumentalGreetingText');
+      const greetingEl = document.getElementById('elegantGreetingText');
       if (tabNum === 2) {
         greetingEl.innerText = getTimeBasedGreeting();
         greetingEl.classList.add('active');
@@ -1810,7 +1810,7 @@
       if (completedList.length > 0) {
         const lastCompletedIdx = completedList[completedList.length - 1];
         const currentActive = getCurrentActiveStopIndex();
-        if (currentActive !== -1) tourData[currentActive].status = 'pending';
+        if (currentActive !== -1) tourData[currentActive].status, status = 'pending';
         tourData[lastCompletedIdx].status = 'active';
         updateCockpitUI();
       }
