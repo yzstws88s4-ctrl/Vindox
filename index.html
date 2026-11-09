@@ -12,7 +12,7 @@
   <meta name="apple-mobile-web-app-title" content="Vindox">
   
   <!-- Web App Manifest -->
-  <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlZpbmRveCBUb3VyIEFwcCIsCiAgInNob3J0X25hbWUiOiAiVmluZG94IiwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGx5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwNzA5MEUiLAogICJ0aGVtZV9jb2xvciI6ICIjMDcwOTBFIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiNDU3MDczMEUtQTBBMi00NTQ2LUIzMTYtQjE1QkU5REQ1RUU0LnBuZyIsCiAgICAgICJzaXplcyI6ICI1MTJ4NTEyIiwKICAgICAgInR5cGUiOiAiaW1hZ2UvcG5nIiwKICAgICAgInB1cnBvc2UiOiAiYW55IG1hc2thYmxlIgogICAgfQogIF0KfQ==">
+  <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlZpbmRveCBUb3VyIEFwcCIsCiAgInNob3J0X25hbWUiOiAiVmluZG94IiwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGx5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwNzA5MEUiLAogICJ0aGVtZV9jb2xvciI6ICIjMDcwOTBFIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiNDU3MDczMEUtQTBBMi00NTQ2LUIzMTYtBjE1QkU5REQ1RUU0LnBuZyIsCiAgICAgICJzaXplcyI6ICI1MTJ4NTEyIiwKICAgICAgInR5cGUiOiAiaW1hZ2UvcG5nIiwKICAgICAgInB1cnBvc2UiOiAiYW55IG1hc2thYmxlIgogICAgfQogIF0KfQ==">
   <meta name="theme-color" content="#07090E">
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <style>
@@ -38,6 +38,15 @@
       padding: 0;
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       -webkit-tap-highlight-color: transparent;
+      /* FIX: Komplettes App-Verbot für unkontrolliertes Markieren / Blinken bei Doppeltipp */
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    /* AUSNAHME: In echten Eingabefeldern und auf dem Unterschriften-Canvas muss Interaktion erlaubt sein */
+    input, textarea, canvas {
+      -webkit-user-select: text;
+      user-select: text;
     }
 
     ::-webkit-scrollbar {
@@ -196,10 +205,8 @@
       margin-top: 14px;
     }
 
-    /* VISUELLES TOUCH-FEEDBACK ANPASSUNGEN (SPRING & GLOW) */
     button, .btn-import-option, .provider-btn, .nav-item, .manager-card, .btn-reorder, .btn-proof-trio {
       transition: transform 0.12s cubic-bezier(0.2, 0, 0, 1), background-color 0.15s ease, box-shadow 0.15s ease;
-      user-select: none;
     }
 
     button:active, .btn-import-option:active, .provider-btn:active, .manager-card:active, .btn-proof-trio:active {
@@ -390,7 +397,6 @@
       justify-content: space-between;
       align-items: center;
       cursor: pointer;
-      user-select: none;
     }
 
     .accordion-header-left {
@@ -1250,32 +1256,50 @@
     let sigCanvas, sigCtx;
     let currentStopProofItems = [];
 
-    // SYNTHETISCHER KLICK-SOUND PER WEB AUDIO API (AKUSTISCHES FEEDBACK)
+    // DEIN GEILER, EXTREM CLEANER & SATISFYING HIGH-END FEEDBACK SOUND (GLASS TAP)
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     function playClickSound() {
       if (audioCtx.state === 'suspended') {
         audioCtx.resume();
       }
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.03);
-      gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.03);
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.03);
+      const now = audioCtx.currentTime;
+
+      const osc1 = audioCtx.createOscillator();
+      const gain1 = audioCtx.createGain();
+      osc1.type = 'sine';
+      osc1.frequency.setValueAtTime(1200, now);
+      osc1.frequency.exponentialRampToValueAtTime(300, now + 0.04);
+      
+      gain1.gain.setValueAtTime(0.08, now);
+      gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+      
+      osc1.connect(gain1);
+      gain1.connect(audioCtx.destination);
+      osc1.start(now);
+      osc1.stop(now + 0.04);
+
+      const osc2 = audioCtx.createOscillator();
+      const gain2 = audioCtx.createGain();
+      osc2.type = 'triangle';
+      osc2.frequency.setValueAtTime(600, now);
+      osc2.frequency.exponentialRampToValueAtTime(150, now + 0.06);
+
+      gain2.gain.setValueAtTime(0.05, now);
+      gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+
+      osc2.connect(gain2);
+      gain2.connect(audioCtx.destination);
+      osc2.start(now);
+      osc2.stop(now + 0.06);
     }
 
-    // VISUELLES + AKUSTISCHES HIGHLIGHT BEI TOUCH
+    // TRIGGER FÜR AKUSTISCHES & HAPTISCHES FEEDBACK BEI INTERAKTION
     document.addEventListener('pointerdown', (e) => {
       const target = e.target.closest('button, .btn-import-option, .provider-btn, .nav-item, .manager-card, .btn-reorder, .btn-proof-trio');
       if (target) {
         playClickSound();
         if (navigator.vibrate) {
-          navigator.vibrate(15);
+          navigator.vibrate(12);
         }
       }
     }, { passive: true });
@@ -1298,7 +1322,6 @@
       document.getElementById('btnMapApple').className = `provider-btn ${provider === 'apple' ? 'active' : ''}`;
     }
 
-    // DIREKTSTART NAVIGATION OHNE ROUTENPLANER-UMWEG
     function launchDirectNavigation() {
       if (tourData.length === 0) {
         alert("Keine aktive Tour oder Stopps vorhanden!");
@@ -1311,10 +1334,8 @@
       let navUrl = "";
 
       if (selectedMapProvider === 'apple') {
-        // Apple Maps direkt im Fahrmodus erzwingen
         navUrl = `maps://?daddr=${encodeURIComponent(destinationQuery)}&dirflg=d&t=m`;
       } else {
-        // Google Maps direkter Navigationsmodus
         navUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destinationQuery)}&travelmode=driving&dir_action=navigate`;
       }
 
