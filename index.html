@@ -1383,7 +1383,8 @@
       }
 
       // Nutzen von window.location.href anstelle von window.open verhindert weiße Leerseiten
-      window.location.href = navUrl;
+       window.open(navUrl, '_system');
+
     }
 
     function openScreenshotUploader() {
