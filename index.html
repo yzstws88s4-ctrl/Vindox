@@ -1251,7 +1251,7 @@
     let sigCanvas, sigCtx;
     let currentStopProofItems = [];
 
-    // ULTRA-DEZENTER, EXTREM CLEANER & SEXY MICRO-TAP SOUND
+    // NEU: HIGH-END CUSTOM KEYBOARD SWITCH SOUND (ULTRA-CLEAN, CRISP & SATISFYING)
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     function playClickSound() {
       if (audioCtx.state === 'suspended') {
@@ -1259,21 +1259,37 @@
       }
       const now = audioCtx.currentTime;
 
+      // 1. Oszillator für den ultra-feinen, knackigen „Switch-Snap“ (hohe Frequenz, extrem kurzer Abfall)
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       
-      osc.type = 'sine';
-      // Extrem sanfter, kurzer Ton im niedrigen Bereich für ein warmes "Plop/Tap"
-      osc.frequency.setValueAtTime(450, now);
-      osc.frequency.exponentialRampToValueAtTime(180, now + 0.025);
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(2400, now);
+      osc.frequency.exponentialRampToValueAtTime(800, now + 0.012);
       
-      gain.gain.setValueAtTime(0.025, now); // Sehr leise und subtil
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.025);
+      gain.gain.setValueAtTime(0.035, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.012);
       
       osc.connect(gain);
       gain.connect(audioCtx.destination);
       osc.start(now);
-      osc.stop(now + 0.025);
+      osc.stop(now + 0.012);
+
+      // 2. Zweiter Oszillator für den warmen, subtilen Gehäuse-Klang („Thock“) im Hintergrund
+      const osc2 = audioCtx.createOscillator();
+      const gain2 = audioCtx.createGain();
+
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(420, now);
+      osc2.frequency.exponentialRampToValueAtTime(140, now + 0.018);
+
+      gain2.gain.setValueAtTime(0.02, now);
+      gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.018);
+
+      osc2.connect(gain2);
+      gain2.connect(audioCtx.destination);
+      osc2.start(now);
+      osc2.stop(now + 0.018);
     }
 
     // TRIGGER FÜR AKUSTISCHES & HAPTISCHES FEEDBACK BEI INTERAKTION
@@ -1282,7 +1298,7 @@
       if (target) {
         playClickSound();
         if (navigator.vibrate) {
-          navigator.vibrate(10);
+          navigator.vibrate(8); // Extrem kurzes, knackiges haptisches Feedback passend zum Sound
         }
       }
     }, { passive: true });
