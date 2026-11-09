@@ -12,7 +12,7 @@
   <meta name="apple-mobile-web-app-title" content="Vindox">
   
   <!-- Web App Manifest -->
-  <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlZpbmRveCBUb3VyIEFwcCIsCiAgInNob3J0X25hbWUiOiAiVmluZG94IiwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGx5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwNzA5MEUiLAogICJ0aGVtZV9jb2xvciI6ICIjMDcwOTBFIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiNDU3MDczMEUtQTBBMi00NTQ2LUIzMTYtBjE1QkU5REQ1RUU0LnBuZyIsCiAgICAgICJzaXplcyI6ICI1MTJ4NTEyIiwKICAgICAgInR5cGUiOiAiaW1hZ2UvcG5nIiwKICAgICAgInB1cnBvc2UiOiAiYW55IG1hc2thYmxlIgogICAgfQogIF0KfQ==">
+  <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlZpbmRveCBUb3VyIEFwcCIsCiAgInNob3J0X25hbWUiOiAiVmluZG94IiwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGx5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwNzA5MEUiLAogICJ0aGVtZV9jb2xvciI6ICIjMDcwOTBFIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiNDU3MDczMEUtQTBBMi00NTQ2LUIzMTYtBjE1QkU5REQ1RUU0LnBuZyIsCiAgICAgICJzaXplcyI6ICI1MTJ4NTEyIiwKICAgICAgInR5cGUiOiAiaW1hZ2UvcG5nIiwkICAgICAgInB1cnBvc2UiOiAiYW55IG1hc2thYmxlIgogICAgfQogIF0KfQ==">
   <meta name="theme-color" content="#07090E">
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <style>
@@ -141,10 +141,11 @@
     }
 
     main {
-      padding: 20px 22px;
+      padding: 16px 22px 20px;
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: 16px;
+      flex: 1;
     }
 
     .section-title-container {
@@ -167,6 +168,16 @@
       color: var(--text-main);
       letter-spacing: -0.035em;
       line-height: 1.05;
+    }
+
+    /* Neu: Platzhalter für den zeitbasierten Gruß direkt unter Cockpit */
+    .dynamic-greeting {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--accent-light);
+      margin-top: -4px;
+      margin-bottom: 4px;
+      letter-spacing: -0.01em;
     }
 
     .hero-panel-container {
@@ -1000,8 +1011,10 @@
 
     <main>
       <div class="section-title-container">
-        <div class="section-title" id="sectionTitleText">Fahrt & Nachweis</div>
-        <div class="section-subtitle-clean" id="sectionSubtitleText">Cockpit</div>
+        <div class="section-title">Fahrt & Nachweis</div>
+        <div class="section-subtitle-clean">Cockpit</div>
+        <!-- Der Gruß sitzt nun exakt im gewonnenen Platz zwischen Überschrift und Kasten -->
+        <div class="dynamic-greeting" id="greetingText">Guten Tag</div>
       </div>
 
       <!-- HERO PANEL -->
@@ -1103,7 +1116,7 @@
         </button>
       </div>
 
-      <!-- COCKPIT UNTERER BEREICH (VOLLSTÄNDIG BIS UNTEN AUSGEFÜLLT) -->
+      <!-- COCKPIT UNTERER BEREICH (Optimiert für sauberen unteren Abschluss) -->
       <div class="sub-content" id="subTab2">
         <div class="cockpit-action-box">
           <div class="nav-provider-switch-top">
@@ -1309,10 +1322,11 @@
       return "Guten Abend";
     }
 
-    function getSubtitles(tabNum) {
-      if (tabNum === 1) return { top: "Tour Erstellen", main: "Importieren" };
-      if (tabNum === 2) return { top: getTimeBasedGreeting(), main: "Cockpit" };
-      return { top: "Touren-Verwaltung", main: "Manager" };
+    function updateGreeting() {
+      const greetingEl = document.getElementById('greetingText');
+      if (greetingEl) {
+        greetingEl.innerText = getTimeBasedGreeting();
+      }
     }
 
     function toggleAccordion() {
@@ -1551,11 +1565,6 @@
     }
 
     function switchNavTab(tabNum) {
-      const sub = getSubtitles(tabNum);
-      
-      document.getElementById('sectionTitleText').innerText = sub.top;
-      document.getElementById('sectionSubtitleText').innerText = sub.main;
-
       document.querySelectorAll('.hero-content').forEach(h => h.classList.remove('active'));
       document.getElementById(`heroTab${tabNum}`).classList.add('active');
 
@@ -1576,6 +1585,8 @@
     }
 
     function updateCockpitUI() {
+      updateGreeting();
+
       if (tourData.length === 0) {
         document.getElementById('currentTitle').innerText = "Keine Stopps vorhanden";
         document.getElementById('currentAddressText').innerText = "Bitte erst im Tab 'Erstellen' erfassen";
@@ -1794,9 +1805,7 @@
     }
 
     // INITIALISIERUNG
-    const initialSub = getSubtitles(1);
-    document.getElementById('sectionTitleText').innerText = initialSub.top;
-    document.getElementById('sectionSubtitleText').innerText = initialSub.main;
+    updateGreeting();
     renderAddressFrame();
 
     if ('serviceWorker' in navigator) {
