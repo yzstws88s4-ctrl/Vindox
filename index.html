@@ -12,7 +12,7 @@
   <meta name="apple-mobile-web-app-title" content="Vindox">
   
   <!-- Web App Manifest -->
-  <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlZpbmRveCBUb3VyIEFwcCIsCiAgInNob3J0X25hbWUiOiAiVmluZG94IiwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGx5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwNzA5MEUiLAogICJ0aGVtZV9jb2xvciI6ICIjMDcwOTBFIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiNDU3MDczMEUtQTBBMi00NTQ2LUIzMTYtBjE1QkU5REQ1RUU0LnBuZyIsCiAgICAgICJzaXplcyI6ICI1MTJ4NTEyIiwKICAgICAgInR5cGUiOiAiaW1hZ2UvcG5nIiwkICAgICAgInB1cnBvc2UiOiAiYW55IG1hc2thYmxlIgogICAgfQogIF0KfQ==">
+  <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlZpbmRveCBUb3VyIEFwcCIsCiAgInNob3J0X25hbWUiOiAiVmluZG94IiwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGx5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwNzA5MEUiLAogICJ0aGVtZV9jb2xvciI6ICIjMDcwOTBFIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiNDU3MDczMEUtQTBBMi00NTQ2LUIzMTYtBjE1QkU5REQ1RUU0LnBuZyIsCiAgICAgICJzaXplcyI6ICI1MTJ4NTEyIiwKICAgICAgInR5cGUiOiAiaW1hZ2UvcG5nIiwKICAgICAgInB1cnBvc2UiOiAiYW55IG1hc2thYmxlIgogICAgfQogIF0KfQ==">
   <meta name="theme-color" content="#07090E">
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <style>
@@ -141,11 +141,10 @@
     }
 
     main {
-      padding: 16px 22px 20px;
+      padding: 20px 22px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
-      flex: 1;
+      gap: 18px;
     }
 
     .section-title-container {
@@ -170,14 +169,18 @@
       line-height: 1.05;
     }
 
-    /* Neu: Platzhalter für den zeitbasierten Gruß direkt unter Cockpit */
-    .dynamic-greeting {
-      font-size: 0.88rem;
-      font-weight: 700;
+    /* NEU: Monumentaler, edler Gruß für das Cockpit */
+    .monumental-greeting {
+      font-size: 1.8rem;
+      font-weight: 800;
       color: var(--accent-light);
-      margin-top: -4px;
-      margin-bottom: 4px;
-      letter-spacing: -0.01em;
+      letter-spacing: -0.025em;
+      line-height: 1.15;
+      margin-top: 4px;
+      display: none;
+    }
+    .monumental-greeting.active {
+      display: block;
     }
 
     .hero-panel-container {
@@ -505,8 +508,7 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
-      flex: 1;
-      justify-content: space-between;
+      margin-top: 12px; /* Schiebt Kasten & Buttons im Cockpit weiter nach unten */
     }
 
     .nav-provider-switch-top {
@@ -1011,10 +1013,10 @@
 
     <main>
       <div class="section-title-container">
-        <div class="section-title">Fahrt & Nachweis</div>
-        <div class="section-subtitle-clean">Cockpit</div>
-        <!-- Der Gruß sitzt nun exakt im gewonnenen Platz zwischen Überschrift und Kasten -->
-        <div class="dynamic-greeting" id="greetingText">Guten Tag</div>
+        <div class="section-title" id="sectionTitleText">Fahrt & Nachweis</div>
+        <div class="section-subtitle-clean" id="sectionSubtitleText">Cockpit</div>
+        <!-- Der monumentale Gruß, der NUR im Cockpit angezeigt wird -->
+        <div class="monumental-greeting" id="monumentalGreetingText">Guten Tag</div>
       </div>
 
       <!-- HERO PANEL -->
@@ -1116,7 +1118,7 @@
         </button>
       </div>
 
-      <!-- COCKPIT UNTERER BEREICH (Optimiert für sauberen unteren Abschluss) -->
+      <!-- COCKPIT UNTERER BEREICH (Weiter nach unten versetzt) -->
       <div class="sub-content" id="subTab2">
         <div class="cockpit-action-box">
           <div class="nav-provider-switch-top">
@@ -1322,11 +1324,10 @@
       return "Guten Abend";
     }
 
-    function updateGreeting() {
-      const greetingEl = document.getElementById('greetingText');
-      if (greetingEl) {
-        greetingEl.innerText = getTimeBasedGreeting();
-      }
+    function getSubtitles(tabNum) {
+      if (tabNum === 1) return { top: "Fahrt & Nachweis", main: "Tour Erstellen" };
+      if (tabNum === 2) return { top: "Fahrt & Nachweis", main: "Cockpit" };
+      return { top: "Fahrt & Nachweis", main: "Manager" };
     }
 
     function toggleAccordion() {
@@ -1565,6 +1566,19 @@
     }
 
     function switchNavTab(tabNum) {
+      const sub = getSubtitles(tabNum);
+      
+      document.getElementById('sectionTitleText').innerText = sub.top;
+      document.getElementById('sectionSubtitleText').innerText = sub.main;
+
+      const greetingEl = document.getElementById('monumentalGreetingText');
+      if (tabNum === 2) {
+        greetingEl.innerText = getTimeBasedGreeting();
+        greetingEl.classList.add('active');
+      } else {
+        greetingEl.classList.remove('active');
+      }
+
       document.querySelectorAll('.hero-content').forEach(h => h.classList.remove('active'));
       document.getElementById(`heroTab${tabNum}`).classList.add('active');
 
@@ -1585,8 +1599,6 @@
     }
 
     function updateCockpitUI() {
-      updateGreeting();
-
       if (tourData.length === 0) {
         document.getElementById('currentTitle').innerText = "Keine Stopps vorhanden";
         document.getElementById('currentAddressText').innerText = "Bitte erst im Tab 'Erstellen' erfassen";
@@ -1805,7 +1817,9 @@
     }
 
     // INITIALISIERUNG
-    updateGreeting();
+    const initialSub = getSubtitles(1);
+    document.getElementById('sectionTitleText').innerText = initialSub.top;
+    document.getElementById('sectionSubtitleText').innerText = initialSub.main;
     renderAddressFrame();
 
     if ('serviceWorker' in navigator) {
