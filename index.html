@@ -1097,7 +1097,7 @@
         <div class="cockpit-action-box">
           <button class="btn-nav-giant" onclick="launchDirectNavigation()">
             <svg viewBox="0 0 24 24"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>
-            Jetzt navigieren (Google Maps Autostart)
+            Jetzt navigieren
           </button>
 
           <button class="btn-next-stop-bright" onclick="openProofModalForCurrent()">
@@ -1324,7 +1324,7 @@
       accordion.classList.toggle('open');
     }
 
-    // DIREKTE GOOGLE MAPS NAVIGATION MIT AUTO-START (OHNE AUSWAHL)
+    // DIREKTE NAVIGATION OHNE WEISSE LEERSEITE
     function launchDirectNavigation() {
       if (tourData.length === 0) {
         alert("Keine aktive Tour oder Stopps vorhanden!");
@@ -1334,11 +1334,15 @@
       const currentStop = tourData[activeIdx];
       
       const destinationQuery = `${currentStop.title}, ${currentStop.address}`;
-      
-      // dir_action=navigate erzwingt den direkten Start der Navigation im Autopilot-Modus
       const navUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destinationQuery)}&travelmode=driving&dir_action=navigate`;
-
-      window.open(navUrl, '_system');
+      
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = navUrl;
+      document.body.appendChild(iframe);
+      setTimeout(() => document.body.removeChild(iframe), 1000);
+      
+      window.location.assign(navUrl);
     }
 
     function openScreenshotUploader() {
