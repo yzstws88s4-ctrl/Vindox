@@ -493,7 +493,9 @@
     .cockpit-action-box {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
+      flex: 1;
+      justify-content: space-between;
     }
 
     .nav-provider-switch-top {
@@ -1101,7 +1103,7 @@
         </button>
       </div>
 
-      <!-- COCKPIT UNTERER BEREICH -->
+      <!-- COCKPIT UNTERER BEREICH (VOLLSTÄNDIG BIS UNTEN AUSGEFÜLLT) -->
       <div class="sub-content" id="subTab2">
         <div class="cockpit-action-box">
           <div class="nav-provider-switch-top">
@@ -1251,7 +1253,7 @@
     let sigCanvas, sigCtx;
     let currentStopProofItems = [];
 
-    // NEU: HIGH-END CUSTOM KEYBOARD SWITCH SOUND (ULTRA-CLEAN, CRISP & SATISFYING)
+    // HIGH-END CUSTOM KEYBOARD SWITCH SOUND (ULTRA-CLEAN, CRISP & SATISFYING)
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     function playClickSound() {
       if (audioCtx.state === 'suspended') {
@@ -1259,7 +1261,6 @@
       }
       const now = audioCtx.currentTime;
 
-      // 1. Oszillator für den ultra-feinen, knackigen „Switch-Snap“ (hohe Frequenz, extrem kurzer Abfall)
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       
@@ -1275,7 +1276,6 @@
       osc.start(now);
       osc.stop(now + 0.012);
 
-      // 2. Zweiter Oszillator für den warmen, subtilen Gehäuse-Klang („Thock“) im Hintergrund
       const osc2 = audioCtx.createOscillator();
       const gain2 = audioCtx.createGain();
 
@@ -1292,20 +1292,26 @@
       osc2.stop(now + 0.018);
     }
 
-    // TRIGGER FÜR AKUSTISCHES & HAPTISCHES FEEDBACK BEI INTERAKTION
     document.addEventListener('pointerdown', (e) => {
       const target = e.target.closest('button, .btn-import-option, .provider-btn, .nav-item, .manager-card, .btn-reorder, .btn-proof-trio');
       if (target) {
         playClickSound();
         if (navigator.vibrate) {
-          navigator.vibrate(8); // Extrem kurzes, knackiges haptisches Feedback passend zum Sound
+          navigator.vibrate(8);
         }
       }
     }, { passive: true });
 
+    function getTimeBasedGreeting() {
+      const hour = new Date().getHours();
+      if (hour >= 5 && hour < 12) return "Guten Morgen";
+      if (hour >= 12 && hour < 18) return "Guten Tag";
+      return "Guten Abend";
+    }
+
     function getSubtitles(tabNum) {
       if (tabNum === 1) return { top: "Tour Erstellen", main: "Importieren" };
-      if (tabNum === 2) return { top: "Fahrt & Nachweis", main: "Cockpit" };
+      if (tabNum === 2) return { top: getTimeBasedGreeting(), main: "Cockpit" };
       return { top: "Touren-Verwaltung", main: "Manager" };
     }
 
