@@ -270,8 +270,9 @@
       font-weight: 700;
     }
 
+    /* ANGEPASSTE REIHENFOLGE: STRASSE GROSS, ORT KLEIN DARUNTER */
     .current-stop-title {
-      font-size: 1.3rem;
+      font-size: 1.35rem;
       font-weight: 800;
       color: var(--text-main);
       line-height: 1.25;
@@ -489,7 +490,6 @@
       transform: scale(0.97);
     }
 
-    /* KOMPAKTES COCKPIT (ALLES IM SICHTBEREICH) */
     .cockpit-action-box {
       display: flex;
       flex-direction: column;
@@ -600,7 +600,6 @@
       fill: var(--text-sub);
     }
 
-    /* MANAGER LISTE MIT DRAG & DROP / SORTIER-PFEILEN */
     .manager-list {
       display: flex;
       flex-direction: column;
@@ -673,7 +672,6 @@
       background: var(--accent-bright);
     }
 
-    /* BOTTOM NAV */
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -730,7 +728,6 @@
       box-shadow: 0 0 12px var(--accent-bright);
     }
 
-    /* MODALS */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -1059,17 +1056,18 @@
             </div>
           </div>
 
-          <!-- Hero Content 2: COCKPIT (JETZT KOMPAKT OHNE SCROLLEN) -->
+          <!-- Hero Content 2: COCKPIT -->
           <div class="hero-content" id="heroTab2">
             <div class="cockpit-header">
               <span>Fahrt im Gange</span>
               <span id="tourProgressHeader">Keine Tour aktiv</span>
             </div>
             
+            <!-- REIHENFOLGE GEÄNDERT: TITEL (STRASSE) OBEN, SUBLINE (ORT) UNTEN -->
             <div class="current-stop-title" id="currentTitle">Keine Stopps vorhanden</div>
             <div class="current-stop-address">
               <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-              <span id="currentAddressText">Bitte erst im Tab "Erstellen" Adressen erfassen</span>
+              <span id="currentAddressText">Bitte erst im Tab "Erstellen" erfassen</span>
             </div>
 
             <div class="current-stop-note" id="currentNoteText">"Keine Notizen verfügbar"</div>
@@ -1128,10 +1126,9 @@
         </button>
       </div>
 
-      <!-- COCKPIT UNTERER BEREICH (MAXIMAL KOMPAKT IM SICHTBEREICH) -->
+      <!-- COCKPIT UNTERER BEREICH -->
       <div class="sub-content" id="subTab2">
         <div class="cockpit-action-box">
-          <!-- KARTENANBIETER OBEN INTEGRIERT -->
           <div class="nav-provider-switch-top">
             <div class="provider-btn active" id="btnMapGoogle" onclick="setMapProvider('google')">Google Maps</div>
             <div class="provider-btn" id="btnMapApple" onclick="setMapProvider('apple')">Apple Karten</div>
@@ -1154,7 +1151,7 @@
         </div>
       </div>
 
-      <!-- MANAGER LISTE (STOPP-BEARBEITUNG & SORTIERUNG) -->
+      <!-- MANAGER LISTE -->
       <div class="sub-content" id="subTab3">
         <div class="manager-list" id="managerList"></div>
       </div>
@@ -1177,7 +1174,7 @@
     </nav>
   </div>
 
-  <!-- MODAL: STOPP BEARBEITEN (IM MANAGER) -->
+  <!-- MODAL: STOPP BEARBEITEN -->
   <div class="modal-overlay" id="editStopModal">
     <div class="modal-sheet" style="height: auto; max-height: 85vh;">
       <div class="sheet-handle"></div>
@@ -1191,8 +1188,8 @@
       </div>
 
       <div class="input-group">
-        <input type="text" id="editTitleInput" class="input-field" placeholder="Unternehmens- / Kundenname">
-        <input type="text" id="editAddressInput" class="input-field" placeholder="Vollständige Adresse">
+        <input type="text" id="editTitleInput" class="input-field" placeholder="Straße & Hausnummer">
+        <input type="text" id="editAddressInput" class="input-field" placeholder="PLZ & Ort">
         <input type="text" id="editNoteInput" class="input-field" placeholder="Notiz / Hinweis für den Fahrer">
         <div style="display: flex; gap: 10px; margin-top: 6px;">
           <button class="btn-action-primary" style="background: rgba(239, 68, 68, 0.2); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.4);" onclick="deleteStopFromModal()">Löschen</button>
@@ -1216,15 +1213,15 @@
       </div>
 
       <div class="input-group">
-        <input type="text" id="manualTitleInput" class="input-field" placeholder="Kunden- / Unternehmensname">
-        <input type="text" id="manualAddressInput" class="input-field" placeholder="Vollständige Adresse (Straße, PLZ, Ort)">
-        <input type="text" id="manualNoteInput" class="input-field" placeholder="Hinweis / Notiz für den Fahrer (Optional)">
+        <input type="text" id="manualTitleInput" class="input-field" placeholder="Straße & Hausnummer">
+        <input type="text" id="manualAddressInput" class="input-field" placeholder="PLZ & Ort">
+        <input type="text" id="manualNoteInput" class="input-field" placeholder="Hinweis / Notiz (Optional)">
         <button class="btn-action-primary" style="margin-top: 8px;" onclick="addManualStop()">Stopp Speichern</button>
       </div>
     </div>
   </div>
 
-  <!-- DYNAMISCHE VINDOX NACHWEIS-MASKE (3-BUTTONS) -->
+  <!-- NACHWEIS-MASKE -->
   <div class="modal-overlay" id="proofModal">
     <div class="modal-sheet">
       <div class="sheet-handle"></div>
@@ -1279,10 +1276,10 @@
     let sigCanvas, sigCtx;
     let currentStopProofItems = [];
 
-    // GLOBALER HAPTIC FEEDBACK GUARANTEE
-    document.addEventListener('click', () => {
+    // ROBUSTER HAPTISCHER FEEDBACK GUARANTEE (BEI JEDEM TOUCH/CLICK)
+    document.addEventListener('pointerdown', () => {
       if (navigator.vibrate) {
-        navigator.vibrate(22);
+        navigator.vibrate(25);
       }
     }, { passive: true });
 
@@ -1304,6 +1301,7 @@
       document.getElementById('btnMapApple').className = `provider-btn ${provider === 'apple' ? 'active' : ''}`;
     }
 
+    // FIX: DIREKTSTART IN DIE NAVIGATION OHNE ROUTENPLANER-UMWEG
     function launchDirectNavigation() {
       if (tourData.length === 0) {
         alert("Keine aktive Tour oder Stopps vorhanden!");
@@ -1311,30 +1309,33 @@
       }
       const activeIdx = getCurrentActiveStopIndex();
       const currentStop = tourData[activeIdx];
-      const addressQuery = `${currentStop.address}, ${currentStop.title}`;
-
-      let navUrl = "";
+      
+      // Hier sind Titel (Strasse) und Address (Ort) getauscht -> Zieladresse für Maps: Strasse + Ort
+      const destinationQuery = `${currentStop.title}, ${currentStop.address}`;
       const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
+      let navUrl = "";
       if (selectedMapProvider === 'google') {
         if (isIOS) {
-          navUrl = `comgooglemaps://?daddr=${encodeURIComponent(addressQuery)}&directionsmode=driving`;
+          // Google Maps App Direktsprung im Fahrmodus
+          navUrl = `comgooglemaps://?daddr=${encodeURIComponent(destinationQuery)}&directionsmode=driving`;
         } else {
-          navUrl = `google.navigation:q=${encodeURIComponent(addressQuery)}`;
+          navUrl = `google.navigation:q=${encodeURIComponent(destinationQuery)}`;
         }
       } else {
-        navUrl = `maps://?daddr=${encodeURIComponent(addressQuery)}&dirflg=d`;
+        // Apple Karten Direktsprung mit erzwungenem Start im Fahrmodus (dirflg=d)
+        navUrl = `maps://?daddr=${encodeURIComponent(destinationQuery)}&dirflg=d&t=m`;
       }
       
       const fallbackUrl = selectedMapProvider === 'google' 
-        ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(addressQuery)}&travelmode=driving`
-        : `https://maps.apple.com/?daddr=${encodeURIComponent(addressQuery)}&dirflg=d`;
+        ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destinationQuery)}&travelmode=driving`
+        : `https://maps.apple.com/?daddr=${encodeURIComponent(destinationQuery)}&dirflg=d`;
 
       try {
         window.location.href = navUrl;
         setTimeout(() => {
           window.open(fallbackUrl, '_blank');
-        }, 500);
+        }, 400);
       } catch (e) {
         window.open(fallbackUrl, '_blank');
       }
@@ -1363,7 +1364,7 @@
 
       progressCard.style.display = 'block';
       statusText.innerText = "Lade OCR Engine...";
-      progressBar.style.width = "10%T";
+      progressBar.style.width = "10%";
       percentText.innerText = "10%";
 
       try {
@@ -1385,8 +1386,9 @@
           const cleanLine = line.trim();
           const match = cleanLine.match(/^(\d{5}\s+[A-Za-zÄÖÜäöüß\-]+)\s+(.+)$/);
           
-          let titleVal = match ? match[1] : `Stopp ${tourData.length + 1}`;
-          let addressVal = match ? match[2] : cleanLine;
+          // GEÄNDERTE REIHEINFOLGE: match[2] ist die Strasse (Titel), match[1] ist PLZ/Ort (Address)
+          let titleVal = match ? match[2] : cleanLine;
+          let addressVal = match ? match[1] : `Stopp ${tourData.length + 1}`;
 
           tourData.push({
             id: Date.now() + index,
@@ -1415,6 +1417,7 @@
     }
 
     function addManualStop() {
+      // Manuell: 1. Input = Straße (Title), 2. Input = Ort (Address)
       const title = document.getElementById('manualTitleInput').value;
       const address = document.getElementById('manualAddressInput').value;
       const note = document.getElementById('manualNoteInput').value;
@@ -1450,7 +1453,6 @@
       }
     }
 
-    // MANAGER SORTIER-FUNKTIONEN (DRAG & DROP ERSATZ PER BUTTONS)
     function moveStopUp(e, id) {
       e.stopPropagation();
       const idx = tourData.findIndex(s => s.id === id);
@@ -1473,7 +1475,6 @@
       }
     }
 
-    // MANAGER STOPP BEARBEITUNGS-MODAL ÖFFNEN
     function openEditModal(id) {
       currentEditingId = id;
       const stop = tourData.find(s => s.id === id);
@@ -1525,6 +1526,7 @@
       tourData.forEach((stop, i) => {
         const item = document.createElement('div');
         item.className = 'frame-stop-item';
+        // Auch hier vertauschte Anzeige (Straße als Haupttitel, Ort als Subline)
         item.innerHTML = `
           <div class="frame-stop-info">
             <h5>${i + 1}. ${stop.title}</h5>
@@ -1583,7 +1585,7 @@
     function updateCockpitUI() {
       if (tourData.length === 0) {
         document.getElementById('currentTitle').innerText = "Keine Stopps vorhanden";
-        document.getElementById('currentAddressText').innerText = "Bitte erst im Tab 'Erstellen' Adressen erfassen";
+        document.getElementById('currentAddressText').innerText = "Bitte erst im Tab 'Erstellen' erfassen";
         document.getElementById('currentNoteText').innerText = "Keine Notizen verfügbar";
         document.getElementById('tourProgressHeader').innerText = "Keine Tour aktiv";
         document.getElementById('progressBar').style.width = '0%';
@@ -1594,6 +1596,7 @@
       const activeIdx = getCurrentActiveStopIndex();
       const currentStop = tourData[activeIdx] || tourData[tourData.length - 1];
 
+      // Titel = Straße, Subline = PLZ/Ort
       document.getElementById('currentTitle').innerText = currentStop.title;
       document.getElementById('currentAddressText').innerText = currentStop.address;
       document.getElementById('currentNoteText').innerText = currentStop.note ? `"${currentStop.note}"` : "Keine Notizen";
@@ -1624,6 +1627,7 @@
 
         let proofText = (stop.proofs && stop.proofs.length > 0) ? ` • ${stop.proofs.length} Nachweise` : '';
         
+        // Manager-Ansicht: Oben Straße, darunter Ort
         card.innerHTML = `
           <div class="manager-card-info">
             <h4>${idx + 1}. ${stop.title}</h4>
