@@ -123,7 +123,6 @@
       align-items: center;
       gap: 6px;
       font-weight: 700;
-      box-shadow: 0 0 15px rgba(16, 185, 129, 0.15);
     }
 
     .status-dot {
@@ -135,16 +134,16 @@
     }
 
     main {
-      padding: 24px 22px;
+      padding: 20px 22px;
       display: flex;
       flex-direction: column;
-      gap: 22px; /* Perfekter High-End Abstand zwischen den Elementen */
+      gap: 18px;
     }
 
     .section-title-container {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 4px;
     }
 
     .section-title {
@@ -155,14 +154,12 @@
       font-weight: 700;
     }
 
-    /* MONUMENTALER, LUXURIÖSER WILLKOMMENS-GRUSS */
     .section-subtitle-clean {
-      font-size: 2.5rem;
+      font-size: 2.2rem;
       font-weight: 900;
       color: var(--text-main);
       letter-spacing: -0.035em;
       line-height: 1.05;
-      padding-bottom: 4px;
       background: linear-gradient(180deg, #FFFFFF 20%, #94A3B8 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -175,26 +172,12 @@
     .panel-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border-active);
-      border-radius: 26px;
-      padding: 22px;
+      border-radius: 24px;
+      padding: 18px;
       backdrop-filter: blur(25px);
-      -webkit-backdrop-filter: blur(25px);
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(37, 99, 235, 0.12);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 25px rgba(37, 99, 235, 0.1);
       position: relative;
       overflow: hidden;
-    }
-
-    .panel-card::before {
-      content: '';
-      position: absolute;
-      top: -60px;
-      right: -60px;
-      width: 140px;
-      height: 140px;
-      background: var(--accent-bright);
-      opacity: 0.12;
-      filter: blur(50px);
-      border-radius: 50%;
     }
 
     .hero-content {
@@ -209,25 +192,25 @@
     .import-action-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 16px;
+      gap: 10px;
+      margin-top: 14px;
     }
 
     .btn-import-option {
       background: rgba(255, 255, 255, 0.035);
       border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 18px 12px;
+      border-radius: 14px;
+      padding: 16px 10px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       color: var(--text-main);
       font-size: 0.78rem;
       font-weight: 700;
       cursor: pointer;
       text-align: center;
-      transition: all 0.2s cubic-bezier(0.15, 0.85, 0.35, 1.2);
+      transition: all 0.2s ease;
     }
 
     .btn-import-option:active {
@@ -237,8 +220,8 @@
     }
 
     .btn-import-option svg {
-      width: 24px;
-      height: 24px;
+      width: 22px;
+      height: 22px;
       fill: var(--accent-light);
     }
 
@@ -246,9 +229,9 @@
       display: none;
       background: rgba(37, 99, 235, 0.08);
       border: 1px solid rgba(37, 99, 235, 0.3);
-      border-radius: 16px;
-      padding: 16px;
-      margin-top: 14px;
+      border-radius: 14px;
+      padding: 14px;
+      margin-top: 12px;
     }
 
     .ai-progress-header {
@@ -279,7 +262,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       font-size: 0.72rem;
       color: var(--text-sub);
       text-transform: uppercase;
@@ -288,37 +271,36 @@
     }
 
     .current-stop-title {
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       font-weight: 800;
       color: var(--text-main);
       line-height: 1.25;
-      margin-bottom: 6px;
-      letter-spacing: -0.01em;
+      margin-bottom: 4px;
     }
 
     .current-stop-address {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: var(--text-sub);
-      margin-bottom: 14px;
+      margin-bottom: 10px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
 
     .current-stop-address svg {
-      width: 16px;
-      height: 16px;
+      width: 15px;
+      height: 15px;
       fill: var(--accent-bright);
       flex-shrink: 0;
     }
 
     .current-stop-note {
       background: rgba(255, 255, 255, 0.03);
-      border-radius: 12px;
-      padding: 12px 14px;
-      font-size: 0.8rem;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 0.78rem;
       color: var(--text-sub);
-      margin-bottom: 18px;
+      margin-bottom: 14px;
       border-left: 3px solid var(--accent-bright);
     }
 
@@ -327,7 +309,7 @@
       background: rgba(255, 255, 255, 0.06);
       border-radius: 3px;
       overflow: hidden;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .progress-bar-fill {
@@ -341,7 +323,7 @@
     .cockpit-footer {
       display: flex;
       justify-content: space-between;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: var(--text-sub);
     }
 
@@ -353,30 +335,29 @@
     .manager-hero-stats {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 12px;
+      gap: 10px;
+      margin-top: 10px;
     }
 
     .manager-stat-box {
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 14px;
+      border-radius: 14px;
+      padding: 12px;
       display: flex;
       flex-direction: column;
       gap: 4px;
     }
 
     .manager-stat-box span {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       color: var(--text-sub);
       text-transform: uppercase;
       font-weight: 700;
-      letter-spacing: 0.04em;
     }
 
     .manager-stat-box strong {
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       color: var(--text-main);
       font-weight: 800;
     }
@@ -384,7 +365,7 @@
     .sub-content {
       display: none;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
     }
 
     .sub-content.active {
@@ -394,10 +375,9 @@
     .accordion-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 22px;
-      padding: 18px;
+      border-radius: 20px;
+      padding: 16px;
       backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
     }
 
     .accordion-header {
@@ -411,14 +391,14 @@
     .accordion-header-left {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
 
     .accordion-toggle-icon {
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
       fill: var(--text-sub);
-      transition: transform 0.3s cubic-bezier(0.15, 0.85, 0.35, 1.2);
+      transition: transform 0.3s ease;
     }
 
     .accordion-card.open .accordion-toggle-icon {
@@ -427,7 +407,7 @@
 
     .accordion-body {
       display: none;
-      margin-top: 16px;
+      margin-top: 14px;
     }
 
     .accordion-card.open .accordion-body {
@@ -437,14 +417,14 @@
     .address-frame {
       border: 1px solid var(--card-border);
       background: rgba(3, 5, 8, 0.7);
-      border-radius: 16px;
-      padding: 14px;
-      min-height: 130px;
-      max-height: 320px;
+      border-radius: 14px;
+      padding: 12px;
+      min-height: 120px;
+      max-height: 300px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
     }
 
     .empty-frame-notice {
@@ -452,28 +432,28 @@
       font-size: 0.78rem;
       color: var(--text-muted);
       text-align: center;
-      line-height: 1.6;
+      line-height: 1.5;
     }
 
     .frame-stop-item {
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid var(--card-border);
-      border-radius: 14px;
-      padding: 14px;
+      border-radius: 12px;
+      padding: 10px 12px;
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
+      align-items: center;
     }
 
     .frame-stop-info h5 {
-      font-size: 0.88rem;
+      font-size: 0.85rem;
       font-weight: 700;
       color: var(--text-main);
-      margin-bottom: 3px;
+      margin-bottom: 2px;
     }
 
     .frame-stop-info p {
-      font-size: 0.78rem;
+      font-size: 0.72rem;
       color: var(--text-sub);
     }
 
@@ -486,8 +466,8 @@
     }
 
     .btn-delete-stop svg {
-      width: 15px;
-      height: 15px;
+      width: 14px;
+      height: 14px;
       fill: var(--text-muted);
     }
 
@@ -496,12 +476,12 @@
       background: linear-gradient(135deg, var(--accent-main), var(--accent-bright));
       border: none;
       color: #FFF;
-      padding: 16px;
-      border-radius: 18px;
-      font-size: 0.95rem;
+      padding: 15px;
+      border-radius: 16px;
+      font-size: 0.92rem;
       font-weight: 800;
       cursor: pointer;
-      box-shadow: 0 6px 25px var(--accent-glow);
+      box-shadow: 0 6px 20px var(--accent-glow);
       transition: transform 0.15s ease;
     }
 
@@ -509,102 +489,29 @@
       transform: scale(0.97);
     }
 
-    .btn-nav-giant {
-      width: 100%;
-      background: linear-gradient(135deg, #1E3A8A, #1E40AF, #2563EB);
-      border: none;
-      color: #FFF;
-      padding: 20px;
-      border-radius: 20px;
-      font-size: 1.1rem;
-      font-weight: 800;
+    /* KOMPAKTES COCKPIT (ALLES IM SICHTBEREICH) */
+    .cockpit-action-box {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      cursor: pointer;
-      box-shadow: 0 10px 35px rgba(30, 58, 138, 0.45);
-      text-decoration: none;
-      transition: transform 0.15s ease;
-    }
-
-    .btn-nav-giant:active {
-      transform: scale(0.97);
-    }
-
-    .btn-nav-giant svg {
-      width: 22px;
-      height: 22px;
-      fill: #FFF;
-    }
-
-    .btn-next-stop-bright {
-      width: 100%;
-      background: linear-gradient(135deg, #F8FAFC, #E2E8F0);
-      color: #0F172A;
-      border: none;
-      padding: 18px;
-      border-radius: 18px;
-      font-size: 1rem;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      flex-direction: column;
       gap: 10px;
-      cursor: pointer;
-      box-shadow: 0 6px 25px rgba(255, 255, 255, 0.18);
-      transition: transform 0.15s ease;
     }
 
-    .btn-next-stop-bright:active {
-      transform: scale(0.97);
-    }
-
-    .btn-next-stop-bright svg {
-      width: 18px;
-      height: 18px;
-      fill: #0F172A;
-    }
-
-    .btn-prev-small {
-      width: 100%;
-      background: rgba(255, 255, 255, 0.035);
-      border: 1px solid var(--card-border);
-      color: var(--text-sub);
-      padding: 12px;
-      border-radius: 14px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      cursor: pointer;
-    }
-
-    .btn-prev-small svg {
-      width: 14px;
-      height: 14px;
-      fill: var(--text-sub);
-    }
-
-    .nav-provider-switch {
+    .nav-provider-switch-top {
       display: flex;
       background: rgba(255, 255, 255, 0.035);
-      border-radius: 14px;
-      padding: 4px;
+      border-radius: 12px;
+      padding: 3px;
       border: 1px solid var(--card-border);
-      margin-top: 4px;
     }
 
     .provider-btn {
       flex: 1;
-      padding: 10px;
+      padding: 8px;
       text-align: center;
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       font-weight: 700;
       color: var(--text-sub);
-      border-radius: 11px;
+      border-radius: 9px;
       cursor: pointer;
       transition: all 0.2s ease;
     }
@@ -613,60 +520,160 @@
       background: var(--card-bg);
       color: var(--text-main);
       border: 1px solid var(--card-border-active);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.5);
     }
 
+    .btn-nav-giant {
+      width: 100%;
+      background: linear-gradient(135deg, #1E3A8A, #1E40AF, #2563EB);
+      border: none;
+      color: #FFF;
+      padding: 16px;
+      border-radius: 16px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(30, 58, 138, 0.4);
+      text-decoration: none;
+    }
+
+    .btn-nav-giant:active {
+      transform: scale(0.97);
+    }
+
+    .btn-nav-giant svg {
+      width: 20px;
+      height: 20px;
+      fill: #FFF;
+    }
+
+    .btn-next-stop-bright {
+      width: 100%;
+      background: linear-gradient(135deg, #F8FAFC, #E2E8F0);
+      color: #0F172A;
+      border: none;
+      padding: 14px;
+      border-radius: 14px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-next-stop-bright:active {
+      transform: scale(0.97);
+    }
+
+    .btn-next-stop-bright svg {
+      width: 16px;
+      height: 16px;
+      fill: #0F172A;
+    }
+
+    .btn-prev-small {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      color: var(--text-sub);
+      padding: 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .btn-prev-small svg {
+      width: 13px;
+      height: 13px;
+      fill: var(--text-sub);
+    }
+
+    /* MANAGER LISTE MIT DRAG & DROP / SORTIER-PFEILEN */
     .manager-list {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
     }
 
     .manager-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 20px;
-      padding: 18px;
+      border-radius: 16px;
+      padding: 14px;
       display: flex;
-      flex-direction: column;
-      gap: 12px;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
       backdrop-filter: blur(15px);
     }
 
     .manager-card.active {
       border-color: var(--card-border-active);
-      box-shadow: 0 0 25px rgba(37, 99, 235, 0.15);
+      box-shadow: 0 0 20px rgba(37, 99, 235, 0.15);
     }
 
-    .manager-header {
+    .manager-card-info {
+      flex: 1;
       display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
+      flex-direction: column;
+      gap: 3px;
     }
 
-    .manager-title h4 {
-      font-size: 0.98rem;
+    .manager-card-info h4 {
+      font-size: 0.9rem;
       font-weight: 700;
       color: var(--text-main);
     }
 
-    .manager-title p {
-      font-size: 0.78rem;
+    .manager-card-info p {
+      font-size: 0.75rem;
       color: var(--text-sub);
-      margin-top: 3px;
     }
 
-    .manager-note-input {
-      background: rgba(0, 0, 0, 0.5);
+    .manager-card-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .reorder-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .btn-reorder {
+      background: rgba(255, 255, 255, 0.06);
       border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 12px 14px;
       color: var(--text-main);
-      font-size: 0.78rem;
-      width: 100%;
-      outline: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
     }
 
+    .btn-reorder:active {
+      background: var(--accent-bright);
+    }
+
+    /* BOTTOM NAV */
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -695,7 +702,6 @@
       cursor: pointer;
       width: 33%;
       position: relative;
-      transition: color 0.2s ease;
     }
 
     .nav-item svg {
@@ -724,13 +730,12 @@
       box-shadow: 0 0 12px var(--accent-bright);
     }
 
-    /* MODAL UND 3-BUTTON ERFASSUNG */
+    /* MODALS */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0, 0, 0, 0.85);
       backdrop-filter: blur(25px);
-      -webkit-backdrop-filter: blur(25px);
       z-index: 100;
       display: flex;
       align-items: flex-end;
@@ -752,13 +757,12 @@
       border-top: 1px solid rgba(37, 99, 235, 0.4);
       border-radius: 32px 32px 0 0;
       padding: 18px 22px 28px;
-      height: 92vh;
+      max-height: 90vh;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       transform: translateY(100%);
       transition: transform 0.35s cubic-bezier(0.15, 0.85, 0.35, 1.2);
-      box-shadow: 0 -15px 50px rgba(0, 0, 0, 0.95);
     }
 
     .modal-overlay.active .modal-sheet {
@@ -790,13 +794,6 @@
       color: var(--text-main);
     }
 
-    .modal-title-box p {
-      font-size: 0.75rem;
-      color: var(--accent-bright);
-      font-weight: 700;
-      margin-top: 3px;
-    }
-
     .close-btn {
       background: rgba(255, 255, 255, 0.08);
       border: none;
@@ -808,7 +805,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-shrink: 0;
     }
 
     .close-btn svg {
@@ -822,8 +818,7 @@
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 16px;
-      padding-right: 2px;
+      gap: 14px;
     }
 
     .input-group {
@@ -835,7 +830,7 @@
     .input-field {
       background: rgba(0, 0, 0, 0.5);
       border: 1px solid var(--card-border);
-      border-radius: 16px;
+      border-radius: 14px;
       padding: 14px 16px;
       color: var(--text-main);
       font-size: 0.9rem;
@@ -855,7 +850,7 @@
     .btn-proof-trio {
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid var(--card-border);
-      border-radius: 16px;
+      border-radius: 14px;
       padding: 14px 8px;
       display: flex;
       flex-direction: column;
@@ -865,7 +860,6 @@
       font-size: 0.75rem;
       font-weight: 700;
       cursor: pointer;
-      transition: all 0.2s ease;
     }
 
     .btn-proof-trio:active {
@@ -950,7 +944,7 @@
       gap: 8px;
       background: rgba(255, 255, 255, 0.025);
       border: 1px solid var(--card-border);
-      border-radius: 18px;
+      border-radius: 16px;
       padding: 14px;
     }
 
@@ -969,7 +963,6 @@
       color: var(--text-sub);
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
     }
 
     .btn-clear-sig {
@@ -996,12 +989,11 @@
       border: none;
       color: #FFF;
       padding: 16px;
-      border-radius: 18px;
+      border-radius: 16px;
       font-size: 1rem;
       font-weight: 800;
       cursor: pointer;
-      box-shadow: 0 6px 30px var(--accent-glow);
-      flex-shrink: 0;
+      box-shadow: 0 6px 25px var(--accent-glow);
       margin-top: 8px;
     }
 
@@ -1067,7 +1059,7 @@
             </div>
           </div>
 
-          <!-- Hero Content 2 -->
+          <!-- Hero Content 2: COCKPIT (JETZT KOMPAKT OHNE SCROLLEN) -->
           <div class="hero-content" id="heroTab2">
             <div class="cockpit-header">
               <span>Fahrt im Gange</span>
@@ -1095,7 +1087,7 @@
           <!-- Hero Content 3 -->
           <div class="hero-content" id="heroTab3">
             <div style="font-size: 0.92rem; font-weight: 700;">Touren-Manager Übersicht</div>
-            <div style="font-size: 0.78rem; color: var(--text-sub); margin-top: 4px;">Verwalte Stopps und füge individuelle Fahrer-Notizen hinzu.</div>
+            <div style="font-size: 0.78rem; color: var(--text-sub); margin-top: 4px;">Tippe auf einen Stopp zum Bearbeiten oder nutze die Pfeile zum Sortieren.</div>
             
             <div class="manager-hero-stats">
               <div class="manager-stat-box">
@@ -1111,7 +1103,7 @@
         </div>
       </div>
 
-      <!-- UNTERER INHALT -->
+      <!-- UNTERER INHALT TAB 1 -->
       <div class="sub-content active" id="subTab1">
         <div class="accordion-card" id="addressAccordion">
           <div class="accordion-header" onclick="toggleAccordion()">
@@ -1131,34 +1123,38 @@
           </div>
         </div>
 
-        <button class="btn-action-primary" style="margin-top: 6px;" onclick="startTourFromTab1()">
+        <button class="btn-action-primary" onclick="startTourFromTab1()">
           Tour freigeben & ins Cockpit wechseln
         </button>
       </div>
 
-      <!-- COCKPIT UNTERER BEREICH -->
+      <!-- COCKPIT UNTERER BEREICH (MAXIMAL KOMPAKT IM SICHTBEREICH) -->
       <div class="sub-content" id="subTab2">
-        <button class="btn-nav-giant" onclick="launchDirectNavigation()">
-          <svg viewBox="0 0 24 24"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>
-          Jetzt navigieren
-        </button>
+        <div class="cockpit-action-box">
+          <!-- KARTENANBIETER OBEN INTEGRIERT -->
+          <div class="nav-provider-switch-top">
+            <div class="provider-btn active" id="btnMapGoogle" onclick="setMapProvider('google')">Google Maps</div>
+            <div class="provider-btn" id="btnMapApple" onclick="setMapProvider('apple')">Apple Karten</div>
+          </div>
 
-        <button class="btn-next-stop-bright" onclick="openProofModalForCurrent()">
-          Nächster Stopp erfasst
-          <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
-        </button>
+          <button class="btn-nav-giant" onclick="launchDirectNavigation()">
+            <svg viewBox="0 0 24 24"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>
+            Jetzt navigieren
+          </button>
 
-        <button class="btn-prev-small" onclick="prevStop()">
-          <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
-          Vorheriger Stopp
-        </button>
+          <button class="btn-next-stop-bright" onclick="openProofModalForCurrent()">
+            Nächster Stopp erfasst
+            <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+          </button>
 
-        <div class="nav-provider-switch">
-          <div class="provider-btn active" id="btnMapGoogle" onclick="setMapProvider('google')">Google Maps (Direkt)</div>
-          <div class="provider-btn" id="btnMapApple" onclick="setMapProvider('apple')">Apple Karten (Direkt)</div>
+          <button class="btn-prev-small" onclick="prevStop()">
+            <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+            Vorheriger Stopp
+          </button>
         </div>
       </div>
 
+      <!-- MANAGER LISTE (STOPP-BEARBEITUNG & SORTIERUNG) -->
       <div class="sub-content" id="subTab3">
         <div class="manager-list" id="managerList"></div>
       </div>
@@ -1179,6 +1175,31 @@
         Manager
       </div>
     </nav>
+  </div>
+
+  <!-- MODAL: STOPP BEARBEITEN (IM MANAGER) -->
+  <div class="modal-overlay" id="editStopModal">
+    <div class="modal-sheet" style="height: auto; max-height: 85vh;">
+      <div class="sheet-handle"></div>
+      <div class="modal-header">
+        <div class="modal-title-box">
+          <h3 id="editModalTitle">Stopp bearbeiten</h3>
+        </div>
+        <button class="close-btn" onclick="closeEditModal()">
+          <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </div>
+
+      <div class="input-group">
+        <input type="text" id="editTitleInput" class="input-field" placeholder="Unternehmens- / Kundenname">
+        <input type="text" id="editAddressInput" class="input-field" placeholder="Vollständige Adresse">
+        <input type="text" id="editNoteInput" class="input-field" placeholder="Notiz / Hinweis für den Fahrer">
+        <div style="display: flex; gap: 10px; margin-top: 6px;">
+          <button class="btn-action-primary" style="background: rgba(239, 68, 68, 0.2); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.4);" onclick="deleteStopFromModal()">Löschen</button>
+          <button class="btn-action-primary" onclick="saveEditedStop()">Speichern</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Modal Manuell Hinzufügen -->
@@ -1210,7 +1231,7 @@
       <div class="modal-header">
         <div class="modal-title-box">
           <h3>Leistungsnachweis erfassen</h3>
-          <p id="proofModalSubtitle">Stopp: 51766 Ründeroth</p>
+          <p id="proofModalSubtitle" style="font-size:0.75rem; color:var(--accent-bright); font-weight:700; margin-top:2px;">Stopp</p>
         </div>
         <button class="close-btn" onclick="closeProofModal()">
           <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
@@ -1218,7 +1239,6 @@
       </div>
 
       <div class="modal-body-scroll">
-        <!-- DIE 3 ERFASSUNGS-BUTTONS -->
         <div class="proof-actions-trio">
           <button class="btn-proof-trio" onclick="document.getElementById('cameraPhotoInput').click()">
             <svg viewBox="0 0 24 24"><path d="M4 4h3l2-2h6l2 2h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2m8 3a5 5 0 0 0-5 5a5 5 0 0 0 5 5a5 5 0 0 0 5-5a5 5 0 0 0-5-5z"/></svg>
@@ -1234,10 +1254,8 @@
           </button>
         </div>
 
-        <!-- RASTER ALLER ERFASSTEN FOTOS & VIDEOS BEI DIESEM STOPP -->
         <div class="captured-items-grid" id="capturedItemsGrid"></div>
 
-        <!-- UNTERSCHRIFTEN-MASKE -->
         <div class="signature-container" id="signatureBox">
           <div class="signature-header">
             <span class="signature-label">Kundenunterschrift</span>
@@ -1254,14 +1272,14 @@
   <script>
     const tourData = [];
     let selectedMapProvider = 'google';
+    let currentEditingId = null;
 
-    let currentGPS = "48.140000, 11.580000";
+    let currentGPS = "51.023400, 7.254100";
     let isDrawing = false;
     let sigCanvas, sigCtx;
-
     let currentStopProofItems = [];
 
-    // GLOBALER HAPTIC FEEDBACK GUARANTEE (LÖST BEI JEDEM KLICK AUS)
+    // GLOBALER HAPTIC FEEDBACK GUARANTEE
     document.addEventListener('click', () => {
       if (navigator.vibrate) {
         navigator.vibrate(22);
@@ -1270,13 +1288,9 @@
 
     function getTimeBasedGreeting() {
       const hour = new Date().getHours();
-      if (hour >= 5 && hour < 12) {
-        return "Guten Morgen";
-      } else if (hour >= 12 && hour < 18) {
-        return "Guten Tag";
-      } else {
-        return "Guten Abend";
-      }
+      if (hour >= 5 && hour < 12) return "Guten Morgen";
+      if (hour >= 12 && hour < 18) return "Guten Tag";
+      return "Guten Abend";
     }
 
     function toggleAccordion() {
@@ -1349,7 +1363,7 @@
 
       progressCard.style.display = 'block';
       statusText.innerText = "Lade OCR Engine...";
-      progressBar.style.width = "10%";
+      progressBar.style.width = "10%T";
       percentText.innerText = "10%";
 
       try {
@@ -1371,23 +1385,15 @@
           const cleanLine = line.trim();
           const match = cleanLine.match(/^(\d{5}\s+[A-Za-zÄÖÜäöüß\-]+)\s+(.+)$/);
           
-          let titleVal = "";
-          let addressVal = "";
-
-          if (match) {
-            titleVal = match[1];     
-            addressVal = match[2];   
-          } else {
-            titleVal = `Stopp ${tourData.length + 1}`;
-            addressVal = cleanLine;
-          }
+          let titleVal = match ? match[1] : `Stopp ${tourData.length + 1}`;
+          let addressVal = match ? match[2] : cleanLine;
 
           tourData.push({
             id: Date.now() + index,
             title: titleVal,
             address: addressVal,
             note: "",
-            coords: "51.766000, 7.450000",
+            coords: "51.023400, 7.254100",
             status: (tourData.length === 0 && index === 0) ? "active" : "pending",
             proofs: []
           });
@@ -1419,7 +1425,7 @@
           title: title,
           address: address,
           note: note || "",
-          coords: "51.766000, 7.450000",
+          coords: "51.023400, 7.254100",
           status: tourData.length === 0 ? "active" : "pending",
           proofs: []
         });
@@ -1442,6 +1448,66 @@
         }
         renderAddressFrame();
       }
+    }
+
+    // MANAGER SORTIER-FUNKTIONEN (DRAG & DROP ERSATZ PER BUTTONS)
+    function moveStopUp(e, id) {
+      e.stopPropagation();
+      const idx = tourData.findIndex(s => s.id === id);
+      if (idx > 0) {
+        const temp = tourData[idx];
+        tourData[idx] = tourData[idx - 1];
+        tourData[idx - 1] = temp;
+        renderManagerList();
+      }
+    }
+
+    function moveStopDown(e, id) {
+      e.stopPropagation();
+      const idx = tourData.findIndex(s => s.id === id);
+      if (idx !== -1 && idx < tourData.length - 1) {
+        const temp = tourData[idx];
+        tourData[idx] = tourData[idx + 1];
+        tourData[idx + 1] = temp;
+        renderManagerList();
+      }
+    }
+
+    // MANAGER STOPP BEARBEITUNGS-MODAL ÖFFNEN
+    function openEditModal(id) {
+      currentEditingId = id;
+      const stop = tourData.find(s => s.id === id);
+      if (!stop) return;
+
+      document.getElementById('editTitleInput').value = stop.title;
+      document.getElementById('editAddressInput').value = stop.address;
+      document.getElementById('editNoteInput').value = stop.note || '';
+      document.getElementById('editStopModal').classList.add('active');
+    }
+
+    function closeEditModal() {
+      document.getElementById('editStopModal').classList.remove('active');
+      currentEditingId = null;
+    }
+
+    function saveEditedStop() {
+      if (!currentEditingId) return;
+      const stop = tourData.find(s => s.id === currentEditingId);
+      if (stop) {
+        stop.title = document.getElementById('editTitleInput').value;
+        stop.address = document.getElementById('editAddressInput').value;
+        stop.note = document.getElementById('editNoteInput').value;
+      }
+      closeEditModal();
+      renderManagerList();
+      updateCockpitUI();
+    }
+
+    function deleteStopFromModal() {
+      if (!currentEditingId) return;
+      deleteStop(currentEditingId);
+      closeEditModal();
+      renderManagerList();
     }
 
     function renderAddressFrame() {
@@ -1554,35 +1620,27 @@
       tourData.forEach((stop, idx) => {
         const card = document.createElement('div');
         card.className = `manager-card ${stop.status === 'active' ? 'active' : ''}`;
-        
-        let proofBadgesHtml = '';
-        if (stop.proofs && stop.proofs.length > 0) {
-          proofBadgesHtml = `<div style="font-size:0.72rem; color: var(--accent-bright); margin-top:4px; font-weight:600;">Erfasste Nachweise: ${stop.proofs.length} Medien/Signaturen</div>`;
-        }
+        card.onclick = () => openEditModal(stop.id);
 
+        let proofText = (stop.proofs && stop.proofs.length > 0) ? ` • ${stop.proofs.length} Nachweise` : '';
+        
         card.innerHTML = `
-          <div class="manager-header">
-            <div class="manager-title">
-              <h4>${idx + 1}. ${stop.title}</h4>
-              <p>${stop.address}</p>
-              ${proofBadgesHtml}
-            </div>
-            <span style="font-size: 0.72rem; font-weight:700; color: ${stop.status === 'completed' ? 'var(--success)' : (stop.status === 'active' ? 'var(--accent-bright)' : 'var(--text-sub)')}">
+          <div class="manager-card-info">
+            <h4>${idx + 1}. ${stop.title}</h4>
+            <p>${stop.address}${proofText}</p>
+          </div>
+          <div class="manager-card-meta">
+            <span style="font-size: 0.68rem; font-weight:700; color: ${stop.status === 'completed' ? 'var(--success)' : (stop.status === 'active' ? 'var(--accent-bright)' : 'var(--text-sub)')}">
               ${stop.status === 'completed' ? 'Erledigt' : (stop.status === 'active' ? 'Aktiv' : 'Ausstehend')}
             </span>
+            <div class="reorder-btns">
+              <button class="btn-reorder" onclick="moveStopUp(event, ${stop.id})">▲</button>
+              <button class="btn-reorder" onclick="moveStopDown(event, ${stop.id})">▼</button>
+            </div>
           </div>
-          <input type="text" class="manager-note-input" value="${stop.note || ''}" placeholder="Notiz hinzufügen..." onchange="updateNote(${stop.id}, this.value)">
         `;
         container.appendChild(card);
       });
-    }
-
-    function updateNote(id, newNote) {
-      const stop = tourData.find(s => s.id === id);
-      if (stop) {
-        stop.note = newNote;
-        updateCockpitUI();
-      }
     }
 
     function openProofModalForCurrent() {
@@ -1619,17 +1677,9 @@
     function handleCapturedPhoto(e) {
       const file = e.target.files[0];
       if (!file) return;
-
       const reader = new FileReader();
       reader.onload = function(evt) {
-        const now = new Date().toLocaleTimeString();
-        currentStopProofItems.push({
-          id: Date.now(),
-          type: 'photo',
-          url: evt.target.result,
-          time: now,
-          gps: currentGPS
-        });
+        currentStopProofItems.push({ id: Date.now(), type: 'photo', url: evt.target.result, time: new Date().toLocaleTimeString(), gps: currentGPS });
         renderCapturedGrid();
       }
       reader.readAsDataURL(file);
@@ -1638,17 +1688,9 @@
     function handleCapturedVideo(e) {
       const file = e.target.files[0];
       if (!file) return;
-
       const reader = new FileReader();
       reader.onload = function(evt) {
-        const now = new Date().toLocaleTimeString();
-        currentStopProofItems.push({
-          id: Date.now(),
-          type: 'video',
-          url: evt.target.result,
-          time: now,
-          gps: currentGPS
-        });
+        currentStopProofItems.push({ id: Date.now(), type: 'video', url: evt.target.result, time: new Date().toLocaleTimeString(), gps: currentGPS });
         renderCapturedGrid();
       }
       reader.readAsDataURL(file);
@@ -1670,15 +1712,10 @@
     function renderCapturedGrid() {
       const grid = document.getElementById('capturedItemsGrid');
       grid.innerHTML = '';
-
       currentStopProofItems.forEach(item => {
         const thumb = document.createElement('div');
         thumb.className = 'captured-item-thumb';
-        
-        let mediaTag = item.type === 'photo' 
-          ? `<img src="${item.url}">` 
-          : `<video src="${item.url}"></video>`;
-        
+        let mediaTag = item.type === 'photo' ? `<img src="${item.url}">` : `<video src="${item.url}"></video>`;
         thumb.innerHTML = `
           ${mediaTag}
           <span class="thumb-type-tag">${item.type}</span>
@@ -1692,7 +1729,6 @@
     function initSignaturePad() {
       sigCanvas = document.getElementById('sigCanvas');
       if (!sigCanvas) return;
-
       sigCtx = sigCanvas.getContext('2d');
       sigCanvas.width = sigCanvas.offsetWidth;
       sigCanvas.height = sigCanvas.offsetHeight;
@@ -1708,9 +1744,7 @@
     }
 
     function clearSignature() {
-      if (sigCtx && sigCanvas) {
-        sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
-      }
+      if (sigCtx && sigCanvas) sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
     }
 
     function startDrawing(e) {
@@ -1738,14 +1772,12 @@
 
     function submitProof() {
       if (tourData.length === 0) return;
-
       const activeIdx = getCurrentActiveStopIndex();
       const stop = tourData[activeIdx];
 
       stop.proofs = [...currentStopProofItems];
       stop.status = 'completed';
       stop.completedAt = new Date().toISOString();
-      stop.completedGPS = currentGPS;
       
       if (activeIdx + 1 < tourData.length) {
         tourData[activeIdx + 1].status = 'active';
@@ -1760,7 +1792,6 @@
       if (completedList.length > 0) {
         const lastCompletedIdx = completedList[completedList.length - 1];
         const currentActive = getCurrentActiveStopIndex();
-        
         if (currentActive !== -1) tourData[currentActive].status = 'pending';
         tourData[lastCompletedIdx].status = 'active';
         updateCockpitUI();
