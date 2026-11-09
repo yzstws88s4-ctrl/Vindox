@@ -20,11 +20,11 @@
       --bg: #07090E;
       --card-bg: rgba(15, 23, 42, 0.85);
       --card-border: rgba(255, 255, 255, 0.08);
-      --card-border-active: rgba(59, 130, 246, 0.4);
-      --accent-main: #1D4ED8;
-      --accent-bright: #3B82F6;
+      --card-border-active: rgba(37, 99, 235, 0.45);
+      --accent-main: #1E3A8A;
+      --accent-bright: #2563EB;
       --accent-light: #60A5FA;
-      --accent-glow: rgba(59, 130, 246, 0.35);
+      --accent-glow: rgba(37, 99, 235, 0.3);
       --text-main: #F8FAFC;
       --text-sub: #94A3B8;
       --text-muted: #475569;
@@ -140,13 +140,26 @@
       gap: 16px;
     }
 
+    .section-title-container {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 8px;
+    }
+
     .section-title {
       font-size: 0.75rem;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: var(--text-muted);
       font-weight: 700;
-      margin-bottom: 2px;
+    }
+
+    .section-subtitle-clean {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
     }
 
     .hero-panel-container {
@@ -159,7 +172,7 @@
       border-radius: 24px;
       padding: 20px;
       backdrop-filter: blur(16px);
-      box-shadow: 0 0 30px rgba(29, 78, 216, 0.15);
+      box-shadow: 0 0 30px rgba(37, 99, 235, 0.15);
       position: relative;
       overflow: hidden;
     }
@@ -212,7 +225,7 @@
 
     .btn-import-option:active {
       transform: scale(0.97);
-      background: rgba(59, 130, 246, 0.08);
+      background: rgba(37, 99, 235, 0.08);
       border-color: var(--card-border-active);
     }
 
@@ -224,8 +237,8 @@
 
     .ai-progress-card {
       display: none;
-      background: rgba(59, 130, 246, 0.08);
-      border: 1px solid rgba(59, 130, 246, 0.25);
+      background: rgba(37, 99, 235, 0.08);
+      border: 1px solid rgba(37, 99, 235, 0.25);
       border-radius: 14px;
       padding: 14px;
       margin-top: 12px;
@@ -471,7 +484,7 @@
 
     .btn-nav-giant {
       width: 100%;
-      background: linear-gradient(135deg, #1E40AF, #2563EB, #3B82F6);
+      background: linear-gradient(135deg, #1E3A8A, #1E40AF, #2563EB);
       border: none;
       color: #FFF;
       padding: 20px;
@@ -483,7 +496,7 @@
       justify-content: center;
       gap: 12px;
       cursor: pointer;
-      box-shadow: 0 8px 30px rgba(37, 99, 235, 0.4);
+      box-shadow: 0 8px 30px rgba(30, 58, 138, 0.4);
       text-decoration: none;
       transition: transform 0.15s ease;
     }
@@ -705,7 +718,7 @@
       width: 100%;
       max-width: 480px;
       background: #0B0E17;
-      border-top: 1px solid rgba(59, 130, 246, 0.4);
+      border-top: 1px solid rgba(37, 99, 235, 0.4);
       border-radius: 28px 28px 0 0;
       padding: 16px 20px 24px;
       height: 92vh;
@@ -841,7 +854,7 @@
     .btn-proof-trio:active {
       transform: scale(0.95);
       border-color: var(--accent-bright);
-      background: rgba(59, 130, 246, 0.1);
+      background: rgba(37, 99, 235, 0.1);
     }
 
     .btn-proof-trio svg {
@@ -1005,7 +1018,10 @@
     </header>
 
     <main>
-      <div class="section-title" id="sectionTitleText">TOUR ERSTELLEN & IMPORTIEREN</div>
+      <div class="section-title-container" id="sectionTitleContainer">
+        <div class="section-title" id="sectionTitleText">TOUR ERSTELLEN & IMPORTIEREN</div>
+        <div class="section-subtitle-clean" id="sectionSubtitleText">Guten Morgen, Alex</div>
+      </div>
 
       <!-- HERO PANEL -->
       <div class="hero-panel-container">
@@ -1040,7 +1056,7 @@
           <!-- Hero Content 2 -->
           <div class="hero-content" id="heroTab2">
             <div class="cockpit-header">
-              <span>Guten Morgen, Alex</span>
+              <span>Fahrt im Gange</span>
               <span id="tourProgressHeader">Keine Tour aktiv</span>
             </div>
             
@@ -1433,12 +1449,19 @@
     }
 
     function switchNavTab(tabNum) {
-      const titles = [
+      const subtitles = [
+        "Guten Morgen, Alex",
+        "Cockpit & Navigation",
+        "Touren-Manager"
+      ];
+      const categories = [
         "TOUR ERSTELLEN & IMPORTIEREN",
         "FAHRT & NACHWEIS (COCKPIT)",
         "TOUR-VERWALTUNG & NOTIZEN"
       ];
-      document.getElementById('sectionTitleText').innerText = titles[tabNum - 1];
+      
+      document.getElementById('sectionTitleText').innerText = categories[tabNum - 1];
+      document.getElementById('sectionSubtitleText').innerText = subtitles[tabNum - 1];
 
       document.querySelectorAll('.hero-content').forEach(h => h.classList.remove('active'));
       document.getElementById(`heroTab${tabNum}`).classList.add('active');
@@ -1642,7 +1665,7 @@
       sigCtx = sigCanvas.getContext('2d');
       sigCanvas.width = sigCanvas.offsetWidth;
       sigCanvas.height = sigCanvas.offsetHeight;
-      sigCtx.strokeStyle = "#3B82F6";
+      sigCtx.strokeStyle = "#2563EB";
       sigCtx.lineWidth = 2.5;
 
       sigCanvas.addEventListener('mousedown', startDrawing);
