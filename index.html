@@ -169,7 +169,6 @@
       line-height: 1.05;
     }
 
-    /* Eleganter, dezent verfeinerter Gruß mit Live-Uhrzeit */
     .elegant-greeting {
       font-size: 0.95rem;
       font-weight: 600;
@@ -1017,7 +1016,6 @@
       <div class="section-title-container">
         <div class="section-title" id="sectionTitleText">Fahrt & Nachweis</div>
         <div class="section-subtitle-clean" id="sectionSubtitleText">Cockpit</div>
-        <!-- Eleganter Gruß mit Live-Uhrzeit, nur im Cockpit aktiv -->
         <div class="elegant-greeting" id="elegantGreetingText">Guten Abend</div>
       </div>
 
@@ -1270,7 +1268,7 @@
     let sigCanvas, sigCtx;
     let currentStopProofItems = [];
 
-    // HIGH-END CUSTOM KEYBOARD SWITCH SOUND (ULTRA-CLEAN, CRISP & SATISFYING)
+    // SOUND EFFEKT FÜR BUTTON-PRESSES
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     function playClickSound() {
       if (audioCtx.state === 'suspended') {
@@ -1319,6 +1317,7 @@
       }
     }, { passive: true });
 
+    // UHRZEIT SCHRITT 1: EXAKTE ZEITMESSUNG & BEGRÜSSUNG
     function getTimeBasedGreeting() {
       const now = new Date();
       const hour = now.getHours();
@@ -1331,6 +1330,22 @@
 
       return `${greeting} <span style="opacity:0.4; font-weight:400;">•</span> <span style="color:#94A3B8; font-weight:500;">${timeStr}</span>`;
     }
+
+    function updateGreetingClock() {
+      const greetingEl = document.getElementById('elegantGreetingText');
+      if (greetingEl) {
+        greetingEl.innerHTML = getTimeBasedGreeting();
+      }
+    }
+
+    // UHRZEIT SCHRITT 2: KONTINUIERLICHER ABLAUF + DIREKTE AKTUALISIERUNG BEI APP-FOCUS
+    setInterval(updateGreetingClock, 1000);
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        updateGreetingClock();
+      }
+    });
 
     function getSubtitles(tabNum) {
       if (tabNum === 1) return { top: "Fahrt & Nachweis", main: "Tour Erstellen" };
@@ -1349,6 +1364,7 @@
       document.getElementById('btnMapApple').className = `provider-btn ${provider === 'apple' ? 'active' : ''}`;
     }
 
+    // DIREKTE NAVIGATION OHNE IN-APP-BROWSER-ZWISCHENSEITE
     function launchDirectNavigation() {
       if (tourData.length === 0) {
         alert("Keine aktive Tour oder Stopps vorhanden!");
@@ -1363,10 +1379,11 @@
       if (selectedMapProvider === 'apple') {
         navUrl = `maps://?daddr=${encodeURIComponent(destinationQuery)}&dirflg=d&t=m`;
       } else {
-        navUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destinationQuery)}&travelmode=driving&dir_action=navigate`;
+        navUrl = `comgooglemaps://?daddr=${encodeURIComponent(destinationQuery)}&directionsmode=driving`;
       }
 
-      window.open(navUrl, '_blank');
+      // Nutzen von window.location.href anstelle von window.open verhindert weiße Leerseiten
+      window.location.href = navUrl;
     }
 
     function openScreenshotUploader() {
@@ -1581,7 +1598,7 @@
 
       const greetingEl = document.getElementById('elegantGreetingText');
       if (tabNum === 2) {
-        greetingEl.innerHTML = getTimeBasedGreeting();
+        updateGreetingClock();
         greetingEl.classList.add('active');
       } else {
         greetingEl.classList.remove('active');
