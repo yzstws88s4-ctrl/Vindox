@@ -24,7 +24,7 @@
       --accent-main: #1E3A8A;
       --accent-bright: #2563EB;
       --accent-light: #60A5FA;
-      --accent-glow: rgba(37, 99, 235, 0.25);
+      --accent-glow: rgba(37, 99, 235, 0.35);
       --text-main: #F8FAFC;
       --text-sub: #94A3B8;
       --text-muted: #64748B;
@@ -196,6 +196,18 @@
       margin-top: 14px;
     }
 
+    /* VISUELLES TOUCH-FEEDBACK ANPASSUNGEN (SPRING & GLOW) */
+    button, .btn-import-option, .provider-btn, .nav-item, .manager-card, .btn-reorder, .btn-proof-trio {
+      transition: transform 0.12s cubic-bezier(0.2, 0, 0, 1), background-color 0.15s ease, box-shadow 0.15s ease;
+      user-select: none;
+    }
+
+    button:active, .btn-import-option:active, .provider-btn:active, .manager-card:active, .btn-proof-trio:active {
+      transform: scale(0.95) !important;
+      box-shadow: 0 0 15px var(--accent-glow) !important;
+      filter: brightness(1.2);
+    }
+
     .btn-import-option {
       background: rgba(255, 255, 255, 0.035);
       border: 1px solid var(--card-border);
@@ -210,13 +222,6 @@
       font-weight: 700;
       cursor: pointer;
       text-align: center;
-      transition: all 0.2s ease;
-    }
-
-    .btn-import-option:active {
-      transform: scale(0.96);
-      background: rgba(37, 99, 235, 0.1);
-      border-color: var(--card-border-active);
     }
 
     .btn-import-option svg {
@@ -270,7 +275,6 @@
       font-weight: 700;
     }
 
-    /* ANGEPASSTE REIHENFOLGE: STRASSE GROSS, ORT KLEIN DARUNTER */
     .current-stop-title {
       font-size: 1.35rem;
       font-weight: 800;
@@ -483,11 +487,6 @@
       font-weight: 800;
       cursor: pointer;
       box-shadow: 0 6px 20px var(--accent-glow);
-      transition: transform 0.15s ease;
-    }
-
-    .btn-action-primary:active {
-      transform: scale(0.97);
     }
 
     .cockpit-action-box {
@@ -513,7 +512,6 @@
       color: var(--text-sub);
       border-radius: 9px;
       cursor: pointer;
-      transition: all 0.2s ease;
     }
 
     .provider-btn.active {
@@ -541,10 +539,6 @@
       text-decoration: none;
     }
 
-    .btn-nav-giant:active {
-      transform: scale(0.97);
-    }
-
     .btn-nav-giant svg {
       width: 20px;
       height: 20px;
@@ -566,10 +560,6 @@
       gap: 8px;
       cursor: pointer;
       box-shadow: 0 4px 20px rgba(255, 255, 255, 0.15);
-    }
-
-    .btn-next-stop-bright:active {
-      transform: scale(0.97);
     }
 
     .btn-next-stop-bright svg {
@@ -615,7 +605,6 @@
       justify-content: space-between;
       align-items: center;
       cursor: pointer;
-      transition: all 0.2s ease;
       backdrop-filter: blur(15px);
     }
 
@@ -666,10 +655,6 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-    }
-
-    .btn-reorder:active {
-      background: var(--accent-bright);
     }
 
     .bottom-nav {
@@ -859,12 +844,6 @@
       cursor: pointer;
     }
 
-    .btn-proof-trio:active {
-      transform: scale(0.95);
-      border-color: var(--accent-bright);
-      background: rgba(37, 99, 235, 0.12);
-    }
-
     .btn-proof-trio svg {
       width: 22px;
       height: 22px;
@@ -993,10 +972,6 @@
       box-shadow: 0 6px 25px var(--accent-glow);
       margin-top: 8px;
     }
-
-    .btn-submit:active {
-      transform: scale(0.98);
-    }
   </style>
 </head>
 <body>
@@ -1063,7 +1038,6 @@
               <span id="tourProgressHeader">Keine Tour aktiv</span>
             </div>
             
-            <!-- REIHENFOLGE GEÄNDERT: TITEL (STRASSE) OBEN, SUBLINE (ORT) UNTEN -->
             <div class="current-stop-title" id="currentTitle">Keine Stopps vorhanden</div>
             <div class="current-stop-address">
               <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
@@ -1276,10 +1250,33 @@
     let sigCanvas, sigCtx;
     let currentStopProofItems = [];
 
-    // ROBUSTER HAPTISCHER FEEDBACK GUARANTEE (BEI JEDEM TOUCH/CLICK)
-    document.addEventListener('pointerdown', () => {
-      if (navigator.vibrate) {
-        navigator.vibrate(25);
+    // SYNTHETISCHER KLICK-SOUND PER WEB AUDIO API (AKUSTISCHES FEEDBACK)
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playClickSound() {
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.03);
+      gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.03);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.03);
+    }
+
+    // VISUELLES + AKUSTISCHES HIGHLIGHT BEI TOUCH
+    document.addEventListener('pointerdown', (e) => {
+      const target = e.target.closest('button, .btn-import-option, .provider-btn, .nav-item, .manager-card, .btn-reorder, .btn-proof-trio');
+      if (target) {
+        playClickSound();
+        if (navigator.vibrate) {
+          navigator.vibrate(15);
+        }
       }
     }, { passive: true });
 
@@ -1301,7 +1298,7 @@
       document.getElementById('btnMapApple').className = `provider-btn ${provider === 'apple' ? 'active' : ''}`;
     }
 
-    // FIX: DIREKTSTART IN DIE NAVIGATION OHNE ROUTENPLANER-UMWEG
+    // DIREKTSTART NAVIGATION OHNE ROUTENPLANER-UMWEG
     function launchDirectNavigation() {
       if (tourData.length === 0) {
         alert("Keine aktive Tour oder Stopps vorhanden!");
@@ -1310,35 +1307,18 @@
       const activeIdx = getCurrentActiveStopIndex();
       const currentStop = tourData[activeIdx];
       
-      // Hier sind Titel (Strasse) und Address (Ort) getauscht -> Zieladresse für Maps: Strasse + Ort
       const destinationQuery = `${currentStop.title}, ${currentStop.address}`;
-      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-
       let navUrl = "";
-      if (selectedMapProvider === 'google') {
-        if (isIOS) {
-          // Google Maps App Direktsprung im Fahrmodus
-          navUrl = `comgooglemaps://?daddr=${encodeURIComponent(destinationQuery)}&directionsmode=driving`;
-        } else {
-          navUrl = `google.navigation:q=${encodeURIComponent(destinationQuery)}`;
-        }
-      } else {
-        // Apple Karten Direktsprung mit erzwungenem Start im Fahrmodus (dirflg=d)
-        navUrl = `maps://?daddr=${encodeURIComponent(destinationQuery)}&dirflg=d&t=m`;
-      }
-      
-      const fallbackUrl = selectedMapProvider === 'google' 
-        ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destinationQuery)}&travelmode=driving`
-        : `https://maps.apple.com/?daddr=${encodeURIComponent(destinationQuery)}&dirflg=d`;
 
-      try {
-        window.location.href = navUrl;
-        setTimeout(() => {
-          window.open(fallbackUrl, '_blank');
-        }, 400);
-      } catch (e) {
-        window.open(fallbackUrl, '_blank');
+      if (selectedMapProvider === 'apple') {
+        // Apple Maps direkt im Fahrmodus erzwingen
+        navUrl = `maps://?daddr=${encodeURIComponent(destinationQuery)}&dirflg=d&t=m`;
+      } else {
+        // Google Maps direkter Navigationsmodus
+        navUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destinationQuery)}&travelmode=driving&dir_action=navigate`;
       }
+
+      window.open(navUrl, '_blank');
     }
 
     function openScreenshotUploader() {
@@ -1386,7 +1366,6 @@
           const cleanLine = line.trim();
           const match = cleanLine.match(/^(\d{5}\s+[A-Za-zÄÖÜäöüß\-]+)\s+(.+)$/);
           
-          // GEÄNDERTE REIHEINFOLGE: match[2] ist die Strasse (Titel), match[1] ist PLZ/Ort (Address)
           let titleVal = match ? match[2] : cleanLine;
           let addressVal = match ? match[1] : `Stopp ${tourData.length + 1}`;
 
@@ -1417,7 +1396,6 @@
     }
 
     function addManualStop() {
-      // Manuell: 1. Input = Straße (Title), 2. Input = Ort (Address)
       const title = document.getElementById('manualTitleInput').value;
       const address = document.getElementById('manualAddressInput').value;
       const note = document.getElementById('manualNoteInput').value;
@@ -1526,7 +1504,6 @@
       tourData.forEach((stop, i) => {
         const item = document.createElement('div');
         item.className = 'frame-stop-item';
-        // Auch hier vertauschte Anzeige (Straße als Haupttitel, Ort als Subline)
         item.innerHTML = `
           <div class="frame-stop-info">
             <h5>${i + 1}. ${stop.title}</h5>
@@ -1596,7 +1573,6 @@
       const activeIdx = getCurrentActiveStopIndex();
       const currentStop = tourData[activeIdx] || tourData[tourData.length - 1];
 
-      // Titel = Straße, Subline = PLZ/Ort
       document.getElementById('currentTitle').innerText = currentStop.title;
       document.getElementById('currentAddressText').innerText = currentStop.address;
       document.getElementById('currentNoteText').innerText = currentStop.note ? `"${currentStop.note}"` : "Keine Notizen";
@@ -1627,7 +1603,6 @@
 
         let proofText = (stop.proofs && stop.proofs.length > 0) ? ` • ${stop.proofs.length} Nachweise` : '';
         
-        // Manager-Ansicht: Oben Straße, darunter Ort
         card.innerHTML = `
           <div class="manager-card-info">
             <h4>${idx + 1}. ${stop.title}</h4>
