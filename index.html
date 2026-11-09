@@ -11,23 +11,23 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Vindox">
   
-  <!-- Web App Manifest mit dem neuen Vindox Logo Icon -->
+  <!-- Web App Manifest -->
   <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlZpbmRveCBUb3VyIEFwcCIsCiAgInNob3J0X25hbWUiOiAiVmluZG94IiwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGx5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwNzA5MEUiLAogICJ0aGVtZV9jb2xvciI6ICIjMDcwOTBFIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiNDU3MDczMEUtQTBBMi00NTQ2LUIzMTYtQjE1QkU5REQ1RUU0LnBuZyIsCiAgICAgICJzaXplcyI6ICI1MTJ4NTEyIiwKICAgICAgInR5cGUiOiAiaW1hZ2UvcG5nIiwKICAgICAgInB1cnBvc2UiOiAiYW55IG1hc2thYmxlIgogICAgfQogIF0KfQ==">
   <meta name="theme-color" content="#07090E">
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <style>
     :root {
       --bg: #07090E;
-      --card-bg: rgba(15, 23, 42, 0.85);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --card-border-active: rgba(37, 99, 235, 0.45);
+      --card-bg: rgba(13, 20, 38, 0.75);
+      --card-border: rgba(255, 255, 255, 0.07);
+      --card-border-active: rgba(37, 99, 235, 0.5);
       --accent-main: #1E3A8A;
       --accent-bright: #2563EB;
       --accent-light: #60A5FA;
-      --accent-glow: rgba(37, 99, 235, 0.3);
+      --accent-glow: rgba(37, 99, 235, 0.25);
       --text-main: #F8FAFC;
       --text-sub: #94A3B8;
-      --text-muted: #475569;
+      --text-muted: #64748B;
       --success: #10B981;
       --success-bg: rgba(16, 185, 129, 0.1);
     }
@@ -67,20 +67,21 @@
       display: flex;
       flex-direction: column;
       position: relative;
-      padding-bottom: 90px;
+      padding-bottom: 100px;
     }
 
     header {
-      padding: 16px 20px;
+      padding: 16px 22px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid var(--card-border);
-      backdrop-filter: blur(16px);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       position: sticky;
       top: 0;
       z-index: 50;
-      background: rgba(7, 9, 14, 0.92);
+      background: rgba(7, 9, 14, 0.85);
     }
 
     .brand-group {
@@ -90,39 +91,39 @@
     }
 
     .brand-logo-img {
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
       object-fit: cover;
-      box-shadow: 0 0 15px var(--accent-glow);
+      box-shadow: 0 4px 20px var(--accent-glow);
+      border: 1px solid rgba(255,255,255,0.1);
     }
 
     .brand-text h1 {
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       font-weight: 800;
       letter-spacing: -0.02em;
       color: var(--text-main);
-      display: flex;
-      align-items: center;
-      gap: 6px;
     }
 
     .driver-info {
       font-size: 0.72rem;
       color: var(--text-sub);
+      font-weight: 500;
     }
 
     .network-badge {
       font-size: 0.7rem;
-      padding: 4px 10px;
+      padding: 5px 12px;
       border-radius: 20px;
       background: var(--success-bg);
       color: var(--success);
-      border: 1px solid rgba(16, 185, 129, 0.2);
+      border: 1px solid rgba(16, 185, 129, 0.25);
       display: flex;
       align-items: center;
       gap: 6px;
-      font-weight: 600;
+      font-weight: 700;
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.15);
     }
 
     .status-dot {
@@ -134,39 +135,35 @@
     }
 
     main {
-      padding: 16px 20px;
+      padding: 24px 22px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 22px; /* Perfekter High-End Abstand zwischen den Elementen */
     }
 
     .section-title-container {
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      margin-top: 4px;
-      margin-bottom: 6px;
+      gap: 6px;
     }
 
     .section-title {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
       color: var(--text-muted);
       font-weight: 700;
     }
 
-    /* MONUMENTALER BEGRÜSSUNGS-TEXT */
+    /* MONUMENTALER, LUXURIÖSER WILLKOMMENS-GRUSS */
     .section-subtitle-clean {
-      font-size: 2.3rem;
+      font-size: 2.5rem;
       font-weight: 900;
       color: var(--text-main);
-      letter-spacing: -0.03em;
-      line-height: 1.1;
-      min-height: 110px;
-      display: flex;
-      align-items: center;
-      background: linear-gradient(180deg, #FFFFFF 30%, #94A3B8 100%);
+      letter-spacing: -0.035em;
+      line-height: 1.05;
+      padding-bottom: 4px;
+      background: linear-gradient(180deg, #FFFFFF 20%, #94A3B8 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -178,10 +175,11 @@
     .panel-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border-active);
-      border-radius: 24px;
-      padding: 20px;
-      backdrop-filter: blur(16px);
-      box-shadow: 0 0 30px rgba(37, 99, 235, 0.15);
+      border-radius: 26px;
+      padding: 22px;
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(37, 99, 235, 0.12);
       position: relative;
       overflow: hidden;
     }
@@ -189,13 +187,13 @@
     .panel-card::before {
       content: '';
       position: absolute;
-      top: -50px;
-      right: -50px;
-      width: 120px;
-      height: 120px;
+      top: -60px;
+      right: -60px;
+      width: 140px;
+      height: 140px;
       background: var(--accent-bright);
-      opacity: 0.15;
-      filter: blur(40px);
+      opacity: 0.12;
+      filter: blur(50px);
       border-radius: 50%;
     }
 
@@ -211,53 +209,53 @@
     .import-action-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 12px;
+      gap: 12px;
+      margin-top: 16px;
     }
 
     .btn-import-option {
-      background: rgba(255, 255, 255, 0.03);
+      background: rgba(255, 255, 255, 0.035);
       border: 1px solid var(--card-border);
-      border-radius: 14px;
-      padding: 16px 10px;
+      border-radius: 16px;
+      padding: 18px 12px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       color: var(--text-main);
-      font-size: 0.75rem;
-      font-weight: 600;
+      font-size: 0.78rem;
+      font-weight: 700;
       cursor: pointer;
       text-align: center;
-      transition: all 0.2s ease;
+      transition: all 0.2s cubic-bezier(0.15, 0.85, 0.35, 1.2);
     }
 
     .btn-import-option:active {
-      transform: scale(0.97);
-      background: rgba(37, 99, 235, 0.08);
+      transform: scale(0.96);
+      background: rgba(37, 99, 235, 0.1);
       border-color: var(--card-border-active);
     }
 
     .btn-import-option svg {
-      width: 22px;
-      height: 22px;
-      fill: var(--text-sub);
+      width: 24px;
+      height: 24px;
+      fill: var(--accent-light);
     }
 
     .ai-progress-card {
       display: none;
       background: rgba(37, 99, 235, 0.08);
-      border: 1px solid rgba(37, 99, 235, 0.25);
-      border-radius: 14px;
-      padding: 14px;
-      margin-top: 12px;
+      border: 1px solid rgba(37, 99, 235, 0.3);
+      border-radius: 16px;
+      padding: 16px;
+      margin-top: 14px;
     }
 
     .ai-progress-header {
       display: flex;
       justify-content: space-between;
       font-size: 0.75rem;
-      font-weight: 600;
+      font-weight: 700;
       margin-bottom: 8px;
       color: #93C5FD;
     }
@@ -290,37 +288,37 @@
     }
 
     .current-stop-title {
-      font-size: 1.35rem;
+      font-size: 1.4rem;
       font-weight: 800;
       color: var(--text-main);
       line-height: 1.25;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
       letter-spacing: -0.01em;
     }
 
     .current-stop-address {
-      font-size: 0.88rem;
+      font-size: 0.9rem;
       color: var(--text-sub);
-      margin-bottom: 12px;
+      margin-bottom: 14px;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
     }
 
     .current-stop-address svg {
-      width: 15px;
-      height: 15px;
+      width: 16px;
+      height: 16px;
       fill: var(--accent-bright);
       flex-shrink: 0;
     }
 
     .current-stop-note {
       background: rgba(255, 255, 255, 0.03);
-      border-radius: 10px;
-      padding: 10px 12px;
-      font-size: 0.78rem;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 0.8rem;
       color: var(--text-sub);
-      margin-bottom: 16px;
+      margin-bottom: 18px;
       border-left: 3px solid var(--accent-bright);
     }
 
@@ -356,14 +354,14 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
-      margin-top: 10px;
+      margin-top: 12px;
     }
 
     .manager-stat-box {
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid var(--card-border);
-      border-radius: 14px;
-      padding: 12px;
+      border-radius: 16px;
+      padding: 14px;
       display: flex;
       flex-direction: column;
       gap: 4px;
@@ -373,11 +371,12 @@
       font-size: 0.7rem;
       color: var(--text-sub);
       text-transform: uppercase;
-      font-weight: 600;
+      font-weight: 700;
+      letter-spacing: 0.04em;
     }
 
     .manager-stat-box strong {
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       color: var(--text-main);
       font-weight: 800;
     }
@@ -385,7 +384,7 @@
     .sub-content {
       display: none;
       flex-direction: column;
-      gap: 14px;
+      gap: 16px;
     }
 
     .sub-content.active {
@@ -395,9 +394,10 @@
     .accordion-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 20px;
-      padding: 16px;
-      backdrop-filter: blur(12px);
+      border-radius: 22px;
+      padding: 18px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
     }
 
     .accordion-header {
@@ -411,14 +411,14 @@
     .accordion-header-left {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
 
     .accordion-toggle-icon {
       width: 20px;
       height: 20px;
       fill: var(--text-sub);
-      transition: transform 0.3s ease;
+      transition: transform 0.3s cubic-bezier(0.15, 0.85, 0.35, 1.2);
     }
 
     .accordion-card.open .accordion-toggle-icon {
@@ -427,7 +427,7 @@
 
     .accordion-body {
       display: none;
-      margin-top: 14px;
+      margin-top: 16px;
     }
 
     .accordion-card.open .accordion-body {
@@ -436,10 +436,10 @@
 
     .address-frame {
       border: 1px solid var(--card-border);
-      background: rgba(3, 5, 8, 0.6);
+      background: rgba(3, 5, 8, 0.7);
       border-radius: 16px;
-      padding: 12px;
-      min-height: 120px;
+      padding: 14px;
+      min-height: 130px;
       max-height: 320px;
       overflow-y: auto;
       display: flex;
@@ -449,31 +449,31 @@
 
     .empty-frame-notice {
       margin: auto;
-      font-size: 0.75rem;
+      font-size: 0.78rem;
       color: var(--text-muted);
       text-align: center;
-      line-height: 1.5;
+      line-height: 1.6;
     }
 
     .frame-stop-item {
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 12px 14px;
+      border-radius: 14px;
+      padding: 14px;
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
     }
 
     .frame-stop-info h5 {
-      font-size: 0.85rem;
+      font-size: 0.88rem;
       font-weight: 700;
       color: var(--text-main);
-      margin-bottom: 2px;
+      margin-bottom: 3px;
     }
 
     .frame-stop-info p {
-      font-size: 0.75rem;
+      font-size: 0.78rem;
       color: var(--text-sub);
     }
 
@@ -481,14 +481,32 @@
       background: none;
       border: none;
       cursor: pointer;
-      padding: 2px;
+      padding: 4px;
       opacity: 0.6;
     }
 
     .btn-delete-stop svg {
-      width: 14px;
-      height: 14px;
+      width: 15px;
+      height: 15px;
       fill: var(--text-muted);
+    }
+
+    .btn-action-primary {
+      width: 100%;
+      background: linear-gradient(135deg, var(--accent-main), var(--accent-bright));
+      border: none;
+      color: #FFF;
+      padding: 16px;
+      border-radius: 18px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 6px 25px var(--accent-glow);
+      transition: transform 0.15s ease;
+    }
+
+    .btn-action-primary:active {
+      transform: scale(0.97);
     }
 
     .btn-nav-giant {
@@ -505,7 +523,7 @@
       justify-content: center;
       gap: 12px;
       cursor: pointer;
-      box-shadow: 0 8px 30px rgba(30, 58, 138, 0.4);
+      box-shadow: 0 10px 35px rgba(30, 58, 138, 0.45);
       text-decoration: none;
       transition: transform 0.15s ease;
     }
@@ -525,16 +543,16 @@
       background: linear-gradient(135deg, #F8FAFC, #E2E8F0);
       color: #0F172A;
       border: none;
-      padding: 16px;
-      border-radius: 16px;
-      font-size: 0.95rem;
+      padding: 18px;
+      border-radius: 18px;
+      font-size: 1rem;
       font-weight: 800;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 10px;
       cursor: pointer;
-      box-shadow: 0 4px 20px rgba(255, 255, 255, 0.15);
+      box-shadow: 0 6px 25px rgba(255, 255, 255, 0.18);
       transition: transform 0.15s ease;
     }
 
@@ -543,50 +561,50 @@
     }
 
     .btn-next-stop-bright svg {
-      width: 16px;
-      height: 16px;
+      width: 18px;
+      height: 18px;
       fill: #0F172A;
     }
 
     .btn-prev-small {
       width: 100%;
-      background: rgba(255, 255, 255, 0.03);
+      background: rgba(255, 255, 255, 0.035);
       border: 1px solid var(--card-border);
       color: var(--text-sub);
-      padding: 10px;
-      border-radius: 12px;
-      font-size: 0.75rem;
-      font-weight: 600;
+      padding: 12px;
+      border-radius: 14px;
+      font-size: 0.78rem;
+      font-weight: 700;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 8px;
       cursor: pointer;
     }
 
     .btn-prev-small svg {
-      width: 13px;
-      height: 13px;
+      width: 14px;
+      height: 14px;
       fill: var(--text-sub);
     }
 
     .nav-provider-switch {
       display: flex;
-      background: rgba(255, 255, 255, 0.03);
-      border-radius: 12px;
-      padding: 3px;
+      background: rgba(255, 255, 255, 0.035);
+      border-radius: 14px;
+      padding: 4px;
       border: 1px solid var(--card-border);
       margin-top: 4px;
     }
 
     .provider-btn {
       flex: 1;
-      padding: 8px;
+      padding: 10px;
       text-align: center;
-      font-size: 0.7rem;
+      font-size: 0.72rem;
       font-weight: 700;
       color: var(--text-sub);
-      border-radius: 9px;
+      border-radius: 11px;
       cursor: pointer;
       transition: all 0.2s ease;
     }
@@ -595,27 +613,29 @@
       background: var(--card-bg);
       color: var(--text-main);
       border: 1px solid var(--card-border-active);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     }
 
     .manager-list {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
     }
 
     .manager-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 18px;
-      padding: 16px;
+      border-radius: 20px;
+      padding: 18px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
+      backdrop-filter: blur(15px);
     }
 
     .manager-card.active {
       border-color: var(--card-border-active);
+      box-shadow: 0 0 25px rgba(37, 99, 235, 0.15);
     }
 
     .manager-header {
@@ -625,24 +645,24 @@
     }
 
     .manager-title h4 {
-      font-size: 0.95rem;
+      font-size: 0.98rem;
       font-weight: 700;
       color: var(--text-main);
     }
 
     .manager-title p {
-      font-size: 0.75rem;
+      font-size: 0.78rem;
       color: var(--text-sub);
-      margin-top: 2px;
+      margin-top: 3px;
     }
 
     .manager-note-input {
-      background: rgba(0, 0, 0, 0.4);
+      background: rgba(0, 0, 0, 0.5);
       border: 1px solid var(--card-border);
-      border-radius: 10px;
-      padding: 10px 12px;
+      border-radius: 12px;
+      padding: 12px 14px;
       color: var(--text-main);
-      font-size: 0.75rem;
+      font-size: 0.78rem;
       width: 100%;
       outline: none;
     }
@@ -654,12 +674,13 @@
       transform: translateX(-50%);
       width: 100%;
       max-width: 480px;
-      background: rgba(7, 9, 14, 0.95);
-      backdrop-filter: blur(20px);
+      background: rgba(7, 9, 14, 0.92);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
       border-top: 1px solid var(--card-border);
       display: flex;
       justify-content: space-around;
-      padding: 8px 0 12px;
+      padding: 10px 0 16px;
       z-index: 90;
     }
 
@@ -667,10 +688,10 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
       color: var(--text-muted);
-      font-size: 0.65rem;
-      font-weight: 600;
+      font-size: 0.68rem;
+      font-weight: 700;
       cursor: pointer;
       width: 33%;
       position: relative;
@@ -678,8 +699,8 @@
     }
 
     .nav-item svg {
-      width: 20px;
-      height: 20px;
+      width: 22px;
+      height: 22px;
       fill: var(--text-muted);
       transition: fill 0.2s ease;
     }
@@ -695,12 +716,12 @@
     .nav-item.active::before {
       content: '';
       position: absolute;
-      top: -9px;
-      width: 24px;
-      height: 2px;
+      top: -11px;
+      width: 28px;
+      height: 2.5px;
       background: var(--accent-bright);
-      border-radius: 2px;
-      box-shadow: 0 0 10px var(--accent-bright);
+      border-radius: 3px;
+      box-shadow: 0 0 12px var(--accent-bright);
     }
 
     /* MODAL UND 3-BUTTON ERFASSUNG */
@@ -708,7 +729,8 @@
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(20px);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
       z-index: 100;
       display: flex;
       align-items: flex-end;
@@ -728,15 +750,15 @@
       max-width: 480px;
       background: #0B0E17;
       border-top: 1px solid rgba(37, 99, 235, 0.4);
-      border-radius: 28px 28px 0 0;
-      padding: 16px 20px 24px;
+      border-radius: 32px 32px 0 0;
+      padding: 18px 22px 28px;
       height: 92vh;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       transform: translateY(100%);
       transition: transform 0.35s cubic-bezier(0.15, 0.85, 0.35, 1.2);
-      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.9);
+      box-shadow: 0 -15px 50px rgba(0, 0, 0, 0.95);
     }
 
     .modal-overlay.active .modal-sheet {
@@ -744,11 +766,11 @@
     }
 
     .sheet-handle {
-      width: 36px;
+      width: 40px;
       height: 4px;
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.25);
       border-radius: 2px;
-      margin: 0 auto 12px;
+      margin: 0 auto 14px;
       flex-shrink: 0;
     }
 
@@ -756,31 +778,31 @@
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: 12px;
-      padding-bottom: 10px;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
       border-bottom: 1px solid var(--card-border);
       flex-shrink: 0;
     }
 
     .modal-title-box h3 {
-      font-size: 1.05rem;
+      font-size: 1.1rem;
       font-weight: 800;
       color: var(--text-main);
     }
 
     .modal-title-box p {
-      font-size: 0.72rem;
+      font-size: 0.75rem;
       color: var(--accent-bright);
-      font-weight: 600;
-      margin-top: 2px;
+      font-weight: 700;
+      margin-top: 3px;
     }
 
     .close-btn {
       background: rgba(255, 255, 255, 0.08);
       border: none;
       color: var(--text-sub);
-      width: 30px;
-      height: 30px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       cursor: pointer;
       display: flex;
@@ -790,8 +812,8 @@
     }
 
     .close-btn svg {
-      width: 14px;
-      height: 14px;
+      width: 15px;
+      height: 15px;
       fill: var(--text-sub);
     }
 
@@ -800,23 +822,23 @@
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 16px;
       padding-right: 2px;
     }
 
     .input-group {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
     }
 
     .input-field {
-      background: rgba(0, 0, 0, 0.4);
+      background: rgba(0, 0, 0, 0.5);
       border: 1px solid var(--card-border);
-      border-radius: 14px;
-      padding: 12px 14px;
+      border-radius: 16px;
+      padding: 14px 16px;
       color: var(--text-main);
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       outline: none;
     }
 
@@ -824,37 +846,23 @@
       border-color: var(--accent-bright);
     }
 
-    .btn-action-primary {
-      width: 100%;
-      background: linear-gradient(135deg, var(--accent-main), var(--accent-bright));
-      border: none;
-      color: #FFF;
-      padding: 14px;
-      border-radius: 14px;
-      font-size: 0.9rem;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 4px 20px var(--accent-glow);
-    }
-
-    /* 3 ACTION BUTTONS GEBÜNDELT */
     .proof-actions-trio {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
-      gap: 8px;
+      gap: 10px;
     }
 
     .btn-proof-trio {
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid var(--card-border);
-      border-radius: 14px;
-      padding: 12px 6px;
+      border-radius: 16px;
+      padding: 14px 8px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       color: var(--text-main);
-      font-size: 0.72rem;
+      font-size: 0.75rem;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -863,28 +871,27 @@
     .btn-proof-trio:active {
       transform: scale(0.95);
       border-color: var(--accent-bright);
-      background: rgba(37, 99, 235, 0.1);
+      background: rgba(37, 99, 235, 0.12);
     }
 
     .btn-proof-trio svg {
-      width: 20px;
-      height: 20px;
+      width: 22px;
+      height: 22px;
       fill: var(--accent-bright);
     }
 
-    /* ERFASSTE MEDIEN GALLERY GRID */
     .captured-items-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
+      gap: 10px;
     }
 
     .captured-item-thumb {
       position: relative;
-      height: 90px;
+      height: 100px;
       background: rgba(0, 0, 0, 0.6);
       border: 1px solid var(--card-border-active);
-      border-radius: 12px;
+      border-radius: 14px;
       overflow: hidden;
     }
 
@@ -896,40 +903,40 @@
 
     .thumb-type-tag {
       position: absolute;
-      top: 4px;
-      left: 4px;
-      background: rgba(7, 9, 14, 0.85);
+      top: 6px;
+      left: 6px;
+      background: rgba(7, 9, 14, 0.88);
       color: #93C5FD;
-      font-size: 0.55rem;
+      font-size: 0.6rem;
       font-weight: 800;
-      padding: 2px 5px;
-      border-radius: 4px;
+      padding: 3px 6px;
+      border-radius: 5px;
       text-transform: uppercase;
     }
 
     .thumb-delete-btn {
       position: absolute;
-      top: 4px;
-      right: 4px;
-      background: rgba(239, 68, 68, 0.85);
+      top: 6px;
+      right: 6px;
+      background: rgba(239, 68, 68, 0.9);
       border: none;
       color: #FFF;
-      width: 18px;
-      height: 18px;
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.65rem;
+      font-size: 0.7rem;
       cursor: pointer;
     }
 
     .thumb-stamp-info {
       position: absolute;
       bottom: 0; left: 0; right: 0;
-      background: rgba(0, 0, 0, 0.75);
-      padding: 2px 4px;
-      font-size: 0.55rem;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 3px 6px;
+      font-size: 0.58rem;
       color: var(--text-sub);
       font-family: monospace;
       white-space: nowrap;
@@ -937,15 +944,14 @@
       text-overflow: ellipsis;
     }
 
-    /* SIGNATUR-BOX */
     .signature-container {
       display: none;
       flex-direction: column;
-      gap: 6px;
-      background: rgba(255, 255, 255, 0.02);
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.025);
       border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 12px;
+      border-radius: 18px;
+      padding: 14px;
     }
 
     .signature-container.active {
@@ -959,7 +965,7 @@
     }
 
     .signature-label {
-      font-size: 0.75rem;
+      font-size: 0.78rem;
       color: var(--text-sub);
       font-weight: 700;
       text-transform: uppercase;
@@ -970,17 +976,17 @@
       background: none;
       border: none;
       color: var(--accent-bright);
-      font-size: 0.7rem;
-      font-weight: 600;
+      font-size: 0.72rem;
+      font-weight: 700;
       cursor: pointer;
     }
 
     .signature-pad {
       width: 100%;
-      height: 110px;
+      height: 120px;
       background: rgba(0, 0, 0, 0.5);
       border: 1px solid var(--card-border);
-      border-radius: 12px;
+      border-radius: 14px;
       touch-action: none;
     }
 
@@ -989,14 +995,14 @@
       background: linear-gradient(135deg, var(--accent-main), var(--accent-bright));
       border: none;
       color: #FFF;
-      padding: 15px;
-      border-radius: 16px;
-      font-size: 0.95rem;
+      padding: 16px;
+      border-radius: 18px;
+      font-size: 1rem;
       font-weight: 800;
       cursor: pointer;
-      box-shadow: 0 4px 25px var(--accent-glow);
+      box-shadow: 0 6px 30px var(--accent-glow);
       flex-shrink: 0;
-      margin-top: 6px;
+      margin-top: 8px;
     }
 
     .btn-submit:active {
@@ -1014,7 +1020,6 @@
   <div class="app-viewport">
     <header>
       <div class="brand-group">
-        <!-- VINDOX LOGO -->
         <img src="4570730E-A0A2-4546-B316-B15BE9DD5EE4.png" alt="Vindox Logo" class="brand-logo-img">
         <div class="brand-text">
           <h1>Vindox</h1>
@@ -1027,9 +1032,9 @@
     </header>
 
     <main>
-      <div class="section-title-container" id="sectionTitleContainer">
+      <div class="section-title-container">
         <div class="section-title" id="sectionTitleText">TOUR ERSTELLEN & IMPORTIEREN</div>
-        <div class="section-subtitle-clean" id="sectionSubtitleText">Guten Morgen</div>
+        <div class="section-subtitle-clean" id="sectionSubtitleText">Guten Tag</div>
       </div>
 
       <!-- HERO PANEL -->
@@ -1037,8 +1042,8 @@
         <div class="panel-card">
           <!-- Hero Content 1 -->
           <div class="hero-content active" id="heroTab1">
-            <div style="font-size: 0.88rem; font-weight: 700;">Screenshot-Adressliste einlesen</div>
-            <div style="font-size: 0.75rem; color: var(--text-sub); margin-top: 3px;">Lade deinen Screenshot hoch. Die OCR liest alle Zeilen fehlerfrei aus.</div>
+            <div style="font-size: 0.92rem; font-weight: 700;">Screenshot-Adressliste einlesen</div>
+            <div style="font-size: 0.78rem; color: var(--text-sub); margin-top: 4px; line-height: 1.4;">Lade deinen Screenshot hoch. Die OCR liest alle Zeilen fehlerfrei aus.</div>
             
             <div class="import-action-grid">
               <button class="btn-import-option" onclick="openScreenshotUploader()">
@@ -1089,8 +1094,8 @@
 
           <!-- Hero Content 3 -->
           <div class="hero-content" id="heroTab3">
-            <div style="font-size: 0.88rem; font-weight: 700;">Touren-Manager Übersicht</div>
-            <div style="font-size: 0.75rem; color: var(--text-sub); margin-top: 3px;">Verwalte Stopps und füge individuelle Fahrer-Notizen hinzu.</div>
+            <div style="font-size: 0.92rem; font-weight: 700;">Touren-Manager Übersicht</div>
+            <div style="font-size: 0.78rem; color: var(--text-sub); margin-top: 4px;">Verwalte Stopps und füge individuelle Fahrer-Notizen hinzu.</div>
             
             <div class="manager-hero-stats">
               <div class="manager-stat-box">
@@ -1111,8 +1116,8 @@
         <div class="accordion-card" id="addressAccordion">
           <div class="accordion-header" onclick="toggleAccordion()">
             <div class="accordion-header-left">
-              <span style="font-size: 0.85rem; font-weight: 700;">Erfasste Zieladressen</span>
-              <span id="stopCountBadge" style="font-size: 0.7rem; color: var(--accent-bright); font-weight: 700;">(0 Stopps)</span>
+              <span style="font-size: 0.9rem; font-weight: 700;">Erfasste Zieladressen</span>
+              <span id="stopCountBadge" style="font-size: 0.75rem; color: var(--accent-bright); font-weight: 700;">(0 Stopps)</span>
             </div>
             <svg class="accordion-toggle-icon" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
           </div>
@@ -1126,7 +1131,7 @@
           </div>
         </div>
 
-        <button class="btn-action-primary" style="margin-top: 4px;" onclick="startTourFromTab1()">
+        <button class="btn-action-primary" style="margin-top: 6px;" onclick="startTourFromTab1()">
           Tour freigeben & ins Cockpit wechseln
         </button>
       </div>
@@ -1193,7 +1198,7 @@
         <input type="text" id="manualTitleInput" class="input-field" placeholder="Kunden- / Unternehmensname">
         <input type="text" id="manualAddressInput" class="input-field" placeholder="Vollständige Adresse (Straße, PLZ, Ort)">
         <input type="text" id="manualNoteInput" class="input-field" placeholder="Hinweis / Notiz für den Fahrer (Optional)">
-        <button class="btn-action-primary" style="margin-top: 6px;" onclick="addManualStop()">Stopp Speichern</button>
+        <button class="btn-action-primary" style="margin-top: 8px;" onclick="addManualStop()">Stopp Speichern</button>
       </div>
     </div>
   </div>
@@ -1215,15 +1220,15 @@
       <div class="modal-body-scroll">
         <!-- DIE 3 ERFASSUNGS-BUTTONS -->
         <div class="proof-actions-trio">
-          <button class="btn-proof-trio" onclick="triggerHaptic(); document.getElementById('cameraPhotoInput').click()">
+          <button class="btn-proof-trio" onclick="document.getElementById('cameraPhotoInput').click()">
             <svg viewBox="0 0 24 24"><path d="M4 4h3l2-2h6l2 2h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2m8 3a5 5 0 0 0-5 5a5 5 0 0 0 5 5a5 5 0 0 0 5-5a5 5 0 0 0-5-5z"/></svg>
             Foto
           </button>
-          <button class="btn-proof-trio" onclick="triggerHaptic(); document.getElementById('cameraVideoInput').click()">
+          <button class="btn-proof-trio" onclick="document.getElementById('cameraVideoInput').click()">
             <svg viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg>
             Video
           </button>
-          <button class="btn-proof-trio" onclick="triggerHaptic(); toggleSignatureArea()">
+          <button class="btn-proof-trio" onclick="toggleSignatureArea()">
             <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
             Unterschrift
           </button>
@@ -1236,7 +1241,7 @@
         <div class="signature-container" id="signatureBox">
           <div class="signature-header">
             <span class="signature-label">Kundenunterschrift</span>
-            <button class="btn-clear-sig" onclick="triggerHaptic(); clearSignature()">Zurücksetzen</button>
+            <button class="btn-clear-sig" onclick="clearSignature()">Zurücksetzen</button>
           </div>
           <canvas class="signature-pad" id="sigCanvas"></canvas>
         </div>
@@ -1256,14 +1261,13 @@
 
     let currentStopProofItems = [];
 
-    // HAPTISCHES FEEDBACK HELFER
-    function triggerHaptic(ms = 25) {
+    // GLOBALER HAPTIC FEEDBACK GUARANTEE (LÖST BEI JEDEM KLICK AUS)
+    document.addEventListener('click', () => {
       if (navigator.vibrate) {
-        navigator.vibrate(ms);
+        navigator.vibrate(22);
       }
-    }
+    }, { passive: true });
 
-    // DYNAMISCHE BEGRÜSSUNG NACH UHRZEIT
     function getTimeBasedGreeting() {
       const hour = new Date().getHours();
       if (hour >= 5 && hour < 12) {
@@ -1276,20 +1280,17 @@
     }
 
     function toggleAccordion() {
-      triggerHaptic();
       const accordion = document.getElementById('addressAccordion');
       accordion.classList.toggle('open');
     }
 
     function setMapProvider(provider) {
-      triggerHaptic();
       selectedMapProvider = provider;
       document.getElementById('btnMapGoogle').className = `provider-btn ${provider === 'google' ? 'active' : ''}`;
       document.getElementById('btnMapApple').className = `provider-btn ${provider === 'apple' ? 'active' : ''}`;
     }
 
     function launchDirectNavigation() {
-      triggerHaptic(40);
       if (tourData.length === 0) {
         alert("Keine aktive Tour oder Stopps vorhanden!");
         return;
@@ -1326,17 +1327,14 @@
     }
 
     function openScreenshotUploader() {
-      triggerHaptic();
       document.getElementById('screenshotInput').click();
     }
 
     function openManualModal() {
-      triggerHaptic();
       document.getElementById('manualModal').classList.add('active');
     }
 
     function closeManualModal() {
-      triggerHaptic();
       document.getElementById('manualModal').classList.remove('active');
     }
 
@@ -1411,7 +1409,6 @@
     }
 
     function addManualStop() {
-      triggerHaptic();
       const title = document.getElementById('manualTitleInput').value;
       const address = document.getElementById('manualAddressInput').value;
       const note = document.getElementById('manualNoteInput').value;
@@ -1437,7 +1434,6 @@
     }
 
     function deleteStop(id) {
-      triggerHaptic();
       const idx = tourData.findIndex(s => s.id === id);
       if (idx !== -1) {
         tourData.splice(idx, 1);
@@ -1477,7 +1473,6 @@
     }
 
     function startTourFromTab1() {
-      triggerHaptic();
       if (tourData.length === 0) {
         alert("Bitte füge zuerst mindestens eine Zieladresse hinzu!");
         return;
@@ -1486,7 +1481,6 @@
     }
 
     function switchNavTab(tabNum) {
-      triggerHaptic();
       const subtitles = [
         getTimeBasedGreeting(),
         "Cockpit & Navigation",
@@ -1553,7 +1547,7 @@
       document.getElementById('mCompletedStops').innerText = completedCount;
 
       if (tourData.length === 0) {
-        container.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: 20px;">Die Tourenliste ist aktuell leer.</div>`;
+        container.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.82rem; margin-top: 25px;">Die Tourenliste ist aktuell leer.</div>`;
         return;
       }
 
@@ -1563,7 +1557,7 @@
         
         let proofBadgesHtml = '';
         if (stop.proofs && stop.proofs.length > 0) {
-          proofBadgesHtml = `<div style="font-size:0.7rem; color: var(--accent-bright); margin-top:4px;">Erfasste Nachweise: ${stop.proofs.length} Medien/Signaturen</div>`;
+          proofBadgesHtml = `<div style="font-size:0.72rem; color: var(--accent-bright); margin-top:4px; font-weight:600;">Erfasste Nachweise: ${stop.proofs.length} Medien/Signaturen</div>`;
         }
 
         card.innerHTML = `
@@ -1573,7 +1567,7 @@
               <p>${stop.address}</p>
               ${proofBadgesHtml}
             </div>
-            <span style="font-size: 0.7rem; font-weight:700; color: ${stop.status === 'completed' ? 'var(--success)' : (stop.status === 'active' ? 'var(--accent-bright)' : 'var(--text-sub)')}">
+            <span style="font-size: 0.72rem; font-weight:700; color: ${stop.status === 'completed' ? 'var(--success)' : (stop.status === 'active' ? 'var(--accent-bright)' : 'var(--text-sub)')}">
               ${stop.status === 'completed' ? 'Erledigt' : (stop.status === 'active' ? 'Aktiv' : 'Ausstehend')}
             </span>
           </div>
@@ -1591,9 +1585,7 @@
       }
     }
 
-    /* MODAL UND 3-BUTTON HANDLER */
     function openProofModalForCurrent() {
-      triggerHaptic();
       if (tourData.length === 0) {
         alert("Bitte zuerst eine Tour starten!");
         return;
@@ -1621,7 +1613,6 @@
     }
 
     function closeProofModal() {
-      triggerHaptic();
       document.getElementById('proofModal').classList.remove('active');
     }
 
@@ -1672,7 +1663,6 @@
     }
 
     function removeCapturedItem(id) {
-      triggerHaptic();
       currentStopProofItems = currentStopProofItems.filter(item => item.id !== id);
       renderCapturedGrid();
     }
@@ -1761,13 +1751,11 @@
         tourData[activeIdx + 1].status = 'active';
       }
 
-      triggerHaptic(80);
       closeProofModal();
       updateCockpitUI();
     }
 
     function prevStop() {
-      triggerHaptic();
       const completedList = tourData.map((s, i) => s.status === 'completed' ? i : -1).filter(i => i !== -1);
       if (completedList.length > 0) {
         const lastCompletedIdx = completedList[completedList.length - 1];
@@ -1779,7 +1767,7 @@
       }
     }
 
-    // INITIALISIERUNG DER AUTOMATISCHEN BEGRÜSSUNG
+    // INITIALISIERUNG
     document.getElementById('sectionSubtitleText').innerText = getTimeBasedGreeting();
     renderAddressFrame();
 
