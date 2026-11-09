@@ -38,12 +38,10 @@
       padding: 0;
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       -webkit-tap-highlight-color: transparent;
-      /* FIX: Komplettes App-Verbot für unkontrolliertes Markieren / Blinken bei Doppeltipp */
       -webkit-user-select: none;
       user-select: none;
     }
 
-    /* AUSNAHME: In echten Eingabefeldern und auf dem Unterschriften-Canvas muss Interaktion erlaubt sein */
     input, textarea, canvas {
       -webkit-user-select: text;
       user-select: text;
@@ -152,13 +150,13 @@
     .section-title-container {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 2px;
     }
 
     .section-title {
-      font-size: 0.7rem;
+      font-size: 0.72rem;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.08em;
       color: var(--text-muted);
       font-weight: 700;
     }
@@ -169,9 +167,6 @@
       color: var(--text-main);
       letter-spacing: -0.035em;
       line-height: 1.05;
-      background: linear-gradient(180deg, #FFFFFF 20%, #94A3B8 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
     }
 
     .hero-panel-container {
@@ -1003,8 +998,8 @@
 
     <main>
       <div class="section-title-container">
-        <div class="section-title" id="sectionTitleText">TOUR ERSTELLEN & IMPORTIEREN</div>
-        <div class="section-subtitle-clean" id="sectionSubtitleText">Guten Tag</div>
+        <div class="section-title" id="sectionTitleText">Fahrt & Nachweis</div>
+        <div class="section-subtitle-clean" id="sectionSubtitleText">Cockpit</div>
       </div>
 
       <!-- HERO PANEL -->
@@ -1256,7 +1251,7 @@
     let sigCanvas, sigCtx;
     let currentStopProofItems = [];
 
-    // DEIN GEILER, EXTREM CLEANER & SATISFYING HIGH-END FEEDBACK SOUND (GLASS TAP)
+    // ULTRA-DEZENTER, EXTREM CLEANER & SEXY MICRO-TAP SOUND
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     function playClickSound() {
       if (audioCtx.state === 'suspended') {
@@ -1264,33 +1259,21 @@
       }
       const now = audioCtx.currentTime;
 
-      const osc1 = audioCtx.createOscillator();
-      const gain1 = audioCtx.createGain();
-      osc1.type = 'sine';
-      osc1.frequency.setValueAtTime(1200, now);
-      osc1.frequency.exponentialRampToValueAtTime(300, now + 0.04);
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
       
-      gain1.gain.setValueAtTime(0.08, now);
-      gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+      osc.type = 'sine';
+      // Extrem sanfter, kurzer Ton im niedrigen Bereich für ein warmes "Plop/Tap"
+      osc.frequency.setValueAtTime(450, now);
+      osc.frequency.exponentialRampToValueAtTime(180, now + 0.025);
       
-      osc1.connect(gain1);
-      gain1.connect(audioCtx.destination);
-      osc1.start(now);
-      osc1.stop(now + 0.04);
-
-      const osc2 = audioCtx.createOscillator();
-      const gain2 = audioCtx.createGain();
-      osc2.type = 'triangle';
-      osc2.frequency.setValueAtTime(600, now);
-      osc2.frequency.exponentialRampToValueAtTime(150, now + 0.06);
-
-      gain2.gain.setValueAtTime(0.05, now);
-      gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
-
-      osc2.connect(gain2);
-      gain2.connect(audioCtx.destination);
-      osc2.start(now);
-      osc2.stop(now + 0.06);
+      gain.gain.setValueAtTime(0.025, now); // Sehr leise und subtil
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.025);
+      
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now);
+      osc.stop(now + 0.025);
     }
 
     // TRIGGER FÜR AKUSTISCHES & HAPTISCHES FEEDBACK BEI INTERAKTION
@@ -1299,16 +1282,15 @@
       if (target) {
         playClickSound();
         if (navigator.vibrate) {
-          navigator.vibrate(12);
+          navigator.vibrate(10);
         }
       }
     }, { passive: true });
 
-    function getTimeBasedGreeting() {
-      const hour = new Date().getHours();
-      if (hour >= 5 && hour < 12) return "Guten Morgen";
-      if (hour >= 12 && hour < 18) return "Guten Tag";
-      return "Guten Abend";
+    function getSubtitles(tabNum) {
+      if (tabNum === 1) return { top: "Tour Erstellen", main: "Importieren" };
+      if (tabNum === 2) return { top: "Fahrt & Nachweis", main: "Cockpit" };
+      return { top: "Touren-Verwaltung", main: "Manager" };
     }
 
     function toggleAccordion() {
@@ -1547,19 +1529,10 @@
     }
 
     function switchNavTab(tabNum) {
-      const subtitles = [
-        getTimeBasedGreeting(),
-        "Cockpit & Navigation",
-        "Touren-Manager"
-      ];
-      const categories = [
-        "TOUR ERSTELLEN & IMPORTIEREN",
-        "FAHRT & NACHWEIS (COCKPIT)",
-        "TOUR-VERWALTUNG & NOTIZEN"
-      ];
+      const sub = getSubtitles(tabNum);
       
-      document.getElementById('sectionTitleText').innerText = categories[tabNum - 1];
-      document.getElementById('sectionSubtitleText').innerText = subtitles[tabNum - 1];
+      document.getElementById('sectionTitleText').innerText = sub.top;
+      document.getElementById('sectionSubtitleText').innerText = sub.main;
 
       document.querySelectorAll('.hero-content').forEach(h => h.classList.remove('active'));
       document.getElementById(`heroTab${tabNum}`).classList.add('active');
@@ -1799,7 +1772,9 @@
     }
 
     // INITIALISIERUNG
-    document.getElementById('sectionSubtitleText').innerText = getTimeBasedGreeting();
+    const initialSub = getSubtitles(1);
+    document.getElementById('sectionTitleText').innerText = initialSub.top;
+    document.getElementById('sectionSubtitleText').innerText = initialSub.main;
     renderAddressFrame();
 
     if ('serviceWorker' in navigator) {
