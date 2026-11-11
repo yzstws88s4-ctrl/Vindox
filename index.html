@@ -711,8 +711,9 @@
       backdrop-filter: blur(25px);
       z-index: 100;
       display: flex;
-      align-items: flex-end;
+      align-items: center; /* HIER GEÄNDERT: Von flex-end auf center für ideale Daumen-Mitte */
       justify-content: center;
+      padding: 16px; /* Abstand zu den Displayrändern */
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.3s ease;
@@ -727,28 +728,24 @@
       width: 100%;
       max-width: 480px;
       background: #0B0E17;
-      border-top: 1px solid rgba(37, 99, 235, 0.4);
-      border-radius: 32px 32px 0 0;
+      border: 1px solid rgba(37, 99, 235, 0.4); /* Rundherum schicker Border für den Floating-Look */
+      border-radius: 28px; /* Oben und unten komplett abgerundet als schwebende Karte */
       padding: 18px 22px 28px;
-      max-height: 90vh;
+      max-height: 85vh;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transform: translateY(100%);
+      transform: translateY(20px) scale(0.95); /* Sanfter Pop-Effekt von der Mitte */
       transition: transform 0.35s cubic-bezier(0.15, 0.85, 0.35, 1.2);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(37, 99, 235, 0.2);
     }
 
     .modal-overlay.active .modal-sheet {
-      transform: translateY(0);
+      transform: translateY(0) scale(1);
     }
 
     .sheet-handle {
-      width: 40px;
-      height: 4px;
-      background: rgba(255, 255, 255, 0.25);
-      border-radius: 2px;
-      margin: 0 auto 14px;
-      flex-shrink: 0;
+      display: none; /* Handle wird bei der zentrierten Floating-Card nicht mehr benötigt */
     }
 
     .modal-header {
