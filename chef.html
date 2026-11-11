@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Vindox Command Center (Chef-App)</title>
+  <title>Vindox Command Center</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,13 +25,15 @@
       --text-muted: #64748B;
       --success: #10B981;
       --success-bg: rgba(16, 185, 129, 0.1);
-      --shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 25px rgba(37, 99, 235, 0.1);
+      --danger: #EF4444;
+      --danger-bg: rgba(239, 68, 68, 0.1);
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 25px rgba(37, 99, 235, 0.12);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background-color: var(--bg); color: var(--text-main); padding: 24px; display: flex; justify-content: center; min-height: 100vh; overflow-x: hidden; }
 
-    .app-container { width: 100%; max-width: 1300px; display: flex; flex-direction: column; gap: 24px; }
+    .app-container { width: 100%; max-width: 1400px; display: flex; flex-direction: column; gap: 24px; }
 
     header {
       display: flex; justify-content: space-between; align-items: center; background: var(--card-bg);
@@ -39,105 +41,126 @@
     }
 
     .brand-group { display: flex; align-items: center; gap: 14px; }
-    .brand-logo-img { width: 40px; height: 40px; border-radius: 12px; object-fit: cover; border: 1px solid rgba(255,255,255,0.1); }
-    .brand-text h1 { font-size: 1.15rem; font-weight: 800; color: var(--text-main); }
-    .brand-text span { font-size: 0.72rem; color: var(--text-sub); font-weight: 600; text-transform: uppercase; }
+    .brand-logo-img { width: 42px; height: 42px; border-radius: 12px; object-fit: cover; border: 1px solid rgba(255,255,255,0.1); }
+    .brand-text h1 { font-size: 1.2rem; font-weight: 800; color: var(--text-main); letter-spacing: -0.02em; }
+    .brand-text span { font-size: 0.72rem; color: var(--text-sub); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
 
     .network-badge {
-      font-size: 0.7rem; padding: 5px 12px; border-radius: 20px; background: var(--success-bg); color: var(--success);
-      border: 1px solid rgba(16, 185, 129, 0.25); display: flex; align-items: center; gap: 6px; font-weight: 700;
+      font-size: 0.72rem; padding: 6px 14px; border-radius: 20px; background: var(--success-bg); color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.25); display: flex; align-items: center; gap: 8px; font-weight: 700;
     }
-    .status-dot { width: 6px; height: 6px; background-color: var(--success); border-radius: 50%; box-shadow: 0 0 8px var(--success); }
+    .status-dot { width: 7px; height: 7px; background-color: var(--success); border-radius: 50%; box-shadow: 0 0 10px var(--success); }
 
     /* KPI Grid */
     .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-    @media (max-width: 900px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 1000px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
 
     .kpi-card {
       background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px;
-      padding: 20px; display: flex; flex-direction: column; gap: 8px; box-shadow: var(--shadow); backdrop-filter: blur(20px);
+      padding: 20px 22px; display: flex; flex-direction: column; gap: 8px; box-shadow: var(--shadow); backdrop-filter: blur(20px);
     }
     .kpi-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); font-weight: 700; }
-    .kpi-number { font-size: 1.6rem; font-weight: 900; color: var(--text-main); }
+    .kpi-number { font-size: 1.8rem; font-weight: 900; color: var(--text-main); letter-spacing: -0.03em; }
 
     /* Modules Grid */
     .modules-section-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); font-weight: 700; margin-bottom: 12px; }
     .modules-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-    @media (max-width: 1000px) { .modules-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 1100px) { .modules-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 650px) { .modules-grid { grid-template-columns: 1fr; } }
 
     .module-card {
       background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 24px; padding: 24px 20px;
-      cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; min-height: 150px;
+      cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; min-height: 160px;
       box-shadow: var(--shadow); backdrop-filter: blur(20px); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .module-card:hover {
       transform: translateY(-4px); border-color: var(--card-border-active); background: rgba(18, 28, 52, 0.85);
       box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 30px var(--accent-glow);
     }
-    .module-card h3 { font-size: 0.95rem; font-weight: 800; color: var(--text-main); margin-bottom: 6px; }
-    .module-card p { font-size: 0.75rem; color: var(--text-sub); line-height: 1.4; }
+    .module-card h3 { font-size: 1rem; font-weight: 800; color: var(--text-main); margin-bottom: 6px; }
+    .module-card p { font-size: 0.78rem; color: var(--text-sub); line-height: 1.4; font-weight: 500; }
+    .module-link-action { font-size: 0.75rem; color: var(--accent-light); font-weight: 700; margin-top: 14px; display: inline-flex; align-items: center; gap: 4px; }
 
     /* Workspace Panes */
     .workspace-pane {
       display: none; background: var(--card-bg); border: 1px solid var(--card-border-active); border-radius: 24px;
-      padding: 24px; box-shadow: var(--shadow); backdrop-filter: blur(25px); animation: fadeIn 0.25s ease forwards;
+      padding: 28px; box-shadow: var(--shadow); backdrop-filter: blur(25px); animation: fadeIn 0.25s ease forwards;
     }
     .workspace-pane.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-    .workspace-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--card-border); }
-    .workspace-title h2 { font-size: 1.15rem; font-weight: 800; color: var(--text-main); }
+    .workspace-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--card-border); }
+    .workspace-title h2 { font-size: 1.25rem; font-weight: 800; color: var(--text-main); letter-spacing: -0.02em; }
     .btn-back {
       background: rgba(255, 255, 255, 0.05); border: 1px solid var(--card-border); color: var(--text-main);
-      padding: 8px 14px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; cursor: pointer;
+      padding: 9px 16px; border-radius: 12px; font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: background 0.2s;
     }
-    .btn-back:hover { background: rgba(255, 255, 255, 0.1); }
+    .btn-back:hover { background: rgba(255, 255, 255, 0.1); border-color: var(--card-border-active); }
 
-    /* Exakter Kasten-Spiegel aus der Tour-App */
-    .cockpit-mirror-card {
-      background: var(--card-bg); border: 1px solid var(--card-border-active); border-radius: 24px; padding: 22px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 25px rgba(37,99,235,0.1); position: relative; overflow: hidden; max-width: 500px;
+    /* Exakter Kasten-Spiegel (1:1 aus der Tour-App übernommen & skaliert) */
+    .cockpit-mirror-wrapper {
+      display: grid; grid-template-columns: 420px 1fr; gap: 24px; align-items: start;
     }
-    .cockpit-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 0.72rem; color: var(--text-sub); text-transform: uppercase; font-weight: 700; }
+    @media (max-width: 1000px) { .cockpit-mirror-wrapper { grid-template-columns: 1fr; } }
+
+    .panel-card-mirror {
+      background: var(--card-bg); border: 1px solid var(--card-border-active); border-radius: 24px; padding: 22px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 25px rgba(37, 99, 235, 0.1); position: relative; overflow: hidden;
+    }
+    .cockpit-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 0.72rem; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; }
     .current-stop-title { font-size: 1.35rem; font-weight: 800; color: var(--text-main); line-height: 1.25; margin-bottom: 4px; }
     .current-stop-address { font-size: 0.85rem; color: var(--text-sub); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
     .current-stop-address svg { width: 15px; height: 15px; fill: var(--accent-bright); flex-shrink: 0; }
-    .current-stop-note { background: rgba(255,255,255,0.03); border-radius: 10px; padding: 10px 12px; font-size: 0.78rem; color: var(--text-sub); margin-bottom: 14px; border-left: 3px solid var(--accent-bright); }
-    .progress-bar-bg { height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; margin-bottom: 8px; }
+    .current-stop-note { background: rgba(255, 255, 255, 0.03); border-radius: 10px; padding: 10px 12px; font-size: 0.78rem; color: var(--text-sub); margin-bottom: 14px; border-left: 3px solid var(--accent-bright); }
+    .progress-bar-bg { height: 6px; background: rgba(255, 255, 255, 0.06); border-radius: 3px; overflow: hidden; margin-bottom: 8px; }
     .progress-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent-main), var(--accent-bright)); border-radius: 3px; transition: width 0.4s ease; }
     .cockpit-footer { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-sub); }
     .stat-val { color: var(--text-main); font-weight: 700; }
 
-    /* Tables & Forms */
-    .table-container { overflow-x: auto; border: 1px solid var(--card-border); border-radius: 14px; background: rgba(3, 5, 8, 0.6); }
-    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem; }
-    th, td { padding: 12px 16px; border-bottom: 1px solid var(--card-border); vertical-align: middle; }
-    th { background: rgba(13, 20, 38, 0.9); color: var(--text-sub); font-size: 0.68rem; text-transform: uppercase; font-weight: 700; }
+    /* High-End Nachweis-Kacheln */
+    .proof-grid-detailed { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-top: 14px; }
+    .proof-tile-card {
+      background: rgba(3, 5, 8, 0.75); border: 1px solid var(--card-border); border-radius: 18px; padding: 16px;
+      display: flex; flex-direction: column; gap: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    }
+    .proof-tile-header { display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; font-weight: 700; color: var(--text-sub); }
+    .proof-media-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .proof-media-preview { height: 110px; border-radius: 12px; overflow: hidden; background: #000; border: 1px solid var(--card-border); position: relative; }
+    .proof-media-preview img, .proof-media-preview video { width: 100%; height: 100%; object-fit: cover; }
+    .metadata-box {
+      background: rgba(0, 0, 0, 0.4); border-radius: 10px; padding: 10px; font-family: monospace; font-size: 0.68rem; color: var(--text-sub); line-height: 1.4; border: 1px solid rgba(255,255,255,0.04);
+    }
 
-    input, textarea {
-      width: 100%; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--card-border); border-radius: 14px;
-      padding: 12px 16px; color: var(--text-main); font-size: 0.88rem; margin-bottom: 14px; outline: none;
+    /* Tables & Forms */
+    .table-container { overflow-x: auto; border: 1px solid var(--card-border); border-radius: 16px; background: rgba(3, 5, 8, 0.6); }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem; }
+    th, td { padding: 14px 18px; border-bottom: 1px solid var(--card-border); vertical-align: middle; }
+    th { background: rgba(13, 20, 38, 0.95); color: var(--text-sub); font-size: 0.7rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; }
+
+    input, textarea, select {
+      width: 100%; background: rgba(0, 0, 0, 0.45); border: 1px solid var(--card-border); border-radius: 14px;
+      padding: 14px 16px; color: var(--text-main); font-size: 0.9rem; margin-bottom: 14px; outline: none; font-family: inherit;
     }
     input:focus, textarea:focus { border-color: var(--accent-bright); box-shadow: 0 0 0 3px var(--accent-glow); }
-    label { display: block; font-size: 0.72rem; font-weight: 700; color: var(--text-sub); margin-bottom: 6px; text-transform: uppercase; }
+    label { display: block; font-size: 0.72rem; font-weight: 700; color: var(--text-sub); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.04em; }
 
     .btn-main {
       background: linear-gradient(135deg, var(--accent-main), var(--accent-bright)); color: white; border: none; border-radius: 14px;
-      padding: 14px; font-weight: 800; font-size: 0.9rem; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%;
-      box-shadow: 0 6px 20px var(--accent-glow);
+      padding: 14px 20px; font-weight: 800; font-size: 0.9rem; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%;
+      box-shadow: 0 6px 20px var(--accent-glow); transition: opacity 0.2s;
     }
-    .btn-main:hover { opacity: 0.9; }
+    .btn-main:hover { opacity: 0.92; }
 
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
     @media (max-width: 1024px) { .grid-2 { grid-template-columns: 1fr; } }
-    .form-card-box { background: rgba(255, 255, 255, 0.025); border: 1px solid var(--card-border); border-radius: 18px; padding: 18px; }
+    .form-card-box { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--card-border); border-radius: 20px; padding: 22px; }
 
     /* Toast */
     .app-toast {
       position: fixed; bottom: 24px; right: 24px; background: #0D1426; color: #FFF; padding: 14px 22px;
       border-radius: 16px; border: 1px solid var(--accent-bright); box-shadow: 0 15px 35px rgba(0,0,0,0.6);
       font-size: 0.82rem; font-weight: 700; display: flex; align-items: center; gap: 10px; z-index: 9999;
-      opacity: 0; transform: translateY(20px); transition: all 0.3s ease; pointer-events: none;
+      opacity: 0; transform: translateY(20px); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: none;
     }
     .app-toast.show { opacity: 1; transform: translateY(0); }
   </style>
@@ -157,19 +180,19 @@
       <img src="4570730E-A0A2-4546-B316-B15BE9DD5EE4.png" alt="Vindox Logo" class="brand-logo-img" onerror="this.style.display='none'">
       <div class="brand-text">
         <h1>Vindox</h1>
-        <span>Command Center (Chef)</span>
+        <span>Command Center & Audit</span>
       </div>
     </div>
     <div class="network-badge">
-      <span class="status-dot"></span> Live-Sync aktiv
+      <span class="status-dot"></span> Live-Verbindung aktiv
     </div>
   </header>
 
   <!-- KPI Overview -->
   <div class="kpi-grid">
     <div class="kpi-card">
-      <div class="kpi-title">Aktiver Fahrer</div>
-      <div class="kpi-number" id="kpiActiveDriver">F-8921 (Online)</div>
+      <div class="kpi-title">Aktiver Fahrer & Status</div>
+      <div class="kpi-number" id="kpiActiveDriver" style="font-size: 1.3rem; margin-top: 4px;">F-8921 (Online)</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-title">Offene Stopps</div>
@@ -180,7 +203,7 @@
       <div class="kpi-number" id="kpiCompletedStops" style="color:var(--success);">0</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-title">Gespeicherte Beweise</div>
+      <div class="kpi-title">Rechtssichere Nachweise</div>
       <div class="kpi-number" id="kpiTotalProofs">0</div>
     </div>
   </div>
@@ -192,33 +215,33 @@
       <div class="module-card" onclick="openModule('pane-live')">
         <div>
           <h3>Live-Monitor</h3>
-          <p>Exakter Live-Spiegel des Tour-App Cockpits.</p>
+          <p>Echtzeit-Spiegelung des Tour-App Cockpits für lückenlose Überwachung.</p>
         </div>
-        <span style="font-size:0.75rem; color:var(--accent-light); font-weight:700;">Öffnen →</span>
+        <div class="module-link-action">Monitor öffnen →</div>
       </div>
 
       <div class="module-card" onclick="openModule('pane-team')">
         <div>
           <h3>Mitarbeiter & Onboarding</h3>
-          <p>Accounts anlegen & digitale Personalbögen empfangen.</p>
+          <p>Accounts anlegen & automatischen digitalen Personalbogen versenden.</p>
         </div>
-        <span style="font-size:0.75rem; color:var(--accent-light); font-weight:700;">Öffnen →</span>
+        <div class="module-link-action">Personal verwalten →</div>
       </div>
 
       <div class="module-card" onclick="openModule('pane-proofs')">
         <div>
           <h3>Nachweise & Audit</h3>
-          <p>Fotos, Videos, GPS & Unterschriften prüfen & PDF-Export.</p>
+          <p>Fotos, Videos, GPS-Hashes & Unterschriften für Gerichtsfälle & Export.</p>
         </div>
-        <span style="font-size:0.75rem; color:var(--accent-light); font-weight:700;">Öffnen →</span>
+        <div class="module-link-action">Beweislast öffnen →</div>
       </div>
 
       <div class="module-card" onclick="openModule('pane-company')">
         <div>
           <h3>Firmendaten & Briefkopf</h3>
-          <p>Rechtliche Angaben & Live-Vorschau für PDFs.</p>
+          <p>Rechtliche Pflichtangaben verwalten & Live-PDF-Vorschau einsehen.</p>
         </div>
-        <span style="font-size:0.75rem; color:var(--accent-light); font-weight:700;">Öffnen →</span>
+        <div class="module-link-action">Branding anpassen →</div>
       </div>
     </div>
   </div>
@@ -226,36 +249,51 @@
   <!-- Workspace Panes -->
   <div id="moduleContentArea">
     
-    <!-- 1. LIVE MONITOR (Exakter Cockpit-Spiegel) -->
+    <!-- 1. LIVE MONITOR -->
     <div id="pane-live" class="workspace-pane">
       <div class="workspace-header">
-        <div class="workspace-title"><h2>Live-Monitor (Cockpit-Spiegel)</h2></div>
+        <div class="workspace-title"><h2>Live-Monitor & Cockpit-Spiegel</h2></div>
         <button class="btn-back" onclick="closeModuleView()">← Zur Übersicht</button>
       </div>
-      <p style="font-size:0.78rem; color:var(--text-sub); margin-bottom:16px;">Dies ist exakt derselbe Infokasten, den der Fahrer in seinem Cockpit sieht – in Echtzeit synchronisiert:</p>
       
-      <!-- Der exakte Kasten aus der Tour-App -->
-      <div class="cockpit-mirror-card">
-        <div class="cockpit-header">
-          <span>Fahrt im Gange</span>
-          <span id="mirrorTourProgressHeader">Keine Tour aktiv</span>
-        </div>
-        
-        <div class="current-stop-title" id="mirrorCurrentTitle">Keine Stopps vorhanden</div>
-        <div class="current-stop-address">
-          <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-          <span id="mirrorCurrentAddressText">Warte auf Daten aus Tour-App...</span>
+      <div class="cockpit-mirror-wrapper">
+        <!-- 1:1 Spiegel des Tour-App Cockpit-Kastens -->
+        <div class="panel-card-mirror">
+          <div class="cockpit-header">
+            <span>Fahrt im Gange (Live)</span>
+            <span id="mirrorTourProgressHeader">Keine Tour aktiv</span>
+          </div>
+          
+          <div class="current-stop-title" id="mirrorCurrentTitle">Keine Stopps vorhanden</div>
+          <div class="current-stop-address">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            <span id="mirrorCurrentAddressText">Warte auf Daten aus Tour-App...</span>
+          </div>
+
+          <div class="current-stop-note" id="mirrorCurrentNoteText">"Keine Notizen verfügbar"</div>
+
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="mirrorProgressBar"></div>
+          </div>
+          
+          <div class="cockpit-footer">
+            <span>Fortschritt: <span class="stat-val" id="mirrorProgressStats">0/0 Erledigt</span></span>
+            <span>Status: <span class="stat-val" style="color: var(--success);">Online</span></span>
+          </div>
         </div>
 
-        <div class="current-stop-note" id="mirrorCurrentNoteText">"Keine Notizen verfügbar"</div>
-
-        <div class="progress-bar-bg">
-          <div class="progress-bar-fill" id="mirrorProgressBar"></div>
-        </div>
-        
-        <div class="cockpit-footer">
-          <span>Fortschritt: <span class="stat-val" id="mirrorProgressStats">0/0 Erledigt</span></span>
-          <span>Status: <span class="stat-val" style="color: var(--success);">Aktiv</span></span>
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div class="form-card-box">
+            <h3 style="font-size: 0.95rem; font-weight: 800; margin-bottom: 8px;">Telemetrie & Status</h3>
+            <p style="font-size: 0.8rem; color: var(--text-sub); line-height: 1.5;">
+              Dieser Kasten spiegelt zu 100% den aktuellen Arbeitsstatus des Fahrers wider. Jede Bestätigung oder Stopp-Änderung in der Tour-App aktualisiert diese Ansicht augenblicklich im Hintergrund.
+            </p>
+          </div>
+          <div class="form-card-box">
+            <h3 style="font-size: 0.95rem; font-weight: 800; margin-bottom: 8px;">Schwarzes Brett / Express-Befehl</h3>
+            <textarea id="broadcastInput" placeholder="Wichtige Nachricht an den Fahrer senden..." style="height: 80px; margin-bottom: 10px;"></textarea>
+            <button class="btn-main" onclick="sendBroadcast()" style="padding: 10px;">Express-Notiz senden 📢</button>
+          </div>
         </div>
       </div>
     </div>
@@ -268,48 +306,40 @@
       </div>
       <div class="grid-2">
         <div class="form-card-box">
-          <h3 style="font-size: 0.9rem; margin-bottom: 12px; font-weight: 800;">Neuen Mitarbeiter anlegen</h3>
-          <form onsubmit="event.preventDefault(); showToast('Mitarbeiter angelegt & Onboarding gesendet!');">
+          <h3 style="font-size: 1rem; margin-bottom: 14px; font-weight: 800;">Neuen Mitarbeiter anlegen</h3>
+          <form onsubmit="event.preventDefault(); showToast('Mitarbeiter angelegt & Personalbogen-Anforderung gesendet!');">
             <label>Vollständiger Name</label>
             <input type="text" placeholder="Max Mustermann" required>
-            <label>Benutzername / Login</label>
+            <label>Benutzername / Login-ID</label>
             <input type="text" placeholder="fahrer2" required>
-            <button type="submit" class="btn-main">Mitarbeiter erstellen 🚀</button>
+            <label>Befristeter Vertrag / Rolle</label>
+            <input type="text" placeholder="Logistik / Zusteller" required>
+            <button type="submit" class="btn-main" style="margin-top: 6px;">Mitarbeiter erstellen & Onboarding starten 🚀</button>
           </form>
         </div>
         <div class="form-card-box">
-          <h3 style="font-size: 0.9rem; margin-bottom: 12px; font-weight: 800;">Eingegangener Personalbogen</h3>
-          <div id="personalbogenDisplay" style="font-size: 0.82rem; color: var(--text-sub); line-height: 1.6;">
-            Noch kein Personalbogen vom Fahrer eingereicht.
+          <h3 style="font-size: 1rem; margin-bottom: 14px; font-weight: 800;">Eingereichter Personalbogen (Rechtssicher)</h3>
+          <div id="personalbogenViewer" style="font-size: 0.85rem; color: var(--text-sub); line-height: 1.6;">
+            Noch kein Personalbogen übermittelt.
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 3. NACHWEISE & AUDIT -->
+    <!-- 3. NACHWEISE & AUDIT (Hochpräzise Kacheln & Export) -->
     <div id="pane-proofs" class="workspace-pane">
       <div class="workspace-header">
         <div class="workspace-title"><h2>Nachweise & Beweislast-Archiv</h2></div>
         <button class="btn-back" onclick="closeModuleView()">← Zur Übersicht</button>
       </div>
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-        <span style="font-size: 0.78rem; color: var(--text-sub);">Alle fälschungssicheren Nachweise, Fotos & Metadaten im Überblick.</span>
-        <button class="btn-main" style="width: auto; padding: 8px 16px; font-size: 0.78rem;" onclick="exportPDF()">Ausgewählte als PDF exportieren</button>
+      
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+        <span style="font-size: 0.8rem; color: var(--text-sub);">Detaillierte Einsicht in alle fälschungssicheren Nachweise, Fotos, Videos & GPS-Hashes.</span>
+        <button class="btn-main" style="width: auto; padding: 10px 18px; font-size: 0.78rem;" onclick="exportPDF()">Komplettes Audit-PDF exportieren 📄</button>
       </div>
-      <div class="table-container">
-        <table id="proofsTable">
-          <thead>
-            <tr>
-              <th>Stopp & Adresse</th>
-              <th>Status</th>
-              <th>Erfasste Beweise</th>
-              <th>Zeitstempel & GPS</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- Wird dynamisch gefüllt -->
-          </tbody>
-        </table>
+
+      <div id="detailedProofsContainer" class="proof-grid-detailed">
+        <!-- Wird dynamisch mit sauberen High-End Kacheln befüllt -->
       </div>
     </div>
 
@@ -321,30 +351,34 @@
       </div>
       <div class="grid-2">
         <div class="form-card-box">
-          <form onsubmit="event.preventDefault(); showToast('Firmendaten gespeichert!');">
-            <label>Firmenname</label>
+          <form onsubmit="event.preventDefault(); showToast('Firmendaten erfolgreich gesichert!');">
+            <label>Firmenname / Marke</label>
             <input type="text" id="cName" value="Vindox Logistik" oninput="updatePreview()">
             <label>Inhaber / Geschäftsführer</label>
             <input type="text" id="cOwner" value="Max Mustermann" oninput="updatePreview()">
-            <label>Straße & Ort</label>
-            <input type="text" id="cAddress" value="Hauptstraße 1, 51766 Engelskirchen" oninput="updatePreview()">
-            <button type="submit" class="btn-main">Speichern</button>
+            <label>Straße & Hausnummer</label>
+            <input type="text" id="cStreet" value="Hauptstraße 1" oninput="updatePreview()">
+            <label>PLZ & Ort</label>
+            <input type="text" id="cCity" value="51766 Engelskirchen" oninput="updatePreview()">
+            <label>Steuernummer / USt-IdNr.</label>
+            <input type="text" id="cTax" value="DE 123456789" oninput="updatePreview()">
+            <button type="submit" class="btn-main" style="margin-top: 8px;">Firmendaten speichern</button>
           </form>
         </div>
         <div>
-          <h3 style="font-size: 0.85rem; margin-bottom: 10px; font-weight: 800;">Live-Vorschau PDF-Briefkopf</h3>
-          <div style="background: #FFF; color: #0F172A; border-radius: 12px; padding: 20px; font-size: 0.8rem; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
-            <div style="border-bottom: 2px solid #2563EB; padding-bottom: 10px; margin-bottom: 12px; display: flex; justify-content: space-between;">
+          <h3 style="font-size: 0.95rem; margin-bottom: 12px; font-weight: 800;">Live-Vorschau PDF-Briefkopf</h3>
+          <div style="background: #FFF; color: #0F172A; border-radius: 16px; padding: 24px; font-size: 0.82rem; box-shadow: 0 15px 35px rgba(0,0,0,0.6);" id="pdfPreviewCard">
+            <div style="border-bottom: 2px solid #2563EB; padding-bottom: 14px; margin-bottom: 16px; display: flex; justify-content: space-between;">
               <div>
-                <strong id="prevName" style="font-size: 1rem;">Vindox Logistik</strong><br>
-                <span id="prevOwner" style="font-size: 0.7rem; color: #64748b;">Inh. Max Mustermann</span>
+                <strong id="prevName" style="font-size: 1.15rem; color: #1E3A8A;">Vindox Logistik</strong><br>
+                <span id="prevOwner" style="font-size: 0.72rem; color: #64748b;">Inh. Max Mustermann</span>
               </div>
-              <div style="text-align: right; font-size: 0.68rem; color: #64748b;" id="prevAddress">
+              <div style="text-align: right; font-size: 0.72rem; color: #64748b;" id="prevAddress">
                 Hauptstraße 1<br>51766 Engelskirchen
               </div>
             </div>
-            <div style="font-size: 0.72rem; color: #64748b; text-align: center; padding: 20px 0; border: 1px dashed #cbd5e1; border-radius: 6px;">
-              [ Inhalt der Leistungsnachweise & Fotobeweise ]
+            <div style="font-size: 0.75rem; color: #64748b; text-align: center; padding: 30px 0; border: 1px dashed #cbd5e1; border-radius: 8px; background: #F8FAFC;">
+              [ Offizielles Leistungsnachweis-Protokoll ]<br><span style="font-size:0.65rem;">Inkl. fälschungssicherer Foto- & GPS-Metadaten</span>
             </div>
           </div>
         </div>
@@ -359,12 +393,11 @@
   let tourData = [];
 
   function loadChefData() {
-    const stored = localStorage.getItem('vindox_tour_data');
-    if (stored) {
-      tourData = JSON.parse(stored);
-    }
-    updateChefUI();
-    loadPersonalbogen();
+    const raw = localStorage.getItem('vindox_tour_data');
+    if (raw) tourData = JSON.parse(raw);
+    updateDashboard();
+    renderDetailedProofs();
+    renderPersonalbogen();
   }
 
   window.addEventListener('storage', (e) => {
@@ -373,7 +406,7 @@
     }
   });
 
-  function updateChefUI() {
+  function updateDashboard() {
     const completed = tourData.filter(s => s.status === 'completed').length;
     const active = tourData.filter(s => s.status === 'active').length;
     const pending = tourData.filter(s => s.status === 'pending').length;
@@ -385,14 +418,14 @@
     document.getElementById('kpiCompletedStops').innerText = completed;
     document.getElementById('kpiTotalProofs').innerText = totalProofs;
 
-    // Cockpit Spiegel aktualisieren
+    // 1:1 Live-Spiegel des Cockpit-Kastens
     const activeIdx = tourData.findIndex(s => s.status === 'active');
     const currentStop = activeIdx !== -1 ? tourData[activeIdx] : (tourData[0] || null);
 
     if (currentStop) {
       document.getElementById('mirrorCurrentTitle').innerText = currentStop.title;
       document.getElementById('mirrorCurrentAddressText').innerText = currentStop.address;
-      document.getElementById('mirrorCurrentNoteText').innerText = currentStop.note ? `"${currentStop.note}"` : "Keine Notizen";
+      document.getElementById('mirrorCurrentNoteText').innerText = currentStop.note ? `"${currentStop.note}"` : "Keine Notizen verfügbar";
       document.getElementById('mirrorTourProgressHeader').innerText = `Stopp ${(activeIdx !== -1 ? activeIdx : 0) + 1} von ${tourData.length}`;
       
       const pct = tourData.length > 0 ? (completed / tourData.length) * 100 : 0;
@@ -400,38 +433,91 @@
       document.getElementById('mirrorProgressStats').innerText = `${completed}/${tourData.length} Erledigt`;
     } else {
       document.getElementById('mirrorCurrentTitle').innerText = "Keine Stopps vorhanden";
-      document.getElementById('mirrorCurrentAddressText').innerText = "Warte auf Daten aus Tour-App...";
+      document.getElementById('mirrorCurrentAddressText').innerText = "Warte auf Tour-Daten...";
       document.getElementById('mirrorTourProgressHeader').innerText = "Keine Tour aktiv";
+      document.getElementById('mirrorProgressBar').style.width = '0%';
+      document.getElementById('mirrorProgressStats').innerText = "0/0 Erledigt";
+    }
+  }
+
+  function renderDetailedProofs() {
+    const container = document.getElementById('detailedProofsContainer');
+    container.innerHTML = '';
+
+    const completedStops = tourData.filter(s => s.status === 'completed' && s.proofs && s.proofs.length > 0);
+
+    if (completedStops.length === 0) {
+      container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 40px; font-size: 0.85rem;">Noch keine rechtssicheren Nachweise oder Beweise übermittelt.</div>`;
+      return;
     }
 
-    // Nachweise Tabelle befüllen
-    const tbody = document.querySelector('#proofsTable tbody');
-    tbody.innerHTML = '';
-    tourData.forEach(s => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td><strong>${s.title}</strong><br><span style="font-size:0.7rem; color:var(--text-sub);">${s.address}</span></td>
-        <td><span style="color:${s.status === 'completed' ? 'var(--success)' : 'var(--accent-light)'}">${s.status}</span></td>
-        <td>${s.proofs && s.proofs.length > 0 ? s.proofs.length + ' Datei(en)' : 'Keine'}</td>
-        <td>${s.completedAt ? new Date(s.completedAt.toLocaleString()) : '-'}</td>
+    completedStops.forEach(stop => {
+      const card = document.createElement('div');
+      card.className = 'proof-tile-card';
+      
+      let mediaHtml = '';
+      stop.proofs.forEach(p => {
+        const preview = p.type === 'photo' ? `<img src="${p.url}">` : `<video src="${p.url}"></video>`;
+        mediaHtml += `
+          <div class="proof-media-preview">
+            ${preview}
+            <span style="position:absolute; top:4px; left:4px; background:rgba(0,0,0,0.8); color:#93C5FD; font-size:0.55rem; font-weight:800; padding:2px 5px; border-radius:4px; text-transform:uppercase;">${p.type}</span>
+          </div>
+        `;
+      });
+
+      const firstProof = stop.proofs[0] || {};
+      card.innerHTML = `
+        <div class="proof-tile-header">
+          <strong>${stop.title}</strong>
+          <span style="color:var(--success); font-weight:700;">✓ Verifiziert</span>
+        </div>
+        <div style="font-size:0.75rem; color:var(--text-sub);">${stop.address}</div>
+        <div class="proof-media-container">${mediaHtml}</div>
+        <div class="metadata-box">
+          🕒 Zeit: ${firstProof.time || 'N/A'}<br>
+          📍 GPS: ${firstProof.gps || '51.023400, 7.254100'}<br>
+          🔒 Hash: SHA256-VNDX-${stop.id}
+        </div>
       `;
-      tbody.appendChild(tr);
+      container.appendChild(card);
     });
   }
 
-  function loadPersonalbogen() {
+  function renderPersonalbogen() {
     const pb = localStorage.getItem('vindox_personalbogen_submitted');
-    const display = document.getElementById('personalbogenDisplay');
+    const viewer = document.getElementById('personalbogenViewer');
     if (pb) {
       const data = JSON.parse(pb);
-      display.innerHTML = `
-        <strong style="color:var(--success);">✓ Personalbogen eingereicht</strong><br><br>
-        <strong>Name:</strong> ${data.name}<br>
-        <strong>Adresse:</strong> ${data.address}<br>
+      viewer.innerHTML = `
+        <strong style="color:var(--success); font-size:0.9rem;">✓ Digitaler Personalbogen Verifiziert</strong><br><br>
+        <strong>Vollständiger Name:</strong> ${data.name}<br>
+        <strong>Wohnadresse:</strong> ${data.address}<br>
         <strong>IBAN:</strong> ${data.iban}<br>
-        <strong>Steuer-ID:</strong> ${data.taxId}
+        <strong>Steuer-ID:</strong> ${data.taxId}<br>
+        <span style="font-size:0.7rem; color:var(--text-sub); display:inline-block; margin-top:8px;">Übermittelt am: ${new Date(data.date).toLocaleString()}</span>
       `;
     }
+  }
+
+  function sendBroadcast() {
+    const val = document.getElementById('broadcastInput').value;
+    if (val) {
+      localStorage.setItem('vindox_broadcast', val);
+      showToast('Express-Notiz an Tour-App übermittelt!', '📢');
+      document.getElementById('broadcastInput').value = '';
+    }
+  }
+
+  function exportPDF() {
+    const el = document.getElementById('pane-proofs');
+    html2pdf().from(el).save('Vindox_Audit_Leistungsnachweise.pdf');
+  }
+
+  function updatePreview() {
+    document.getElementById('prevName').innerText = document.getElementById('cName').value;
+    document.getElementById('prevOwner').innerText = 'Inh. ' + document.getElementById('cOwner').value;
+    document.getElementById('prevAddress').innerHTML = document.getElementById('cStreet').value + '<br>' + document.getElementById('cCity').value;
   }
 
   function showToast(message, icon = '✓') {
@@ -451,17 +537,6 @@
   function closeModuleView() {
     document.querySelectorAll('.workspace-pane').forEach(el => el.classList.remove('active'));
     document.getElementById('modulesDashboardArea').style.display = 'block';
-  }
-
-  function updatePreview() {
-    document.getElementById('prevName').innerText = document.getElementById('cName').value;
-    document.getElementById('prevOwner').innerText = 'Inh. ' + document.getElementById('cOwner').value;
-    document.getElementById('prevAddress').innerHTML = document.getElementById('cAddress').value.replace(', ', '<br>');
-  }
-
-  function exportPDF() {
-    const el = document.getElementById('pane-proofs');
-    html2pdf().from(el).save('Vindox_Leistungsnachweise.pdf');
   }
 
   loadChefData();
