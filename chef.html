@@ -3,12 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Vindox — Enterprise Command Center</title>
+  <title>Vindox — Enterprise Command Center v4.0</title>
 
   <link rel="apple-touch-icon" href="4570730E-A0A2-4546-B316-B15BE9DD5EE4.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Vindox Command">
   <meta name="theme-color" content="#07090E">
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -16,23 +15,18 @@
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
   <style>
-    /* ==========================================================================
-       1. DESIGN TOKENS & CORE VARIABLES (EXACT TOUR-APP DNA)
-       ========================================================================== */
     :root {
       --bg: #07090E;
       --bg-elevated: #0B0E17;
-      --card-bg: rgba(13, 20, 38, 0.72);
-      --card-bg-hover: rgba(18, 28, 52, 0.85);
+      --card-bg: rgba(13, 20, 38, 0.75);
       --card-solid: #0D1426;
-      --card-border: rgba(255, 255, 255, 0.07);
-      --card-border-subtle: rgba(255, 255, 255, 0.04);
-      --card-border-active: rgba(37, 99, 235, 0.55);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-border-active: rgba(37, 99, 235, 0.6);
 
       --accent-main: #1E3A8A;
       --accent-bright: #2563EB;
       --accent-light: #60A5FA;
-      --accent-glow: rgba(37, 99, 235, 0.35);
+      --accent-glow: rgba(37, 99, 235, 0.4);
       --accent-subtle: rgba(37, 99, 235, 0.12);
 
       --text-main: #F8FAFC;
@@ -51,1200 +45,252 @@
       --danger-bg: rgba(239, 68, 68, 0.12);
       --danger-border: rgba(239, 68, 68, 0.25);
 
-      --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      --font-mono: "SF Mono", "JetBrains Mono", "Fira Code", monospace;
+      --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+      --font-mono: "SF Mono", "JetBrains Mono", monospace;
 
-      --shadow-card: 0 12px 35px rgba(0, 0, 0, 0.55), 0 0 25px rgba(37, 99, 235, 0.06);
-      --shadow-modal: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 40px rgba(37, 99, 235, 0.2);
+      --shadow-card: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(37, 99, 235, 0.07);
+      --shadow-modal: 0 30px 70px rgba(0, 0, 0, 0.9), 0 0 50px rgba(37, 99, 235, 0.25);
 
       --radius-sm: 10px;
       --radius-md: 14px;
       --radius-lg: 20px;
-      --radius-xl: 24px;
+      --radius-xl: 26px;
     }
 
-    /* ==========================================================================
-       2. RESET & GLOBAL BASE STYLES
-       ========================================================================== */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: var(--font-sans);
-      -webkit-tap-highlight-color: transparent;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-sans); -webkit-tap-highlight-color: transparent; }
 
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: rgba(7, 9, 14, 0.4);
-    }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.12);
-      border-radius: 6px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: rgba(96, 165, 250, 0.4);
-    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(7, 9, 14, 0.5); }
+    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 6px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(96, 165, 250, 0.5); }
 
-    html, body {
-      height: 100%;
-      background-color: var(--bg);
-      color: var(--text-main);
-      overflow: hidden;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
+    html, body { height: 100%; background-color: var(--bg); color: var(--text-main); overflow: hidden; -webkit-font-smoothing: antialiased; }
 
-    /* Subtle Ambient Radial Lighting */
     body::before {
       content: "";
       position: fixed;
-      top: -15%;
-      left: 15%;
-      width: 55vw;
-      height: 55vw;
-      background: radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, rgba(7, 9, 14, 0) 70%);
+      top: -20%;
+      left: 10%;
+      width: 60vw;
+      height: 60vw;
+      background: radial-gradient(circle, rgba(37, 99, 235, 0.09) 0%, rgba(7, 9, 14, 0) 70%);
       pointer-events: none;
       z-index: 0;
     }
 
-    /* ==========================================================================
-       3. MASTER SHELL LAYOUT (SIDEBAR + WORKSPACE)
-       ========================================================================== */
-    .enterprise-shell {
-      position: relative;
-      z-index: 1;
-      display: grid;
-      grid-template-columns: 270px 1fr;
-      height: 100vh;
-      width: 100vw;
-    }
+    .enterprise-shell { position: relative; z-index: 1; display: grid; grid-template-columns: 280px 1fr; height: 100vh; width: 100vw; }
 
     @media (max-width: 1024px) {
-      .enterprise-shell {
-        grid-template-columns: 1fr;
-      }
-      .sidebar {
-        display: none;
-      }
+      .enterprise-shell { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
     }
 
     /* SIDEBAR */
     .sidebar {
-      background: rgba(11, 14, 23, 0.88);
+      background: rgba(11, 14, 23, 0.92);
       border-right: 1px solid var(--card-border);
       backdrop-filter: blur(25px);
-      -webkit-backdrop-filter: blur(25px);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 24px 18px;
-      user-select: none;
+      display: flex; flex-direction: column; justify-content: space-between;
+      padding: 24px 18px; user-select: none;
     }
 
-    .sidebar-brand {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 4px 8px 22px 8px;
-      border-bottom: 1px solid var(--card-border);
-    }
+    .sidebar-brand { display: flex; align-items: center; gap: 14px; padding: 4px 8px 24px 8px; border-bottom: 1px solid var(--card-border); }
+    .brand-logo-box { width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, var(--accent-main), var(--accent-bright)); box-shadow: 0 4px 20px var(--accent-glow); border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .brand-logo-box img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
+    .brand-meta h1 { font-size: 1.2rem; font-weight: 900; letter-spacing: -0.02em; color: var(--text-main); line-height: 1.1; }
+    .brand-meta span { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.09em; color: var(--accent-light); }
 
-    .brand-logo-box {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      overflow: hidden;
-      background: linear-gradient(135deg, var(--accent-main), var(--accent-bright));
-      box-shadow: 0 4px 20px var(--accent-glow);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .brand-logo-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .brand-meta h1 {
-      font-size: 1.15rem;
-      font-weight: 900;
-      letter-spacing: -0.02em;
-      color: var(--text-main);
-      line-height: 1.1;
-    }
-
-    .brand-meta span {
-      font-size: 0.68rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--accent-light);
-    }
-
-    .nav-section-label {
-      font-size: 0.65rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.09em;
-      color: var(--text-muted);
-      padding: 18px 12px 8px 12px;
-    }
-
-    .sidebar-nav {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
+    .nav-section-label { font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.09em; color: var(--text-muted); padding: 20px 12px 8px 12px; }
+    .sidebar-nav { display: flex; flex-direction: column; gap: 6px; }
 
     .nav-btn {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      padding: 12px 14px;
-      background: transparent;
-      border: 1px solid transparent;
-      border-radius: var(--radius-md);
-      color: var(--text-sub);
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.16s cubic-bezier(0.2, 0, 0, 1);
-      text-align: left;
+      display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 13px 15px;
+      background: transparent; border: 1px solid transparent; border-radius: var(--radius-md);
+      color: var(--text-sub); font-size: 0.86rem; font-weight: 600; cursor: pointer; transition: all 0.18s ease; text-align: left;
     }
+    .nav-btn-left { display: flex; align-items: center; gap: 12px; }
+    .nav-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; opacity: 0.8; }
+    .nav-btn:hover { background: rgba(255, 255, 255, 0.04); color: var(--text-main); }
+    .nav-btn.active { background: rgba(37, 99, 235, 0.16); border-color: rgba(37, 99, 235, 0.4); color: var(--text-main); font-weight: 700; box-shadow: 0 4px 18px rgba(37, 99, 235, 0.15); }
+    .nav-btn.active svg { stroke: var(--accent-light); opacity: 1; }
 
-    .nav-btn-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+    .nav-badge { background: rgba(255, 255, 255, 0.08); color: var(--text-sub); font-size: 0.7rem; font-weight: 800; padding: 2px 8px; border-radius: 20px; }
+    .nav-btn.active .nav-badge { background: var(--accent-bright); color: #FFF; }
 
-    .nav-btn svg {
-      width: 18px;
-      height: 18px;
-      stroke: currentColor;
-      fill: none;
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      opacity: 0.8;
-      transition: opacity 0.16s ease;
-    }
+    .sidebar-footer { border-top: 1px solid var(--card-border); padding-top: 16px; }
+    .system-health-card { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--card-border); border-radius: var(--radius-md); padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; }
+    .health-indicator { display: flex; align-items: center; gap: 8px; font-size: 0.76rem; font-weight: 700; color: var(--success); }
+    .pulse-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); box-shadow: 0 0 10px var(--success); animation: pulseGlow 2s infinite; }
+    @keyframes pulseGlow { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.85); } }
 
-    .nav-btn:hover {
-      background: rgba(255, 255, 255, 0.035);
-      color: var(--text-main);
-    }
-
-    .nav-btn.active {
-      background: rgba(37, 99, 235, 0.14);
-      border-color: rgba(37, 99, 235, 0.35);
-      color: var(--text-main);
-      font-weight: 700;
-      box-shadow: 0 4px 16px rgba(37, 99, 235, 0.12);
-    }
-
-    .nav-btn.active svg {
-      stroke: var(--accent-light);
-      opacity: 1;
-    }
-
-    .nav-badge {
-      background: rgba(255, 255, 255, 0.07);
-      color: var(--text-sub);
-      font-size: 0.68rem;
-      font-weight: 800;
-      padding: 2px 8px;
-      border-radius: 20px;
-    }
-
-    .nav-btn.active .nav-badge {
-      background: var(--accent-bright);
-      color: #FFF;
-    }
-
-    .sidebar-footer {
-      border-top: 1px solid var(--card-border);
-      padding-top: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .system-health-card {
-      background: rgba(255, 255, 255, 0.025);
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius-md);
-      padding: 12px 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .health-indicator {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.74rem;
-      font-weight: 700;
-      color: var(--success);
-    }
-
-    .pulse-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--success);
-      box-shadow: 0 0 10px var(--success);
-      animation: pulseGlow 2s infinite;
-    }
-
-    @keyframes pulseGlow {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(0.85); }
-    }
-
-    /* ==========================================================================
-       4. MAIN WORKSPACE & TOP BAR
-       ========================================================================== */
-    .workspace {
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      overflow: hidden;
-    }
+    /* WORKSPACE */
+    .workspace { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 
     .topbar {
-      height: 76px;
-      padding: 0 32px;
-      border-bottom: 1px solid var(--card-border);
-      background: rgba(7, 9, 14, 0.75);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-shrink: 0;
+      height: 78px; padding: 0 32px; border-bottom: 1px solid var(--card-border);
+      background: rgba(7, 9, 14, 0.8); backdrop-filter: blur(20px); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
     }
+    .topbar-left { display: flex; flex-direction: column; gap: 2px; }
+    .topbar-eyebrow { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); }
+    .topbar-title { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.03em; color: var(--text-main); }
+    .topbar-right { display: flex; align-items: center; gap: 14px; }
 
-    .topbar-left {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
+    .live-clock-pill { background: rgba(255, 255, 255, 0.035); border: 1px solid var(--card-border); border-radius: 20px; padding: 8px 16px; font-size: 0.76rem; font-weight: 600; color: var(--text-sub); font-variant-numeric: tabular-nums; }
+    .chef-profile-pill { display: flex; align-items: center; gap: 10px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 6px 14px 6px 8px; }
+    .chef-avatar { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-main), var(--accent-bright)); color: #FFF; font-size: 0.75rem; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+    .chef-name-text { font-size: 0.8rem; font-weight: 700; color: var(--text-main); }
 
-    .topbar-eyebrow {
-      font-size: 0.68rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-muted);
-    }
+    .btn-ghost-danger { background: var(--danger-bg); border: 1px solid var(--danger-border); color: var(--danger); padding: 8px 14px; border-radius: var(--radius-sm); font-size: 0.76rem; font-weight: 700; cursor: pointer; transition: all 0.15s ease; }
+    .btn-ghost-danger:hover { background: var(--danger); color: #FFF; }
 
-    .topbar-title {
-      font-size: 1.45rem;
-      font-weight: 900;
-      letter-spacing: -0.03em;
-      color: var(--text-main);
-    }
+    .canvas-scroll { flex: 1; overflow-y: auto; padding: 28px 32px 70px 32px; }
+    .view-section { display: none; flex-direction: column; gap: 24px; animation: fadeSlideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
+    .view-section.active { display: flex; }
+    @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    .topbar-right {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .live-clock-pill {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--card-border);
-      border-radius: 20px;
-      padding: 7px 14px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--text-sub);
-      font-variant-numeric: tabular-nums;
-    }
-
-    .chef-profile-pill {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 20px;
-      padding: 6px 14px 6px 8px;
-    }
-
-    .chef-avatar {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent-main), var(--accent-bright));
-      color: #FFF;
-      font-size: 0.72rem;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .chef-name-text {
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: var(--text-main);
-    }
-
-    .btn-ghost-danger {
-      background: var(--danger-bg);
-      border: 1px solid var(--danger-border);
-      color: var(--danger);
-      padding: 8px 14px;
-      border-radius: var(--radius-sm);
-      font-size: 0.75rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-
-    .btn-ghost-danger:hover {
-      background: var(--danger);
-      color: #FFF;
-    }
-
-    /* SCROLLABLE CONTENT CANVAS */
-    .canvas-scroll {
-      flex: 1;
-      overflow-y: auto;
-      padding: 28px 32px 60px 32px;
-    }
-
-    .view-section {
-      display: none;
-      flex-direction: column;
-      gap: 24px;
-      animation: fadeSlideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .view-section.active {
-      display: flex;
-    }
-
-    @keyframes fadeSlideIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ==========================================================================
-       5. KPI CARDS & METRIC STRIP
-       ========================================================================== */
-    .kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 18px;
-    }
-
-    @media (max-width: 1280px) {
-      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
-    }
+    /* KPI STRIP */
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+    @media (max-width: 1280px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
 
     .kpi-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius-lg);
-      padding: 20px 22px;
-      backdrop-filter: blur(25px);
-      box-shadow: var(--shadow-card);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 14px;
-      position: relative;
-      overflow: hidden;
-      transition: border-color 0.2s ease, transform 0.2s ease;
+      background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius-lg); padding: 20px 22px;
+      backdrop-filter: blur(25px); box-shadow: var(--shadow-card); display: flex; flex-direction: column; justify-content: space-between; gap: 14px; transition: all 0.2s ease;
     }
+    .kpi-card:hover { border-color: var(--card-border-active); transform: translateY(-2px); }
+    .kpi-top { display: flex; justify-content: space-between; align-items: center; }
+    .kpi-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-sub); }
+    .kpi-icon-wrap { width: 38px; height: 38px; border-radius: 11px; background: var(--accent-subtle); border: 1px solid rgba(37, 99, 235, 0.25); color: var(--accent-light); display: flex; align-items: center; justify-content: center; }
+    .kpi-icon-wrap svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; }
+    .kpi-bottom { display: flex; align-items: baseline; justify-content: space-between; }
+    .kpi-number { font-size: 2.2rem; font-weight: 900; letter-spacing: -0.03em; color: var(--text-main); line-height: 1; }
+    .kpi-trend { font-size: 0.74rem; font-weight: 700; padding: 3px 9px; border-radius: 12px; background: var(--success-bg); color: var(--success); }
 
-    .kpi-card:hover {
-      border-color: var(--card-border-active);
-      transform: translateY(-2px);
-    }
+    /* PANELS & GRIDS */
+    .grid-command-main { display: grid; grid-template-columns: 1.35fr 0.65fr; gap: 22px; }
+    .grid-2-equal { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+    .grid-planer { display: grid; grid-template-columns: 0.95fr 1.05fr; gap: 22px; }
+    @media (max-width: 1200px) { .grid-command-main, .grid-2-equal, .grid-planer { grid-template-columns: 1fr; } }
 
-    .kpi-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+    .panel-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius-xl); padding: 24px; backdrop-filter: blur(25px); box-shadow: var(--shadow-card); display: flex; flex-direction: column; gap: 18px; }
+    .panel-card.highlight-border { border-color: var(--card-border-active); }
+    .panel-head { display: flex; justify-content: space-between; align-items: center; padding-bottom: 14px; border-bottom: 1px solid var(--card-border); }
+    .panel-head-title { display: flex; align-items: center; gap: 10px; font-size: 0.88rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-main); }
+    .panel-head-title svg { width: 18px; height: 18px; stroke: var(--accent-light); fill: none; stroke-width: 2.2; }
 
-    .kpi-label {
-      font-size: 0.72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--text-sub);
-    }
+    /* BUTTONS & CONTROLS */
+    .btn-primary { background: linear-gradient(135deg, var(--accent-main), var(--accent-bright)); border: none; color: #FFF; padding: 14px 20px; border-radius: var(--radius-md); font-size: 0.88rem; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 6px 22px var(--accent-glow); transition: all 0.15s ease; }
+    .btn-primary:hover { filter: brightness(1.1); box-shadow: 0 8px 28px rgba(37, 99, 235, 0.5); }
+    .btn-primary:active { transform: scale(0.97); }
 
-    .kpi-icon-wrap {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      background: var(--accent-subtle);
-      border: 1px solid rgba(37, 99, 235, 0.25);
-      color: var(--accent-light);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    .btn-secondary { background: rgba(255, 255, 255, 0.045); border: 1px solid var(--card-border); color: var(--text-main); padding: 10px 16px; border-radius: var(--radius-sm); font-size: 0.78rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.15s ease; }
+    .btn-secondary:hover { background: rgba(255, 255, 255, 0.09); border-color: var(--card-border-active); }
 
-    .kpi-icon-wrap svg {
-      width: 18px;
-      height: 18px;
-      stroke: currentColor;
-      fill: none;
-      stroke-width: 2;
-    }
+    .btn-danger-sm { background: var(--danger-bg); border: 1px solid var(--danger-border); color: var(--danger); padding: 6px 12px; border-radius: 8px; font-size: 0.74rem; font-weight: 700; cursor: pointer; transition: all 0.15s ease; }
+    .btn-danger-sm:hover { background: var(--danger); color: #FFF; }
 
-    .kpi-bottom {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-    }
+    .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+    .form-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-sub); }
+    .input-control { width: 100%; background: rgba(3, 5, 8, 0.7); border: 1px solid var(--card-border); border-radius: var(--radius-md); padding: 12px 15px; color: var(--text-main); font-size: 0.86rem; outline: none; transition: border-color 0.2s ease; }
+    .input-control:focus { border-color: var(--accent-bright); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2); }
 
-    .kpi-number {
-      font-size: 2.1rem;
-      font-weight: 900;
-      letter-spacing: -0.03em;
-      color: var(--text-main);
-      line-height: 1;
-    }
+    /* LIVE DRIVER CARDS */
+    .live-driver-card { background: rgba(3, 5, 8, 0.6); border: 1px solid var(--card-border); border-radius: var(--radius-lg); padding: 18px 20px; transition: all 0.2s ease; }
+    .live-driver-card:hover { border-color: var(--card-border-active); background: rgba(13, 20, 38, 0.7); }
+    .live-driver-card.aborted { border-color: var(--danger-border); background: rgba(239, 68, 68, 0.05); }
 
-    .kpi-trend {
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 12px;
-      background: var(--success-bg);
-      color: var(--success);
-    }
+    .driver-card-top { display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+    .driver-identity { display: flex; align-items: center; gap: 14px; }
+    .driver-initials { width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, rgba(30, 58, 138, 0.5), rgba(37, 99, 235, 0.3)); border: 1px solid rgba(96, 165, 250, 0.4); color: var(--accent-light); font-size: 0.95rem; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+    .driver-name-block h4 { font-size: 1rem; font-weight: 800; color: var(--text-main); }
+    .driver-name-block span { font-size: 0.78rem; color: var(--text-sub); }
 
-    /* ==========================================================================
-       6. GLASS PANELS, GRIDS & BUTTONS
-       ========================================================================== */
-    .grid-command-main {
-      display: grid;
-      grid-template-columns: 1.35fr 0.65fr;
-      gap: 22px;
-    }
+    .status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; }
+    .status-pill.active { background: var(--success-bg); color: var(--success); border: 1px solid var(--success-border); }
+    .status-pill.pending { background: var(--warning-bg); color: var(--warning); border: 1px solid var(--warning-border); }
+    .status-pill.danger { background: var(--danger-bg); color: var(--danger); border: 1px solid var(--danger-border); }
 
-    .grid-2-equal {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 22px;
-    }
+    .progress-wrapper { margin: 16px 0 12px 0; }
+    .progress-track { height: 7px; background: rgba(255, 255, 255, 0.06); border-radius: 4px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent-main), var(--accent-bright), var(--accent-light)); border-radius: 4px; transition: width 0.45s ease; }
+    .progress-meta { display: flex; justify-content: space-between; font-size: 0.76rem; font-weight: 700; color: var(--text-sub); margin-top: 7px; }
 
-    .grid-planer {
-      display: grid;
-      grid-template-columns: 0.95fr 1.05fr;
-      gap: 22px;
-    }
+    .telemetry-nodes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+    .node-tile { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 10px 14px; }
+    .node-tile-label { font-size: 0.66rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 3px; }
+    .node-tile-val { font-size: 0.82rem; font-weight: 700; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-    @media (max-width: 1200px) {
-      .grid-command-main, .grid-2-equal, .grid-planer {
-        grid-template-columns: 1fr;
-      }
-    }
+    .accordion-drawer { display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--card-border); }
+    .accordion-drawer.open { display: block; }
 
-    .panel-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius-xl);
-      padding: 24px;
-      backdrop-filter: blur(25px);
-      -webkit-backdrop-filter: blur(25px);
-      box-shadow: var(--shadow-card);
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
-
-    .panel-card.highlight-border {
-      border-color: var(--card-border-active);
-    }
-
-    .panel-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 14px;
-      border-bottom: 1px solid var(--card-border);
-    }
-
-    .panel-head-title {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 0.85rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-main);
-    }
-
-    .panel-head-title svg {
-      width: 17px;
-      height: 17px;
-      stroke: var(--accent-light);
-      fill: none;
-      stroke-width: 2.2;
-    }
-
-    /* BUTTONS */
-    .btn-primary {
-      background: linear-gradient(135deg, var(--accent-main), var(--accent-bright));
-      border: none;
-      color: #FFF;
-      padding: 14px 20px;
-      border-radius: var(--radius-md);
-      font-size: 0.88rem;
-      font-weight: 800;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      box-shadow: 0 6px 22px var(--accent-glow);
-      transition: transform 0.12s ease, filter 0.15s ease, box-shadow 0.15s ease;
-    }
-
-    .btn-primary:hover {
-      filter: brightness(1.1);
-      box-shadow: 0 8px 28px rgba(37, 99, 235, 0.5);
-    }
-
-    .btn-primary:active {
-      transform: scale(0.97);
-    }
-
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--card-border);
-      color: var(--text-main);
-      padding: 10px 16px;
-      border-radius: var(--radius-sm);
-      font-size: 0.78rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: all 0.15s ease;
-    }
-
-    .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.08);
-      border-color: var(--card-border-active);
-    }
-
-    .btn-danger-sm {
-      background: var(--danger-bg);
-      border: 1px solid var(--danger-border);
-      color: var(--danger);
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-
-    .btn-danger-sm:hover {
-      background: var(--danger);
-      color: #FFF;
-    }
-
-    /* INPUTS & FORMS */
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      margin-bottom: 14px;
-    }
-
-    .form-label {
-      font-size: 0.7rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-sub);
-    }
-
-    .input-control {
-      width: 100%;
-      background: rgba(3, 5, 8, 0.65);
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius-md);
-      padding: 12px 15px;
-      color: var(--text-main);
-      font-size: 0.86rem;
-      outline: none;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .input-control:focus {
-      border-color: var(--accent-bright);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
-    }
-
-    /* ==========================================================================
-       7. LIVE DRIVER CARDS & TELEMETRY
-       ========================================================================== */
-    .live-driver-card {
-      background: rgba(3, 5, 8, 0.55);
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius-lg);
-      padding: 18px 20px;
-      transition: all 0.2s ease;
-    }
-
-    .live-driver-card:hover {
-      border-color: var(--card-border-active);
-      background: rgba(13, 20, 38, 0.65);
-    }
-
-    .live-driver-card.aborted {
-      border-color: var(--danger-border);
-      background: rgba(239, 68, 68, 0.04);
-    }
-
-    .driver-card-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-    }
-
-    .driver-identity {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .driver-initials {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, rgba(30, 58, 138, 0.4), rgba(37, 99, 235, 0.25));
-      border: 1px solid rgba(96, 165, 250, 0.35);
-      color: var(--accent-light);
-      font-size: 0.95rem;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .driver-name-block h4 {
-      font-size: 0.98rem;
-      font-weight: 800;
-      color: var(--text-main);
-    }
-
-    .driver-name-block span {
-      font-size: 0.76rem;
-      color: var(--text-sub);
-    }
-
-    .status-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 5px 12px;
-      border-radius: 20px;
-      font-size: 0.68rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .status-pill.active {
-      background: var(--success-bg);
-      color: var(--success);
-      border: 1px solid var(--success-border);
-    }
-
-    .status-pill.pending {
-      background: var(--warning-bg);
-      color: var(--warning);
-      border: 1px solid var(--warning-border);
-    }
-
-    .status-pill.danger {
-      background: var(--danger-bg);
-      color: var(--danger);
-      border: 1px solid var(--danger-border);
-    }
-
-    .progress-wrapper {
-      margin: 16px 0 12px 0;
-    }
-
-    .progress-track {
-      height: 7px;
-      background: rgba(255, 255, 255, 0.06);
-      border-radius: 4px;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--accent-main), var(--accent-bright), var(--accent-light));
-      border-radius: 4px;
-      transition: width 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .progress-meta {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.74rem;
-      font-weight: 700;
-      color: var(--text-sub);
-      margin-top: 7px;
-    }
-
-    .telemetry-nodes {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 12px;
-    }
-
-    .node-tile {
-      background: rgba(255, 255, 255, 0.025);
-      border: 1px solid var(--card-border-subtle);
-      border-radius: 12px;
-      padding: 10px 14px;
-    }
-
-    .node-tile-label {
-      font-size: 0.64rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 3px;
-    }
-
-    .node-tile-val {
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--text-main);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .accordion-drawer {
-      display: none;
-      margin-top: 16px;
-      padding-top: 16px;
-      border-top: 1px solid var(--card-border);
-    }
-
-    .accordion-drawer.open {
-      display: block;
-    }
-
-    /* ==========================================================================
-       8. ACTIVITY FEED (RIGHT COMMAND COLUMN)
-       ========================================================================== */
-    .activity-feed {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      max-height: 480px;
-      overflow-y: auto;
-    }
-
-    .feed-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      padding: 12px 14px;
-      background: rgba(3, 5, 8, 0.45);
-      border: 1px solid var(--card-border-subtle);
-      border-radius: 14px;
-    }
-
-    .feed-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--accent-bright);
-      margin-top: 5px;
-      flex-shrink: 0;
-      box-shadow: 0 0 8px var(--accent-bright);
-    }
-
+    /* ACTIVITY FEED */
+    .activity-feed { display: flex; flex-direction: column; gap: 12px; max-height: 500px; overflow-y: auto; }
+    .feed-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; background: rgba(3, 5, 8, 0.5); border: 1px solid rgba(255, 255, 255, 0.04); border-radius: 14px; }
+    .feed-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-bright); margin-top: 5px; flex-shrink: 0; box-shadow: 0 0 8px var(--accent-bright); }
     .feed-dot.success { background: var(--success); box-shadow: 0 0 8px var(--success); }
     .feed-dot.danger { background: var(--danger); box-shadow: 0 0 8px var(--danger); }
+    .feed-content { flex: 1; }
+    .feed-title { font-size: 0.84rem; font-weight: 700; color: var(--text-main); line-height: 1.3; }
+    .feed-time { font-size: 0.72rem; color: var(--text-muted); margin-top: 3px; font-family: var(--font-mono); }
 
-    .feed-content {
-      flex: 1;
-    }
+    /* OCR & BUILDER */
+    .ocr-dropzone { border: 1.5px dashed var(--card-border-active); background: rgba(37, 99, 235, 0.05); border-radius: var(--radius-lg); padding: 22px; text-align: center; }
+    .ocr-actions { display: flex; gap: 10px; justify-content: center; margin-top: 12px; }
 
-    .feed-title {
-      font-size: 0.82rem;
-      font-weight: 700;
-      color: var(--text-main);
-      line-height: 1.3;
-    }
+    .stop-builder-list { background: rgba(3, 5, 8, 0.7); border: 1px solid var(--card-border); border-radius: var(--radius-lg); padding: 14px; min-height: 240px; max-height: 380px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+    .builder-stop-row { display: flex; align-items: center; justify-content: space-between; background: rgba(255, 255, 255, 0.035); border: 1px solid var(--card-border); border-radius: 12px; padding: 10px 14px; gap: 12px; }
+    .builder-stop-num { width: 26px; height: 26px; border-radius: 7px; background: var(--accent-subtle); color: var(--accent-light); font-size: 0.75rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .builder-stop-text { flex: 1; font-size: 0.86rem; font-weight: 600; color: var(--text-main); }
+    .builder-stop-actions { display: flex; align-items: center; gap: 5px; }
+    .icon-mini-btn { width: 28px; height: 28px; border-radius: 7px; background: rgba(255, 255, 255, 0.06); border: 1px solid var(--card-border); color: var(--text-sub); font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .icon-mini-btn:hover { background: rgba(255, 255, 255, 0.15); color: var(--text-main); }
 
-    .feed-time {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      margin-top: 3px;
-      font-family: var(--font-mono);
-    }
+    /* TABLES */
+    .filter-toolbar { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap: 12px; align-items: center; }
+    @media (max-width: 1100px) { .filter-toolbar { grid-template-columns: 1fr 1fr; } }
 
-    /* ==========================================================================
-       9. TOUR PLANNER & INTERACTIVE STOP QUEUE
-       ========================================================================== */
-    .ocr-dropzone {
-      border: 1.5px dashed var(--card-border-active);
-      background: rgba(37, 99, 235, 0.04);
-      border-radius: var(--radius-lg);
-      padding: 20px;
-      text-align: center;
-      transition: all 0.2s ease;
-    }
+    .batch-bar { display: none; align-items: center; justify-content: space-between; background: rgba(37, 99, 235, 0.16); border: 1px solid var(--accent-bright); border-radius: var(--radius-md); padding: 12px 18px; }
+    .batch-bar.visible { display: flex; }
 
-    .ocr-dropzone:hover {
-      background: rgba(37, 99, 235, 0.08);
-      border-color: var(--accent-light);
-    }
+    .table-wrap { overflow-x: auto; border: 1px solid var(--card-border); border-radius: var(--radius-lg); background: rgba(3, 5, 8, 0.6); }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.86rem; }
+    th { background: rgba(11, 14, 23, 0.95); color: var(--text-muted); font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; padding: 14px 16px; border-bottom: 1px solid var(--card-border); position: sticky; top: 0; z-index: 5; }
+    td { padding: 14px 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.03); color: var(--text-main); vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255, 255, 255, 0.025); }
 
-    .ocr-actions {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      margin-top: 12px;
-    }
+    .proof-thumb { width: 44px; height: 44px; border-radius: 9px; object-fit: cover; border: 1px solid var(--card-border-active); cursor: pointer; transition: transform 0.15s ease; }
+    .proof-thumb:hover { transform: scale(1.1); }
 
-    .stop-builder-list {
-      background: rgba(3, 5, 8, 0.65);
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius-lg);
-      padding: 14px;
-      min-height: 240px;
-      max-height: 360px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
+    /* MODALS & TOAST */
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(20px); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 1000; }
+    .modal-backdrop.open { display: flex; }
+    .modal-card { background: var(--bg-elevated); border: 1px solid var(--card-border-active); border-radius: var(--radius-xl); width: 100%; max-width: 560px; padding: 28px; box-shadow: var(--shadow-modal); }
+    .modal-head { display: flex; justify-content: space-between; align-items: center; padding-bottom: 14px; margin-bottom: 18px; border-bottom: 1px solid var(--card-border); }
+    .modal-head h3 { font-size: 1.1rem; font-weight: 800; color: var(--text-main); }
+    .modal-close { width: 34px; height: 34px; border-radius: 50%; background: rgba(255, 255, 255, 0.06); border: none; color: var(--text-sub); cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
-    .builder-stop-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 10px 14px;
-      gap: 12px;
-    }
-
-    .builder-stop-num {
-      width: 24px;
-      height: 24px;
-      border-radius: 6px;
-      background: var(--accent-subtle);
-      color: var(--accent-light);
-      font-size: 0.72rem;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .builder-stop-text {
-      flex: 1;
-      font-size: 0.84rem;
-      font-weight: 600;
-      color: var(--text-main);
-    }
-
-    .builder-stop-actions {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .icon-mini-btn {
-      width: 26px;
-      height: 26px;
-      border-radius: 6px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--card-border);
-      color: var(--text-sub);
-      font-size: 0.7rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .icon-mini-btn:hover {
-      background: rgba(255, 255, 255, 0.12);
-      color: var(--text-main);
-    }
-
-    /* Toggle Switch for Photo Proof Requirement */
-    .switch-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(3, 5, 8, 0.5);
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius-md);
-      padding: 12px 16px;
-      margin-bottom: 14px;
-    }
-
-    .switch-label-group {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .switch-label-group strong {
-      font-size: 0.82rem;
-      color: var(--text-main);
-    }
-
-    .switch-label-group span {
-      font-size: 0.72rem;
-      color: var(--text-sub);
-    }
-
-    /* ==========================================================================
-       10. ENTERPRISE DATA TABLES (AUDIT & TEAM)
-       ========================================================================== */
-    .filter-toolbar {
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr auto;
-      gap: 12px;
-      align-items: center;
-    }
-
-    @media (max-width: 1100px) {
-      .filter-toolbar { grid-template-columns: 1fr 1fr; }
-    }
-
-    .batch-bar {
-      display: none;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(37, 99, 235, 0.14);
-      border: 1px solid var(--accent-bright);
-      border-radius: var(--radius-md);
-      padding: 12px 18px;
-    }
-
-    .batch-bar.visible {
-      display: flex;
-    }
-
-    .table-wrap {
-      overflow-x: auto;
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius-lg);
-      background: rgba(3, 5, 8, 0.55);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-      font-size: 0.84rem;
-    }
-
-    th {
-      background: rgba(11, 14, 23, 0.95);
-      color: var(--text-muted);
-      font-size: 0.68rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      padding: 14px 16px;
-      border-bottom: 1px solid var(--card-border);
-      position: sticky;
-      top: 0;
-      z-index: 5;
-    }
-
-    td {
-      padding: 14px 16px;
-      border-bottom: 1px solid var(--card-border-subtle);
-      color: var(--text-main);
-      vertical-align: middle;
-    }
-
-    tr:last-child td {
-      border-bottom: none;
-    }
-
-    tr:hover td {
-      background: rgba(255, 255, 255, 0.02);
-    }
-
-    .proof-thumb {
-      width: 42px;
-      height: 42px;
-      border-radius: 8px;
-      object-fit: cover;
-      border: 1px solid var(--card-border-active);
-      cursor: pointer;
-      transition: transform 0.15s ease;
-    }
-
-    .proof-thumb:hover {
-      transform: scale(1.08);
-    }
-
-    /* ==========================================================================
-       11. MODALS & TOAST NOTIFICATIONS
-       ========================================================================== */
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.82);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      z-index: 1000;
-    }
-
-    .modal-backdrop.open {
-      display: flex;
-    }
-
-    .modal-card {
-      background: var(--bg-elevated);
-      border: 1px solid var(--card-border-active);
-      border-radius: var(--radius-xl);
-      width: 100%;
-      max-width: 540px;
-      padding: 26px;
-      box-shadow: var(--shadow-modal);
-      animation: modalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    @keyframes modalPop {
-      from { opacity: 0; transform: scale(0.95) translateY(12px); }
-      to { opacity: 1; transform: scale(1) translateY(0); }
-    }
-
-    .modal-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 14px;
-      margin-bottom: 18px;
-      border-bottom: 1px solid var(--card-border);
-    }
-
-    .modal-head h3 {
-      font-size: 1.05rem;
-      font-weight: 800;
-      color: var(--text-main);
-    }
-
-    .modal-close {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.06);
-      border: none;
-      color: var(--text-sub);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .modal-close:hover {
-      background: rgba(255, 255, 255, 0.14);
-      color: #FFF;
-    }
-
-    .toast-banner {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      background: var(--bg-elevated);
-      border: 1px solid var(--accent-bright);
-      color: var(--text-main);
-      padding: 14px 20px;
-      border-radius: var(--radius-md);
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.75);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 0.84rem;
-      font-weight: 700;
-      z-index: 9999;
-      opacity: 0;
-      transform: translateY(20px);
-      pointer-events: none;
-      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .toast-banner.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .toast-indicator {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--accent-light);
-      box-shadow: 0 0 10px var(--accent-light);
-    }
+    .toast-banner { position: fixed; bottom: 24px; right: 24px; background: var(--bg-elevated); border: 1px solid var(--accent-bright); color: var(--text-main); padding: 14px 22px; border-radius: var(--radius-md); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8); display: flex; align-items: center; gap: 12px; font-size: 0.86rem; font-weight: 700; z-index: 9999; opacity: 0; transform: translateY(20px); pointer-events: none; transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1); }
+    .toast-banner.show { opacity: 1; transform: translateY(0); }
+    .toast-indicator { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-light); box-shadow: 0 0 10px var(--accent-light); }
   </style>
 </head>
 <body>
 
-  <!-- GLOBAL TOAST -->
   <div id="toastBanner" class="toast-banner">
     <span class="toast-indicator" id="toastDot"></span>
     <span id="toastMessage">System bereit</span>
   </div>
 
-  <!-- MODAL: STRIPE ZUSATZFAHRER-LIZENZ -->
+  <!-- MODAL: STRIPE LIZENZ -->
   <div id="stripeUpgradeModal" class="modal-backdrop">
     <div class="modal-card" style="max-width: 460px;">
       <div class="modal-head">
         <h3>Zusatzfahrer-Lizenz aktivieren</h3>
         <button class="modal-close" onclick="closeStripeUpgradeModal()">✕</button>
       </div>
-      <p style="font-size: 0.86rem; color: var(--text-sub); line-height: 1.55; margin-bottom: 18px;">
-        Sie legen einen weiteren aktiven Fahrer-Account in Ihrem Vindox-Arbeitsbereich an. Ihr bestehendes Abonnement wird automatisch um einen Fahrerplatz erweitert.
+      <p style="font-size: 0.88rem; color: var(--text-sub); line-height: 1.6; margin-bottom: 18px;">
+        Sie legen einen weiteren Fahrer an. Ihr Abonnement wird automatisch über Stripe um einen zusätzlichen Fahrerplatz erweitert.
       </p>
-      <div style="background: rgba(37, 99, 235, 0.08); border: 1px solid rgba(37, 99, 235, 0.3); border-radius: 12px; padding: 14px; font-size: 0.82rem; font-weight: 700; color: var(--accent-light); margin-bottom: 20px;">
-        Weiterleitung zum gesicherten Stripe-Checkout zur Freischaltung des Fahrerplatzes.
-      </div>
       <div style="display: flex; gap: 12px;">
         <button class="btn-secondary" style="flex: 1;" onclick="closeStripeUpgradeModal()">Abbrechen</button>
         <button class="btn-primary" style="flex: 1;" onclick="proceedToStripeCheckout()">Weiter zu Stripe</button>
@@ -1252,35 +298,31 @@
     </div>
   </div>
 
-  <!-- MODAL: NACHWEIS & AUDIT INSPEKTOR -->
+  <!-- MODAL: AUDIT INSPEKTOR -->
   <div id="proofModal" class="modal-backdrop">
     <div class="modal-card">
       <div class="modal-head">
         <h3>Audit-Nachweis & Metadaten</h3>
         <button class="modal-close" onclick="closeProofModal()">✕</button>
       </div>
-      <img id="modalImage" style="width: 100%; max-height: 260px; object-fit: contain; background: #030508; border-radius: 14px; border: 1px solid var(--card-border); margin-bottom: 16px;" alt="Fotobeweis">
-      <div style="background: rgba(3, 5, 8, 0.6); border: 1px solid var(--card-border); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 8px; font-size: 0.82rem; margin-bottom: 18px;">
+      <img id="modalImage" style="width: 100%; max-height: 260px; object-fit: contain; background: #030508; border-radius: 14px; border: 1px solid var(--card-border); margin-bottom: 16px;" alt="Beweis">
+      <div style="background: rgba(3, 5, 8, 0.65); border: 1px solid var(--card-border); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 8px; font-size: 0.84rem; margin-bottom: 18px;">
         <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-sub);">Leistungsort:</span><strong id="modalAddress"></strong></div>
-        <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-sub);">Ausführender Fahrer:</span><strong id="modalDriver"></strong></div>
-        <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-sub);">Zugehörige Tour:</span><strong id="modalTour"></strong></div>
+        <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-sub);">Fahrer:</span><strong id="modalDriver"></strong></div>
+        <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-sub);">Tour:</span><strong id="modalTour"></strong></div>
         <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-sub);">Zeitstempel:</span><strong id="modalTime" style="font-family: var(--font-mono);"></strong></div>
-        <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-sub);">Audit-Status:</span><strong id="modalStatus"></strong></div>
-        <div id="modalNoteBox" style="display: none; padding-top: 6px; border-top: 1px solid var(--card-border); color: var(--warning);">
-          <strong>Fahrer-Notiz / Grund:</strong> <span id="modalNotes"></span>
-        </div>
+        <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-sub);">Status:</span><strong id="modalStatus"></strong></div>
       </div>
       <div style="display: flex; gap: 12px;">
-        <button class="btn-primary" style="flex: 1;" onclick="downloadSingleProofPDF()">Gerichtsfestes Einzel-PDF</button>
-        <button class="btn-danger-sm" style="padding: 12px 18px; font-size: 0.82rem;" onclick="deleteSingleProofModal()">Eintrag löschen</button>
+        <button class="btn-primary" style="flex: 1;" onclick="downloadSingleProofPDF()">Gerichtsfestes PDF</button>
+        <button class="btn-danger-sm" style="padding: 12px 18px;" onclick="deleteSingleProofModal()">Löschen</button>
       </div>
     </div>
   </div>
 
-  <!-- ENTERPRISE SHELL -->
   <div class="enterprise-shell">
 
-    <!-- LEFT SIDEBAR -->
+    <!-- SIDEBAR -->
     <aside class="sidebar">
       <div>
         <div class="sidebar-brand">
@@ -1289,7 +331,7 @@
           </div>
           <div class="brand-meta">
             <h1>Vindox</h1>
-            <span>Command Center</span>
+            <span>Command v4.0</span>
           </div>
         </div>
 
@@ -1301,7 +343,6 @@
               <span>Übersicht & HUD</span>
             </div>
           </button>
-
           <button class="nav-btn" data-view="view-live" onclick="switchView('view-live', 'Leitstand', 'Live-Flotten-Monitor')">
             <div class="nav-btn-left">
               <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
@@ -1309,7 +350,6 @@
             </div>
             <span class="nav-badge" id="navBadgeLive">0</span>
           </button>
-
           <button class="nav-btn" data-view="view-planer" onclick="switchView('view-planer', 'Disposition', 'Tour-Planer & OCR')">
             <div class="nav-btn-left">
               <svg viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg>
@@ -1317,10 +357,9 @@
             </div>
             <span class="nav-badge" id="navBadgePlanned">0</span>
           </button>
-
           <button class="nav-btn" data-view="view-proofs" onclick="switchView('view-proofs', 'Rechtssicherheit', 'Nachweise & Audit-Tresor')">
             <div class="nav-btn-left">
-              <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
               <span>Nachweise & Audit</span>
             </div>
             <span class="nav-badge" id="navBadgeProofs">0</span>
@@ -1331,12 +370,11 @@
         <nav class="sidebar-nav">
           <button class="nav-btn" data-view="view-team" onclick="switchView('view-team', 'Organisation', 'Fahrer-Team & Lizenzen')">
             <div class="nav-btn-left">
-              <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
               <span>Fahrer-Team</span>
             </div>
             <span class="nav-badge" id="navBadgeDrivers">0</span>
           </button>
-
           <button class="nav-btn" data-view="view-company" onclick="switchView('view-company', 'Organisation', 'Unternehmensprofil & PDF-Kopf')">
             <div class="nav-btn-left">
               <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
@@ -1352,23 +390,20 @@
             <span class="pulse-dot"></span>
             <span>Realtime Sync</span>
           </div>
-          <span style="font-size: 0.68rem; font-family: var(--font-mono); color: var(--text-muted);">v3.0</span>
+          <span style="font-size: 0.7rem; font-family: var(--font-mono); color: var(--text-muted);">v4.0</span>
         </div>
       </div>
     </aside>
 
-    <!-- MAIN WORKSPACE -->
+    <!-- WORKSPACE -->
     <div class="workspace">
-      
-      <!-- TOP BAR -->
       <header class="topbar">
         <div class="topbar-left">
           <span class="topbar-eyebrow" id="topbarEyebrow">Leitstand</span>
           <h2 class="topbar-title" id="topbarTitle">Command Overview</h2>
         </div>
-
         <div class="topbar-right">
-          <div class="live-clock-pill" id="liveClockDisplay">--:-- Uhr</div>
+          <div class="live-clock-pill" id="liveClockDisplay">--:--:-- Uhr</div>
           <div class="chef-profile-pill">
             <div class="chef-avatar" id="chefAvatarInitials">CH</div>
             <span class="chef-name-text" id="chefGreetingLabel">Geschäftsführung</span>
@@ -1377,543 +412,237 @@
         </div>
       </header>
 
-      <!-- SCROLLABLE VIEWPORT -->
       <div class="canvas-scroll">
 
-        <!-- ================================================================
-             VIEW 1: COMMAND OVERVIEW (HUD)
-             ================================================================ -->
+        <!-- VIEW 1: OVERVIEW -->
         <section id="view-overview" class="view-section active">
-          
-          <!-- KPI METRIC STRIP -->
           <div class="kpi-grid">
             <div class="kpi-card">
               <div class="kpi-top">
                 <span class="kpi-label">Aktive Fahrer</span>
-                <div class="kpi-icon-wrap">
-                  <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-                </div>
+                <div class="kpi-icon-wrap"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
               </div>
-              <div class="kpi-bottom">
-                <span class="kpi-number" id="kpiActiveDrivers">0</span>
-                <span class="kpi-trend">Team Bereit</span>
-              </div>
+              <div class="kpi-bottom"><span class="kpi-number" id="kpiActiveDrivers">0</span><span class="kpi-trend">Online</span></div>
             </div>
-
             <div class="kpi-card">
               <div class="kpi-top">
                 <span class="kpi-label">Geplante Touren</span>
-                <div class="kpi-icon-wrap">
-                  <svg viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg>
-                </div>
+                <div class="kpi-icon-wrap"><svg viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg></div>
               </div>
-              <div class="kpi-bottom">
-                <span class="kpi-number" id="kpiTotalTours">0</span>
-                <span class="kpi-trend" style="background: var(--accent-subtle); color: var(--accent-light);">Warteschlange</span>
-              </div>
+              <div class="kpi-bottom"><span class="kpi-number" id="kpiTotalTours">0</span><span class="kpi-trend" style="background: var(--accent-subtle); color: var(--accent-light);">Warteschlange</span></div>
             </div>
-
             <div class="kpi-card">
               <div class="kpi-top">
                 <span class="kpi-label">Abschlussquote</span>
-                <div class="kpi-icon-wrap">
-                  <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-                </div>
+                <div class="kpi-icon-wrap"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
               </div>
-              <div class="kpi-bottom">
-                <span class="kpi-number" id="kpiCompletionRate">0%</span>
-                <span class="kpi-trend">Gesamt</span>
-              </div>
+              <div class="kpi-bottom"><span class="kpi-number" id="kpiCompletionRate">0%</span><span class="kpi-trend">Gesamt</span></div>
             </div>
-
             <div class="kpi-card">
               <div class="kpi-top">
                 <span class="kpi-label">Fotobeweise</span>
-                <div class="kpi-icon-wrap">
-                  <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-                </div>
+                <div class="kpi-icon-wrap"><svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
               </div>
-              <div class="kpi-bottom">
-                <span class="kpi-number" id="kpiProofsToday">0</span>
-                <span class="kpi-trend">GPS-Stempel</span>
-              </div>
+              <div class="kpi-bottom"><span class="kpi-number" id="kpiProofsToday">0</span><span class="kpi-trend">Heute</span></div>
             </div>
           </div>
 
-          <!-- MAIN SPLIT: LIVE TELEMETRY + REALTIME EVENT STREAM -->
           <div class="grid-command-main">
-            
-            <!-- Left: Active Fleet Stream -->
             <div class="panel-card highlight-border">
               <div class="panel-head">
-                <div class="panel-head-title">
-                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                  <span>Aktive Touren in Echtzeit</span>
-                </div>
-                <button class="btn-secondary" onclick="switchView('view-planer', 'Disposition', 'Tour-Planer & OCR')">+ Neue Tour disponieren</button>
+                <div class="panel-head-title"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>Live-Flotte in Echtzeit</span></div>
+                <button class="btn-secondary" onclick="switchView('view-planer', 'Disposition', 'Tour-Planer & OCR')">+ Tour disponieren</button>
               </div>
               <div id="overviewLiveContainer" style="display: flex; flex-direction: column; gap: 14px;">
-                <p style="color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 30px;">Synchronisiere Flottendaten...</p>
+                <p style="color: var(--text-muted); text-align: center; padding: 30px;">Lade Flottendaten...</p>
               </div>
             </div>
 
-            <!-- Right: Audit & Telemetry Feed -->
             <div class="panel-card">
               <div class="panel-head">
-                <div class="panel-head-title">
-                  <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-                  <span>Echtzeit-Protokoll</span>
-                </div>
+                <div class="panel-head-title"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg><span>Aktivitäts-Stream</span></div>
                 <span class="status-pill active">Live</span>
               </div>
               <div class="activity-feed" id="realtimeActivityFeed">
-                <div class="feed-item">
-                  <span class="feed-dot"></span>
-                  <div class="feed-content">
-                    <div class="feed-title">Vindox Command Center initialisiert</div>
-                    <div class="feed-time">Systemstatus: Verbunden</div>
-                  </div>
-                </div>
+                <div class="feed-item"><span class="feed-dot"></span><div class="feed-content"><div class="feed-title">Vindox Enterprise Command gestartet</div><div class="feed-time">System bereit</div></div></div>
               </div>
             </div>
-
           </div>
         </section>
 
-        <!-- ================================================================
-             VIEW 2: FULLSCREEN LIVE MONITOR
-             ================================================================ -->
+        <!-- VIEW 2: LIVE MONITOR -->
         <section id="view-live" class="view-section">
           <div class="panel-card highlight-border">
             <div class="panel-head">
-              <div class="panel-head-title">
-                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                <span>Detaillierter Live-Monitor (Klicken für Stopp-Protokoll)</span>
-              </div>
-              <span class="status-pill active">Supabase Realtime</span>
+              <div class="panel-head-title"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>Flotten-Leitstand</span></div>
+              <span class="status-pill active">Realtime Sync</span>
             </div>
             <div id="liveToursContainer" style="display: flex; flex-direction: column; gap: 16px;"></div>
           </div>
         </section>
 
-        <!-- ================================================================
-             VIEW 3: TOUR-PLANER & OCR DISPATCH
-             ================================================================ -->
+        <!-- VIEW 3: PLANER & OCR -->
         <section id="view-planer" class="view-section">
           <div class="grid-planer">
-            
-            <!-- Left Column: OCR & Tour Metadata -->
             <div style="display: flex; flex-direction: column; gap: 20px;">
               <div class="panel-card">
                 <div class="panel-head">
-                  <div class="panel-head-title">
-                    <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-                    <span>OCR Adress-Scanner</span>
-                  </div>
-                  <span style="font-size: 0.7rem; color: var(--accent-light); font-weight: 700;">Tesseract DE Engine</span>
+                  <div class="panel-head-title"><svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/></svg><span>OCR Adress-Scanner</span></div>
                 </div>
-
                 <div class="ocr-dropzone">
-                  <div style="font-size: 0.86rem; font-weight: 700; color: var(--text-main);">Lieferschein oder Adressliste fotografieren</div>
-                  <div style="font-size: 0.76rem; color: var(--text-sub); margin-top: 4px;">Die KI extrahiert alle Straßen und Hausnummern automatisch in die Stopp-Liste.</div>
+                  <div style="font-size: 0.88rem; font-weight: 700;">Lieferschein oder Dokument fotografieren</div>
+                  <div style="font-size: 0.78rem; color: var(--text-sub); margin-top: 4px;">Die OCR liest alle Zieladressen fehlerfrei aus.</div>
                   <div class="ocr-actions">
-                    <button class="btn-secondary" onclick="document.getElementById('bossCameraInput').click()">Kamera öffnen</button>
-                    <button class="btn-secondary" onclick="document.getElementById('bossFileInput').click()">Bilddatei hochladen</button>
+                    <button class="btn-secondary" onclick="document.getElementById('bossCameraInput').click()">Kamera</button>
+                    <button class="btn-secondary" onclick="document.getElementById('bossFileInput').click()">Datei</button>
                   </div>
                   <input type="file" id="bossCameraInput" accept="image/*" capture="environment" style="display: none;" onchange="processBossTourScan(event)">
                   <input type="file" id="bossFileInput" accept="image/*" style="display: none;" onchange="processBossTourScan(event)">
-                  <div id="scanStatusMsg" style="font-size: 0.76rem; color: var(--success); font-weight: 700; margin-top: 10px; display: none;"></div>
+                  <div id="scanStatusMsg" style="font-size: 0.78rem; color: var(--success); font-weight: 700; margin-top: 10px; display: none;"></div>
                 </div>
               </div>
 
               <div class="panel-card">
                 <div class="panel-head">
-                  <div class="panel-head-title">
-                    <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-                    <span>Tour-Parameter & Zuweisung</span>
-                  </div>
+                  <div class="panel-head-title"><svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/></svg><span>Parameter & Zuweisung</span></div>
                 </div>
-
                 <div class="form-group">
-                  <label class="form-label">Tour-Bezeichnung</label>
-                  <input type="text" id="tourTitle" class="input-control" placeholder="z. B. Morgentour Engelskirchen Nord">
+                  <label class="form-label">Tour-Titel</label>
+                  <input type="text" id="tourTitle" class="input-control" placeholder="z. B. Morgentour Nord">
                 </div>
-
                 <div class="form-group">
-                  <label class="form-label">Fahrer auswählen</label>
+                  <label class="form-label">Fahrer</label>
                   <select id="tourAssignee" class="input-control"></select>
                 </div>
-
-                <div class="switch-row">
-                  <div class="switch-label-group">
-                    <strong>Fotobeweispflicht erzwingen</strong>
-                    <span>Kamera öffnet sich beim Fahrer sofort bei Stopp-Bestätigung</span>
-                  </div>
-                  <input type="checkbox" id="requirePhotoProof" checked style="width: 18px; height: 18px; accent-color: var(--accent-bright); cursor: pointer;">
-                </div>
-
                 <div class="form-group" style="margin-bottom: 0;">
-                  <label class="form-label">Dispositions-Hinweis für Fahrer</label>
-                  <textarea id="tourNotes" class="input-control" style="height: 75px; margin-bottom: 0;" placeholder="Optionaler Hinweis (z. B. Zugangscode, Ansprechpartner)..."></textarea>
+                  <label class="form-label">Hinweise</label>
+                  <textarea id="tourNotes" class="input-control" style="height: 75px; margin-bottom: 0;" placeholder="Optionale Anweisungen..."></textarea>
                 </div>
               </div>
             </div>
 
-            <!-- Right Column: Interactive Stop Builder -->
             <div class="panel-card highlight-border">
               <div class="panel-head">
-                <div class="panel-head-title">
-                  <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                  <span>Stopp-Reihenfolge & Adressen</span>
-                </div>
+                <div class="panel-head-title"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/></svg><span>Stopp-Warteschlange</span></div>
                 <span class="status-pill active" id="addressCountBadge">0 Stopps</span>
               </div>
-
               <div style="display: flex; gap: 10px;">
-                <input type="text" id="singleAddressInput" class="input-control" style="margin-bottom: 0;" placeholder="Einzelne Adresse hinzufügen (Enter drücken)..." onkeydown="if(event.key==='Enter'){event.preventDefault(); addSingleStopToBuilder();}">
-                <button class="btn-secondary" style="white-space: nowrap;" onclick="addSingleStopToBuilder()">+ Hinzufügen</button>
+                <input type="text" id="singleAddressInput" class="input-control" style="margin-bottom: 0;" placeholder="Adresse eingeben & Enter..." onkeydown="if(event.key==='Enter'){event.preventDefault(); addSingleStopToBuilder();}">
+                <button class="btn-secondary" onclick="addSingleStopToBuilder()">+ Hinzufügen</button>
               </div>
-
               <div class="stop-builder-list" id="stopBuilderList">
-                <div style="margin: auto; text-align: center; color: var(--text-muted); font-size: 0.82rem; line-height: 1.5;">
-                  Noch keine Stopps in der Liste.<br>Fügen Sie oben Adressen hinzu oder nutzen Sie den OCR-Scanner.
-                </div>
+                <div style="margin: auto; text-align: center; color: var(--text-muted); font-size: 0.84rem;">Noch keine Stopps erfasst.</div>
               </div>
-
-              <div style="display: flex; gap: 10px; align-items: center;">
-                <button class="btn-secondary" style="font-size: 0.74rem;" onclick="toggleBulkPasteArea()">Textblock einfügen</button>
-                <button class="btn-danger-sm" style="margin-left: auto;" onclick="clearBuilderStops()">Liste leeren</button>
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <button class="btn-secondary" onclick="toggleBulkPasteArea()" style="font-size: 0.76rem;">Bulk-Import</button>
+                <button class="btn-danger-sm" onclick="clearBuilderStops()">Liste leeren</button>
               </div>
-
               <div id="bulkPasteContainer" style="display: none;">
-                <textarea id="tourAddressesBulk" class="input-control" style="height: 110px; font-family: var(--font-mono); font-size: 0.8rem;" placeholder="Mehrere Adressen zeilenweise einfügen..."></textarea>
-                <button class="btn-secondary" style="width: 100%;" onclick="importBulkAddresses()">Zeilen in Stopp-Liste übernehmen</button>
+                <textarea id="tourAddressesBulk" class="input-control" style="height: 90px; font-family: var(--font-mono); font-size: 0.8rem;" placeholder="Mehrere Adressen zeilenweise einfügen..."></textarea>
+                <button class="btn-secondary" style="width: 100%;" onclick="importBulkAddresses()">Übernehmen</button>
               </div>
-
-              <button class="btn-primary" style="margin-top: auto;" onclick="createAndSendTour()">
-                Tour verbindlich an Fahrer übermitteln
-              </button>
+              <button class="btn-primary" style="margin-top: auto;" onclick="createAndSendTour()">Tour an Fahrer übertragen</button>
             </div>
-
           </div>
 
-          <!-- Planned Tours Queue -->
           <div class="panel-card">
-            <div class="panel-head">
-              <div class="panel-head-title">
-                <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                <span>Zugewiesene Touren in der Warteschlange</span>
-              </div>
-            </div>
+            <div class="panel-head"><div class="panel-head-title"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/></svg><span>Geplante Warteschlange</span></div></div>
             <div class="table-wrap">
               <table>
-                <thead>
-                  <tr>
-                    <th>Tour-Titel</th>
-                    <th>Zugewiesener Fahrer</th>
-                    <th>Umfang</th>
-                    <th>Erstellt am</th>
-                    <th style="text-align: right;">Verwaltung</th>
-                  </tr>
-                </thead>
-                <tbody id="plannedToursTableBody">
-                  <tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Lade Warteschlange...</td></tr>
-                </tbody>
+                <thead><tr><th>Tour</th><th>Fahrer</th><th>Umfang</th><th>Erstellt</th><th style="text-align: right;">Aktion</th></tr></thead>
+                <tbody id="plannedToursTableBody"><tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Lade Warteschlange...</td></tr></tbody>
               </table>
             </div>
           </div>
         </section>
 
-        <!-- ================================================================
-             VIEW 4: NACHWEISE & AUDIT-TRESOR
-             ================================================================ -->
+        <!-- VIEW 4: PROOFS & AUDIT -->
         <section id="view-proofs" class="view-section">
           <div class="panel-card highlight-border">
             <div class="panel-head">
-              <div class="panel-head-title">
-                <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                <span>Rechtssichere Leistungsnachweise & Fotobeweise</span>
-              </div>
+              <div class="panel-head-title"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>Audit-Tresor & Leistungsnachweise</span></div>
               <span class="status-pill active" id="proofsCountBadge">0 Einträge</span>
             </div>
-
             <div class="filter-toolbar">
-              <input type="text" id="proofSearchInput" class="input-control" style="margin-bottom: 0;" placeholder="Nach Adresse, Fahrer oder Tour filtern..." oninput="filterAndRenderProofs()">
+              <input type="text" id="proofSearchInput" class="input-control" style="margin-bottom: 0;" placeholder="Suchen..." oninput="filterAndRenderProofs()">
               <input type="date" id="proofDateFilter" class="input-control" style="margin-bottom: 0;" onchange="filterAndRenderProofs()">
               <select id="proofStatusFilter" class="input-control" style="margin-bottom: 0;" onchange="filterAndRenderProofs()">
                 <option value="">Alle Status</option>
                 <option value="erledigt">Erledigt</option>
-                <option value="offen">Offen</option>
                 <option value="abgebrochen">Abgebrochen</option>
               </select>
               <select id="proofDriverFilter" class="input-control" style="margin-bottom: 0;" onchange="filterAndRenderProofs()">
                 <option value="">Alle Fahrer</option>
               </select>
-              <label style="display: flex; align-items: center; gap: 8px; font-size: 0.78rem; font-weight: 700; color: var(--text-sub); cursor: pointer; white-space: nowrap;">
-                <input type="checkbox" id="onlyPhotosToggle" onchange="filterAndRenderProofs()" style="width: 16px; height: 16px; accent-color: var(--accent-bright);">
-                Nur mit Fotobeweis
+              <label style="display: flex; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: 700; color: var(--text-sub); cursor: pointer;">
+                <input type="checkbox" id="onlyPhotosToggle" onchange="filterAndRenderProofs()" style="width: 16px; height: 16px; accent-color: var(--accent-bright);"> Nur Fotos
               </label>
             </div>
-
             <div id="batchActionBar" class="batch-bar">
-              <span id="selectedCountText" style="font-size: 0.84rem; font-weight: 800; color: var(--accent-light);">0 Einträge ausgewählt</span>
+              <span id="selectedCountText" style="font-size: 0.86rem; font-weight: 800; color: var(--accent-light);">0 ausgewählt</span>
               <div style="display: flex; gap: 10px;">
-                <button class="btn-primary" style="padding: 9px 16px; font-size: 0.78rem;" onclick="exportSelectedProofsPDF()">Sammel-PDF exportieren</button>
-                <button class="btn-danger-sm" style="padding: 9px 14px;" onclick="deleteSelectedProofs()">Auswahl löschen</button>
+                <button class="btn-primary" style="padding: 9px 16px; font-size: 0.78rem;" onclick="exportSelectedProofsPDF()">Sammel-PDF</button>
+                <button class="btn-danger-sm" style="padding: 9px 14px;" onclick="deleteSelectedProofs()">Löschen</button>
               </div>
             </div>
-
-            <div class="table-wrap" style="max-height: 540px;">
+            <div class="table-wrap" style="max-height: 520px;">
               <table>
-                <thead>
-                  <tr>
-                    <th style="width: 42px; text-align: center;"><input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAllProofs(this)"></th>
-                    <th style="width: 64px;">Beleg</th>
-                    <th>Leistungsort & Notiz</th>
-                    <th>Fahrer</th>
-                    <th>Tour</th>
-                    <th>Zeitstempel</th>
-                    <th>Status</th>
-                    <th style="text-align: right;">Aktionen</th>
-                  </tr>
-                </thead>
-                <tbody id="proofsTableBody">
-                  <tr><td colspan="8" style="text-align: center; color: var(--text-muted);">Lade Audit-Daten...</td></tr>
-                </tbody>
+                <thead><tr><th style="width: 42px; text-align: center;"><input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAllProofs(this)"></th><th style="width: 60px;">Foto</th><th>Leistungsort</th><th>Fahrer</th><th>Tour</th><th>Zeit</th><th>Status</th><th style="text-align: right;">Aktion</th></tr></thead>
+                <tbody id="proofsTableBody"><tr><td colspan="8" style="text-align: center; color: var(--text-muted);">Lade Audit-Daten...</td></tr></tbody>
               </table>
             </div>
           </div>
         </section>
 
-        <!-- ================================================================
-             VIEW 5: TEAM & LIZENZEN
-             ================================================================ -->
+        <!-- VIEW 5: TEAM -->
         <section id="view-team" class="view-section">
           <div class="grid-2-equal">
-            
             <div class="panel-card">
-              <div class="panel-head">
-                <div class="panel-head-title">
-                  <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
-                  <span>Neuen Fahrer-Account erstellen</span>
-                </div>
-              </div>
-
+              <div class="panel-head"><div class="panel-head-title"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/></svg><span>Fahrer anlegen</span></div></div>
               <form id="addWorkerForm" onsubmit="interceptAddEmployee(event)">
-                <div class="form-group">
-                  <label class="form-label">Vollständiger Name des Fahrers</label>
-                  <input type="text" id="empName" class="input-control" placeholder="z. B. Lukas Weber" required>
-                </div>
-
-                <div class="form-group">
-                  <label class="form-label">App-Benutzername</label>
-                  <input type="text" id="empUsername" class="input-control" placeholder="z. B. l.weber" required autocomplete="off">
-                </div>
-
-                <div class="form-group">
-                  <label class="form-label">Initial-Passwort</label>
-                  <input type="password" id="empPassword" class="input-control" placeholder="••••••••" required>
-                </div>
-
-                <button type="submit" id="addEmpBtn" class="btn-primary" style="width: 100%; margin-top: 8px;">
-                  Fahrerplatz freischalten & anlegen
-                </button>
+                <div class="form-group"><label class="form-label">Name</label><input type="text" id="empName" class="input-control" placeholder="Max Mustermann" required></div>
+                <div class="form-group"><label class="form-label">Benutzername</label><input type="text" id="empUsername" class="input-control" placeholder="fahrer1" required></div>
+                <div class="form-group"><label class="form-label">Passwort</label><input type="password" id="empPassword" class="input-control" placeholder="••••••••" required></div>
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 8px;">Fahrerplatz freischalten</button>
               </form>
             </div>
-
             <div class="panel-card highlight-border">
-              <div class="panel-head">
-                <div class="panel-head-title">
-                  <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-                  <span>Aktives Fahrer-Team</span>
-                </div>
-                <span class="status-pill active" id="driverCountBadge">0 Fahrer</span>
-              </div>
-
-              <input type="text" id="driverSearchInput" class="input-control" style="margin-bottom: 0;" placeholder="Fahrer nach Name oder Login suchen..." oninput="filterDriverTable()">
-
+              <div class="panel-head"><div class="panel-head-title"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5"/></svg><span>Aktives Team</span></div><span class="status-pill active" id="driverCountBadge">0 Fahrer</span></div>
+              <input type="text" id="driverSearchInput" class="input-control" placeholder="Fahrer suchen..." oninput="filterDriverTable()">
               <div class="table-wrap">
                 <table>
-                  <thead>
-                    <tr>
-                      <th>Fahrer</th>
-                      <th>App-Login</th>
-                      <th>Lizenzstatus</th>
-                      <th style="text-align: right;">Aktion</th>
-                    </tr>
-                  </thead>
-                  <tbody id="employeeTableBody">
-                    <tr><td colspan="4" style="text-align: center; color: var(--text-muted);">Lade Team...</td></tr>
-                  </tbody>
+                  <thead><tr><th>Name</th><th>Login</th><th>Status</th><th style="text-align: right;">Aktion</th></tr></thead>
+                  <tbody id="employeeTableBody"><tr><td colspan="4" style="text-align: center; color: var(--text-muted);">Lade Team...</td></tr></tbody>
                 </table>
               </div>
             </div>
-
           </div>
         </section>
 
-        <!-- ================================================================
-             VIEW 6: UNTERNEHMENSPROFIL & PDF-BRIEFbogen
-             ================================================================ -->
+        <!-- VIEW 6: COMPANY -->
         <section id="view-company" class="view-section">
           <div class="grid-2-equal">
-            
             <div class="panel-card">
-              <div class="panel-head">
-                <div class="panel-head-title">
-                  <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-                  <span>Pflichtangaben & Firmendaten</span>
-                </div>
-              </div>
-
+              <div class="panel-head"><div class="panel-head-title"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/></svg><span>Unternehmensprofil</span></div></div>
               <form id="companyProfileForm" onsubmit="saveCompanyProfile(event)">
-                <div class="form-group">
-                  <label class="form-label">Firmenname</label>
-                  <input type="text" id="compName" class="input-control" placeholder="z. B. Vindox Logistik" oninput="updatePdfPreview()" required>
-                </div>
-
-                <div class="form-group">
-                  <label class="form-label">Rechtsform</label>
-                  <select id="compLegalForm" class="input-control" onchange="updatePdfPreview()">
-                    <option value="GbR">GbR (Gesellschaft bürgerlichen Rechts)</option>
-                    <option value="Einzelunternehmen">Einzelunternehmen / e.K.</option>
-                    <option value="GmbH">GmbH / UG (haftungsbeschränkt)</option>
-                    <option value="GmbH & Co. KG">GmbH & Co. KG / OHG</option>
-                    <option value="AG">AG</option>
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <label class="form-label">Tätigkeitsbereich / Untertitel</label>
-                  <input type="text" id="compSubtitle" class="input-control" placeholder="z. B. Logistik, Kurierdienst & Objektservice" oninput="updatePdfPreview()">
-                </div>
-
-                <div class="form-group">
-                  <label class="form-label">Vertretungsberechtigte(r) Inhaber / Geschäftsführer</label>
-                  <input type="text" id="compOwner" class="input-control" placeholder="Vor- und Nachname" oninput="updatePdfPreview()" required>
-                </div>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                  <div class="form-group">
-                    <label class="form-label">Straße & Hausnummer</label>
-                    <input type="text" id="compStreet" class="input-control" placeholder="Hauptstraße 1" oninput="updatePdfPreview()" required>
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label">PLZ & Ort</label>
-                    <input type="text" id="compCity" class="input-control" placeholder="51766 Engelskirchen" oninput="updatePdfPreview()" required>
-                  </div>
-                </div>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                  <div class="form-group">
-                    <label class="form-label">Geschäfts-E-Mail</label>
-                    <input type="email" id="compEmail" class="input-control" placeholder="info@firma.de" oninput="updatePdfPreview()" required>
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label">Telefon</label>
-                    <input type="text" id="compPhone" class="input-control" placeholder="+49 2263 ..." oninput="updatePdfPreview()">
-                  </div>
-                </div>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                  <div class="form-group">
-                    <label class="form-label">Steuernummer / USt-IdNr.</label>
-                    <input type="text" id="compTax" class="input-control" placeholder="DE ..." oninput="updatePdfPreview()" required>
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label">Handelsregister (optional)</label>
-                    <input type="text" id="compHr" class="input-control" placeholder="HRB ..." oninput="updatePdfPreview()">
-                  </div>
-                </div>
-
-                <div style="display: grid; grid-template-columns: 1.4fr 0.6fr; gap: 12px;">
-                  <div class="form-group">
-                    <label class="form-label">IBAN</label>
-                    <input type="text" id="compIban" class="input-control" placeholder="DE..." oninput="updatePdfPreview()">
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label">BIC</label>
-                    <input type="text" id="compBic" class="input-control" placeholder="BIC" oninput="updatePdfPreview()">
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label class="form-label">Firmenlogo für PDF-Briefkopf</label>
-                  <div class="ocr-dropzone" style="padding: 14px; cursor: pointer;" onclick="document.getElementById('compLogoInput').click()">
-                    <div id="formLogoContainer" style="font-size: 0.8rem; font-weight: 700; color: var(--text-sub);">Logo auswählen (PNG / JPG)</div>
-                  </div>
-                  <input type="file" id="compLogoInput" accept="image/png, image/jpeg" style="display: none;" onchange="handleLogoUpload(event)">
-                  <button type="button" class="btn-danger-sm" id="removeLogoBtn" onclick="removeLogo()" style="display: none; width: 100%; margin-top: 8px;">Logo entfernen</button>
-                </div>
-
-                <button type="submit" class="btn-primary" style="width: 100%;">Unternehmensdaten speichern</button>
+                <div class="form-group"><label class="form-label">Firmenname</label><input type="text" id="compName" class="input-control" oninput="updatePdfPreview()" required></div>
+                <div class="form-group"><label class="form-label">Rechtsform</label><select id="compLegalForm" class="input-control" onchange="updatePdfPreview()"><option value="GbR">GbR</option><option value="Einzelunternehmen">Einzelunternehmen</option><option value="GmbH">GmbH</option></select></div>
+                <div class="form-group"><label class="form-label">Geschäftsführer</label><input type="text" id="compOwner" class="input-control" oninput="updatePdfPreview()" required></div>
+                <div class="form-group"><label class="form-label">Straße</label><input type="text" id="compStreet" class="input-control" oninput="updatePdfPreview()" required></div>
+                <div class="form-group"><label class="form-label">PLZ & Ort</label><input type="text" id="compCity" class="input-control" oninput="updatePdfPreview()" required></div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Speichern</button>
               </form>
             </div>
-
-            <!-- Live DIN-A4 PDF Preview -->
             <div class="panel-card highlight-border">
-              <div class="panel-head">
-                <div class="panel-head-title">
-                  <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                  <span>Live-Vorschau: Gerichtsfester PDF-Briefkopf</span>
-                </div>
-              </div>
-
-              <div style="background: #FFFFFF; color: #0F172A; border-radius: 14px; padding: 30px; min-height: 540px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 20px 50px rgba(0,0,0,0.6);">
+              <div class="panel-head"><div class="panel-head-title"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16"/></svg><span>PDF-Vorschau</span></div></div>
+              <div style="background: #FFF; color: #0F172A; border-radius: 14px; padding: 24px; min-height: 480px; display: flex; flex-direction: column; justify-content: space-between;">
                 <div>
-                  <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #2563EB; padding-bottom: 16px; margin-bottom: 20px;">
-                    <div style="display: flex; align-items: center;">
-                      <div id="prevLogoArea"></div>
-                      <div>
-                        <strong id="prevCompName" style="font-size: 18px; font-weight: 800; color: #0F172A; display: block;">Vindox Logistik</strong>
-                        <span id="prevCompSubtitle" style="font-size: 11px; color: #64748B; font-weight: 600;">Logistik & Objektservice</span>
-                      </div>
-                    </div>
-                    <div style="text-align: right; font-size: 11px; color: #475569; line-height: 1.5;">
-                      <strong id="prevCompStreet">Hauptstraße 1</strong><br>
-                      <strong id="prevCompCity">51766 Engelskirchen</strong><br>
-                      <span id="prevCompEmail">info@firma.de</span><br>
-                      <span id="prevCompPhone">+49 2263 ...</span>
-                    </div>
-                  </div>
-
-                  <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 16px;">
-                    <div>
-                      <h4 style="font-size: 13px; text-transform: uppercase; font-weight: 800; color: #0F172A;">LEISTUNGSNACHWEIS / AUDIT-PROTOKOLL</h4>
-                      <p style="font-size: 10px; color: #64748B; margin-top: 2px;">GPS-validierter Ausführungsnachweis mit Zeitstempel-Integrität</p>
-                    </div>
-                    <div style="text-align: right; font-size: 10px; color: #64748B;">
-                      <strong>Protokoll-ID:</strong> LN-2026-849201<br>
-                      <strong>Datum:</strong> <span id="prevDateDisplay">12.11.2026</span>
-                    </div>
-                  </div>
-
-                  <div style="background: #F8FAFC; border: 1px dashed #CBD5E1; border-radius: 8px; padding: 40px 20px; text-align: center; color: #94A3B8; font-size: 11px; margin-top: 16px;">
-                    [ Automatisierte Tabelle der Fotobeweise, GPS-Koordinaten und Zeitstempel ]
-                  </div>
+                  <strong id="prevCompName" style="font-size: 18px; font-weight: 800; display: block;">Vindox Logistik</strong>
+                  <span id="prevCompStreet" style="font-size: 11px; color: #64748B;">Hauptstraße 1, 51766 Engelskirchen</span>
                 </div>
-
-                <div style="border-top: 1px solid #E2E8F0; padding-top: 12px; margin-top: 24px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; font-size: 9px; color: #64748B; line-height: 1.5;">
-                  <div>
-                    <strong style="color: #0F172A;">Unternehmen</strong><br>
-                    Rechtsform: <span id="prevLegalFormLabel">GbR</span><br>
-                    Vertretung: <span id="prevCompOwner">-</span><br>
-                    Sitz: <span id="prevCompSitz">Engelskirchen</span>
-                  </div>
-                  <div>
-                    <strong style="color: #0F172A;">Steuer & Register</strong><br>
-                    Steuernr./USt-ID: <span id="prevCompTax">-</span><br>
-                    <span id="prevCompHrDisplay" style="display: none;">Register: <span id="prevCompHr">-</span></span>
-                  </div>
-                  <div>
-                    <strong style="color: #0F172A;">Bankverbindung</strong><br>
-                    IBAN: <span id="prevCompIban">-</span><br>
-                    BIC: <span id="prevCompBic">-</span>
-                  </div>
-                </div>
+                <div style="font-size: 10px; color: #64748B; border-top: 1px solid #E2E8F0; padding-top: 10px;">Rechtssicherer Ausführungsnachweis</div>
               </div>
             </div>
-
           </div>
         </section>
 
@@ -1922,9 +651,6 @@
   </div>
 
   <script>
-    /* ==========================================================================
-       SUPABASE & APPLICATION STATE
-       ========================================================================== */
     const SUPABASE_URL = 'https://cvfbkxzhpxopbkaymvvf.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_EK07XF7umKLsdfbRK9p6gQ_0-5AkSjb';
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -1937,62 +663,16 @@
     let activeModalProof = null;
     let companyLogoBase64 = '';
 
-    /* ==========================================================================
-       HAPTIC & AUDIO FEEDBACK (TOUR-APP SIGNATURE)
-       ========================================================================== */
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    function playSubtleClick() {
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-      const now = audioCtx.currentTime;
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(2200, now);
-      osc.frequency.exponentialRampToValueAtTime(750, now + 0.01);
-      gain.gain.setValueAtTime(0.025, now);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.01);
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start(now);
-      osc.stop(now + 0.01);
-    }
-
-    document.addEventListener('pointerdown', (e) => {
-      if (e.target.closest('button, .nav-btn, .driver-card-top, .proof-thumb')) {
-        playSubtleClick();
-      }
-    }, { passive: true });
-
-    /* ==========================================================================
-       TOAST & CLOCK UTILITIES
-       ========================================================================== */
-    function showToast(message, type = 'info') {
-      const banner = document.getElementById('toastBanner');
-      const dot = document.getElementById('toastDot');
-      document.getElementById('toastMessage').innerText = message;
-
-      if (type === 'danger') {
-        dot.style.background = 'var(--danger)';
-        dot.style.boxShadow = '0 0 10px var(--danger)';
-      } else if (type === 'success') {
-        dot.style.background = 'var(--success)';
-        dot.style.boxShadow = '0 0 10px var(--success)';
-      } else {
-        dot.style.background = 'var(--accent-light)';
-        dot.style.boxShadow = '0 0 10px var(--accent-light)';
-      }
-
-      banner.classList.add('show');
-      setTimeout(() => banner.classList.remove('show'), 3200);
+    function showToast(msg, type = 'info') {
+      const b = document.getElementById('toastBanner');
+      document.getElementById('toastMessage').innerText = msg;
+      b.classList.add('show');
+      setTimeout(() => b.classList.remove('show'), 3000);
     }
 
     function updateClock() {
       const now = new Date();
-      const h = String(now.getHours()).padStart(2, '0');
-      const m = String(now.getMinutes()).padStart(2, '0');
-      const s = String(now.getSeconds()).padStart(2, '0');
-      const el = document.getElementById('liveClockDisplay');
-      if (el) el.innerText = `${h}:${m}:${s} Uhr`;
+      document.getElementById('liveClockDisplay').innerText = now.toLocaleTimeString('de-DE') + ' Uhr';
     }
     setInterval(updateClock, 1000);
 
@@ -2002,1009 +682,199 @@
       const now = new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
       const item = document.createElement('div');
       item.className = 'feed-item';
-      item.innerHTML = `
-        <span class="feed-dot ${variant}"></span>
-        <div class="feed-content">
-          <div class="feed-title">${title}</div>
-          <div class="feed-time">${now} Uhr</div>
-        </div>
-      `;
+      item.innerHTML = `<span class="feed-dot ${variant}"></span><div class="feed-content"><div class="feed-title">${title}</div><div class="feed-time">${now} Uhr</div></div>`;
       feed.prepend(item);
-      if (feed.children.length > 25) feed.lastElementChild.remove();
+      if (feed.children.length > 20) feed.lastElementChild.remove();
     }
 
-    /* ==========================================================================
-       VIEW NAVIGATION
-       ========================================================================== */
     function switchView(viewId, eyebrow, title) {
       document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-      const target = document.getElementById(viewId);
-      if (target) target.classList.add('active');
-
+      document.getElementById(viewId).classList.add('active');
       document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-      const activeBtn = document.querySelector(`.nav-btn[data-view="${viewId}"]`);
-      if (activeBtn) activeBtn.classList.add('active');
-
+      document.querySelector(`.nav-btn[data-view="${viewId}"]`)?.classList.add('active');
       document.getElementById('topbarEyebrow').innerText = eyebrow;
       document.getElementById('topbarTitle').innerText = title;
-
-      localStorage.setItem('vindox_command_view', JSON.stringify({ viewId, eyebrow, title }));
     }
 
-    /* ==========================================================================
-       INITIALIZATION & AUTH SESSION
-       ========================================================================== */
     window.onload = async () => {
       updateClock();
-      document.getElementById('prevDateDisplay').innerText = new Date().toLocaleDateString('de-DE');
       loadCompanyProfile();
-
-      const savedView = localStorage.getItem('vindox_command_view');
-      if (savedView) {
-        try {
-          const parsed = JSON.parse(savedView);
-          switchView(parsed.viewId, parsed.eyebrow, parsed.title);
-        } catch (e) {}
-      }
-
       try {
         const { data: { session } } = await supabaseClient.auth.getSession();
-        if (!session || !session.user) {
-          renderDemoFallback();
-          return;
-        }
+        if (!session || !session.user) return;
         currentChef = session.user;
-        const meta = currentChef.user_metadata || {};
-        const chefName = meta.name || meta.full_name || currentChef.email?.split('@')[0] || 'Geschäftsführung';
-        document.getElementById('chefGreetingLabel').innerText = chefName;
-        document.getElementById('chefAvatarInitials').innerText = chefName.substring(0, 2).toUpperCase();
-
+        const name = currentChef.user_metadata?.name || currentChef.email.split('@')[0];
+        document.getElementById('chefGreetingLabel').innerText = name;
+        document.getElementById('chefAvatarInitials').innerText = name.substring(0, 2).toUpperCase();
         await loadDriversFromSupabase();
         await loadToursFromSupabase();
-        subscribeRealtime();
-      } catch (err) {
-        renderDemoFallback();
-      }
+      } catch (e) {}
     };
 
-    function renderDemoFallback() {
-      const demoHtml = `
-        <div class="live-driver-card">
-          <div class="driver-card-top">
-            <div class="driver-identity">
-              <div class="driver-initials">F1</div>
-              <div class="driver-name-block">
-                <h4>Fahrer 1 (Vorschau-Modus)</h4>
-                <span>Tour Engelskirchen / Lindlar</span>
-              </div>
-            </div>
-            <span class="status-pill active">Unterwegs</span>
-          </div>
-          <div class="progress-wrapper">
-            <div class="progress-track"><div class="progress-fill" style="width: 65%;"></div></div>
-            <div class="progress-meta">
-              <span>13 von 20 Stopps abgeschlossen</span>
-              <span style="color: var(--accent-light);">65%</span>
-            </div>
-          </div>
-          <div class="telemetry-nodes">
-            <div class="node-tile">
-              <div class="node-tile-label">Letzter Nachweis</div>
-              <div class="node-tile-val">Hauptstraße 14, 51766 Engelskirchen</div>
-            </div>
-            <div class="node-tile">
-              <div class="node-tile-label">Nächstes Ziel</div>
-              <div class="node-tile-val">#14 Dörner Weg 20, 51766 Engelskirchen</div>
-            </div>
-          </div>
-        </div>
-      `;
-      document.getElementById('overviewLiveContainer').innerHTML = demoHtml;
-      document.getElementById('liveToursContainer').innerHTML = demoHtml;
-    }
-
-    function subscribeRealtime() {
-      supabaseClient.channel('public:stops')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'stops' }, (payload) => {
-          loadToursFromSupabase();
-          if (payload.new && payload.new.status === 'erledigt') {
-            logActivityEvent(`Stopp erledigt: ${payload.new.address}`, 'success');
-          }
-        }).subscribe();
-
-      supabaseClient.channel('public:tours')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'tours' }, (payload) => {
-          loadToursFromSupabase();
-          if (payload.new && payload.new.status === 'abgebrochen') {
-            logActivityEvent(`Tour abgebrochen: ${payload.new.title}`, 'danger');
-          }
-        }).subscribe();
-    }
-
-    /* ==========================================================================
-       TEAM & DRIVER MANAGEMENT + STRIPE GATE
-       ========================================================================== */
     async function loadDriversFromSupabase() {
-      const { data: profiles } = await supabaseClient
-        .from('profiles')
-        .select('*')
-        .eq('role', 'driver')
-        .eq('is_active', true);
-
-      driversList = profiles || [];
+      const { data } = await supabaseClient.from('profiles').select('*').eq('role', 'driver').eq('is_active', true);
+      driversList = data || [];
       document.getElementById('kpiActiveDrivers').innerText = driversList.length;
       document.getElementById('navBadgeDrivers').innerText = driversList.length;
       renderDriverList(driversList);
     }
 
-    function renderDriverList(listToRender) {
+    function renderDriverList(list) {
       const tbody = document.getElementById('employeeTableBody');
       const select = document.getElementById('tourAssignee');
-      const driverFilter = document.getElementById('proofDriverFilter');
-      const countBadge = document.getElementById('driverCountBadge');
-
-      if (countBadge) countBadge.innerText = `${driversList.length} Fahrer`;
-      if (tbody) tbody.innerHTML = '';
-      if (select) select.innerHTML = '';
-      if (driverFilter) driverFilter.innerHTML = '<option value="">Alle Fahrer</option>';
-
-      if (driversList.length === 0) {
-        if (tbody) tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--text-muted);">Keine aktiven Fahrer hinterlegt.</td></tr>';
-        if (select) select.innerHTML = '<option value="">Kein Fahrer verfügbar</option>';
-        return;
-      }
-
-      driversList.forEach(driver => {
-        const cleanUser = (driver.email || '').split('@')[0];
-        const name = driver.full_name || cleanUser;
-        if (select) select.innerHTML += `<option value="${driver.id}">${name} (${cleanUser})</option>`;
-        if (driverFilter) driverFilter.innerHTML += `<option value="${name.toLowerCase()}">${name}</option>`;
-      });
-
-      if (listToRender.length === 0) {
-        if (tbody) tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--text-muted);">Keine Suchtreffer.</td></tr>';
-        return;
-      }
-
-      listToRender.forEach(driver => {
-        const cleanUser = (driver.email || '').split('@')[0];
-        const name = driver.full_name || cleanUser;
-        const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
-
-        tbody.innerHTML += `
-          <tr>
-            <td>
-              <div style="display: flex; align-items: center; gap: 12px;">
-                <div class="driver-initials" style="width: 34px; height: 34px; font-size: 0.78rem;">${initials}</div>
-                <strong>${name}</strong>
-              </div>
-            </td>
-            <td><code style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--accent-light);">${cleanUser}</code></td>
-            <td><span class="status-pill active">Aktiv</span></td>
-            <td style="text-align: right;">
-              <button class="btn-danger-sm" onclick="deleteDriver('${driver.id}', '${name}')">Deaktivieren</button>
-            </td>
-          </tr>
-        `;
-      });
+      if (tbody) tbody.innerHTML = list.length ? list.map(d => `<tr><td><strong>${d.full_name || d.email}</strong></td><td><code>${d.email.split('@')[0]}</code></td><td><span class="status-pill active">Aktiv</span></td><td style="text-align: right;"><button class="btn-danger-sm" onclick="deleteDriver('${d.id}')">Deaktivieren</button></td></tr>`).join('') : '<tr><td colspan="4" style="text-align: center; color: var(--text-muted);">Keine Fahrer</td></tr>';
+      if (select) select.innerHTML = list.length ? list.map(d => `<option value="${d.id}">${d.full_name || d.email}</option>`).join('') : '<option value="">Keine Fahrer</option>';
     }
 
     function filterDriverTable() {
-      const term = (document.getElementById('driverSearchInput')?.value || '').toLowerCase();
-      const filtered = driversList.filter(d =>
-        (d.full_name || '').toLowerCase().includes(term) ||
-        (d.email || '').toLowerCase().includes(term)
-      );
-      renderDriverList(filtered);
+      const term = document.getElementById('driverSearchInput').value.toLowerCase();
+      renderDriverList(driversList.filter(d => (d.full_name || '').toLowerCase().includes(term) || d.email.toLowerCase().includes(term)));
     }
 
-    async function deleteDriver(id, name) {
-      if (!confirm(`Fahrer-Account "${name}" wirklich deaktivieren?`)) return;
+    async function deleteDriver(id) {
+      if (!confirm('Fahrer wirklich deaktivieren?')) return;
       await supabaseClient.from('profiles').update({ is_active: false }).eq('id', id);
-      showToast(`Fahrer ${name} deaktiviert`, 'danger');
-      logActivityEvent(`Fahrer deaktiviert: ${name}`, 'danger');
-      await loadDriversFromSupabase();
-      await loadToursFromSupabase();
+      showToast('Fahrer deaktiviert', 'danger');
+      loadDriversFromSupabase();
     }
 
     function interceptAddEmployee(e) {
       e.preventDefault();
-      const name = document.getElementById('empName').value.trim();
-      const username = document.getElementById('empUsername').value.trim();
-      const password = document.getElementById('empPassword').value.trim();
-      if (!name || !username || !password) return;
-
-      localStorage.setItem('pending_driver_name', name);
-      localStorage.setItem('pending_driver_username', username);
-      localStorage.setItem('pending_driver_password', password);
       document.getElementById('stripeUpgradeModal').classList.add('open');
     }
+    function closeStripeUpgradeModal() { document.getElementById('stripeUpgradeModal').classList.remove('open'); }
+    function proceedToStripeCheckout() { window.location.href = 'https://buy.stripe.com/7sY28qarXfAsdCb2gzdby02'; }
 
-    function closeStripeUpgradeModal() {
-      document.getElementById('stripeUpgradeModal').classList.remove('open');
-    }
-
-    function proceedToStripeCheckout() {
-      closeStripeUpgradeModal();
-      window.location.href = 'https://buy.stripe.com/7sY28qarXfAsdCb2gzdby02';
-    }
-
-    /* ==========================================================================
-       INTERACTIVE TOUR PLANNER & OCR SCANNER
-       ========================================================================== */
     function renderBuilderStops() {
-      const container = document.getElementById('stopBuilderList');
-      const badge = document.getElementById('addressCountBadge');
-      badge.innerText = `${builderStops.length} Stopps`;
-
-      if (builderStops.length === 0) {
-        container.innerHTML = `
-          <div style="margin: auto; text-align: center; color: var(--text-muted); font-size: 0.82rem; line-height: 1.5;">
-            Noch keine Stopps in der Liste.<br>Fügen Sie oben Adressen hinzu oder nutzen Sie den OCR-Scanner.
-          </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = builderStops.map((addr, idx) => `
-        <div class="builder-stop-row">
-          <div class="builder-stop-num">${idx + 1}</div>
-          <div class="builder-stop-text">${addr}</div>
-          <div class="builder-stop-actions">
-            <button class="icon-mini-btn" title="Nach oben" onclick="moveBuilderStop(${idx}, -1)">▲</button>
-            <button class="icon-mini-btn" title="Nach unten" onclick="moveBuilderStop(${idx}, 1)">▼</button>
-            <button class="icon-mini-btn" style="color: var(--danger);" title="Entfernen" onclick="removeBuilderStop(${idx})">✕</button>
-          </div>
-        </div>
-      `).join('');
+      const list = document.getElementById('stopBuilderList');
+      document.getElementById('addressCountBadge').innerText = `${builderStops.length} Stopps`;
+      list.innerHTML = builderStops.length ? builderStops.map((a, i) => `<div class="builder-stop-row"><div class="builder-stop-num">${i+1}</div><div class="builder-stop-text">${a}</div><button class="icon-mini-btn" style="color:var(--danger);" onclick="builderStops.splice(${i},1);renderBuilderStops()">✕</button></div>`).join('') : '<div style="margin: auto; text-align: center; color: var(--text-muted);">Keine Stopps</div>';
     }
-
     function addSingleStopToBuilder() {
-      const input = document.getElementById('singleAddressInput');
-      const val = input.value.trim();
-      if (val.length < 3) return;
-      builderStops.push(val);
-      input.value = '';
-      renderBuilderStops();
+      const inp = document.getElementById('singleAddressInput');
+      if (inp.value.trim().length > 2) { builderStops.push(inp.value.trim()); inp.value=''; renderBuilderStops(); }
     }
-
-    function moveBuilderStop(index, delta) {
-      const target = index + delta;
-      if (target < 0 || target >= builderStops.length) return;
-      const temp = builderStops[index];
-      builderStops[index] = builderStops[target];
-      builderStops[target] = temp;
-      renderBuilderStops();
-    }
-
-    function removeBuilderStop(index) {
-      builderStops.splice(index, 1);
-      renderBuilderStops();
-    }
-
-    function clearBuilderStops() {
-      builderStops = [];
-      renderBuilderStops();
-    }
-
-    function toggleBulkPasteArea() {
-      const el = document.getElementById('bulkPasteContainer');
-      el.style.display = el.style.display === 'none' ? 'block' : 'none';
-    }
-
+    function clearBuilderStops() { builderStops = []; renderBuilderStops(); }
+    function toggleBulkPasteArea() { const el = document.getElementById('bulkPasteContainer'); el.style.display = el.style.display === 'none' ? 'block' : 'none'; }
     function importBulkAddresses() {
-      const raw = document.getElementById('tourAddressesBulk').value;
-      const lines = raw.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 2);
-      if (lines.length === 0) return;
-      builderStops.push(...lines);
-      document.getElementById('tourAddressesBulk').value = '';
-      document.getElementById('bulkPasteContainer').style.display = 'none';
-      renderBuilderStops();
-      showToast(`${lines.length} Adressen übernommen`, 'success');
+      const lines = document.getElementById('tourAddressesBulk').value.split('\n').map(l => l.trim()).filter(l => l.length > 2);
+      builderStops.push(...lines); document.getElementById('tourAddressesBulk').value = ''; toggleBulkPasteArea(); renderBuilderStops();
     }
 
     async function processBossTourScan(e) {
       const file = e.target.files[0];
       if (!file) return;
       const msg = document.getElementById('scanStatusMsg');
-      msg.style.display = 'block';
-      msg.style.color = 'var(--accent-light)';
-      msg.innerText = 'OCR-Texterkennung läuft...';
-
+      msg.style.display = 'block'; msg.innerText = 'OCR Analyse läuft...';
       try {
-        const result = await Tesseract.recognize(file, 'deu');
-        const lines = result.data.text
-          .split(/\r?\n|;/)
-          .map(l => l.replace(/^\s*\d+[\.\)\-]?\s*/, '').trim())
-          .filter(l => l.length > 4);
-
-        if (lines.length > 0) {
-          builderStops.push(...lines);
-          renderBuilderStops();
-          msg.style.color = 'var(--success)';
-          msg.innerText = `${lines.length} Adressen erfolgreich erkannt und hinzugefügt`;
-          if (!document.getElementById('tourTitle').value) {
-            document.getElementById('tourTitle').value = 'Tour ' + new Date().toLocaleDateString('de-DE');
-          }
-        } else {
-          msg.style.color = 'var(--warning)';
-          msg.innerText = 'Keine eindeutigen Adresszeilen erkannt.';
-        }
-      } catch (err) {
-        msg.style.color = 'var(--danger)';
-        msg.innerText = 'OCR-Analyse fehlgeschlagen.';
-      }
-      setTimeout(() => { msg.style.display = 'none'; }, 4500);
-      e.target.value = '';
+        const ret = await Tesseract.recognize(file, 'deu');
+        const lines = ret.data.text.split('\n').map(l => l.trim()).filter(l => l.length > 4);
+        builderStops.push(...lines); renderBuilderStops();
+        msg.innerText = `${lines.length} Adressen erkannt`;
+      } catch (err) { msg.innerText = 'OCR Fehler'; }
+      setTimeout(() => msg.style.display = 'none', 4000);
     }
 
     async function createAndSendTour() {
       const title = document.getElementById('tourTitle').value.trim() || 'Tour ' + new Date().toLocaleDateString('de-DE');
       const driverId = document.getElementById('tourAssignee').value;
-      const notes = document.getElementById('tourNotes').value.trim();
+      if (!driverId || builderStops.length === 0) return showToast('Fahrer & Stopps erforderlich', 'danger');
 
-      if (!driverId) return showToast('Bitte zuerst einen Fahrer auswählen', 'danger');
-      if (builderStops.length === 0) return showToast('Bitte mindestens einen Stopp erfassen', 'danger');
+      const { data: tour } = await supabaseClient.from('tours').insert([{ title, assigned_to: driverId, status: 'geplant' }]).select('*').single();
+      await supabaseClient.from('stops').insert(builderStops.map((addr, idx) => ({ tour_id: tour.id, address: addr, sequence: idx + 1, status: 'offen' })));
 
-      const { data: tourData, error } = await supabaseClient.from('tours').insert([{
-        title,
-        assigned_to: driverId,
-        created_by: currentChef?.id || 'demo',
-        notes,
-        status: 'geplant'
-      }]).select('*').single();
-
-      if (error) return showToast('Übertragungsfehler: ' + error.message, 'danger');
-
-      const stopsPayload = builderStops.map((addr, idx) => ({
-        tour_id: tourData.id,
-        address: addr,
-        sequence: idx + 1,
-        status: 'offen'
-      }));
-
-      await supabaseClient.from('stops').insert(stopsPayload);
-
-      showToast('Tour erfolgreich an Fahrer übermittelt', 'success');
-      logActivityEvent(`Neue Tour disponiert: ${title} (${builderStops.length} Stopps)`, 'info');
-
-      builderStops = [];
-      renderBuilderStops();
-      document.getElementById('tourTitle').value = '';
-      document.getElementById('tourNotes').value = '';
-      await loadToursFromSupabase();
+      showToast('Tour erfolgreich übertragen', 'success');
+      logActivityEvent(`Tour disponiert: ${title}`, 'success');
+      builderStops = []; renderBuilderStops();
+      loadToursFromSupabase();
     }
 
-    async function deletePlannedTour(tourId, title) {
-      if (!confirm(`Geplante Tour "${title}" aus der Warteschlange löschen?`)) return;
-      await supabaseClient.from('stops').delete().eq('tour_id', tourId);
-      await supabaseClient.from('tours').delete().eq('id', tourId);
-      showToast(`Tour "${title}" entfernt`, 'danger');
-      await loadToursFromSupabase();
-    }
-
-    /* ==========================================================================
-       LOAD TOURS, LIVE MONITOR & AUDIT PROOFS
-       ========================================================================== */
     async function loadToursFromSupabase() {
-      const { data: tours } = await supabaseClient
-        .from('tours')
-        .select('*, stops(*), profiles:assigned_to(full_name, email, is_active)')
-        .order('created_at', { ascending: false });
+      const { data: tours } = await supabaseClient.from('tours').select('*, stops(*), profiles:assigned_to(full_name, email, is_active)').order('created_at', { ascending: false });
+      const today = new Date().toISOString().split('T')[0];
+      const live = (tours || []).filter(t => t.profiles?.is_active && (t.status === 'aktiv' || t.status === 'abgebrochen') && t.created_at?.startsWith(today));
+      const planned = (tours || []).filter(t => t.status === 'geplant');
 
-      const todayStr = new Date().toISOString().split('T')[0];
+      document.getElementById('kpiTotalTours').innerText = planned.length;
+      document.getElementById('navBadgePlanned').innerText = planned.length;
+      document.getElementById('navBadgeLive').innerText = live.length;
 
-      const liveActiveTours = (tours || []).filter(t =>
-        t.profiles?.is_active === true &&
-        (t.status === 'aktiv' || t.status === 'abgebrochen') &&
-        t.created_at && t.created_at.startsWith(todayStr)
-      );
+      document.getElementById('plannedToursTableBody').innerHTML = planned.length ? planned.map(t => `<tr><td><strong>${t.title}</strong></td><td>${t.profiles?.full_name || 'Fahrer'}</td><td><span class="status-pill pending">${t.stops?.length || 0} Stopps</span></td><td>${new Date(t.created_at).toLocaleString('de-DE')}</td><td style="text-align: right;"><button class="btn-danger-sm" onclick="supabaseClient.from('tours').delete().eq('id','${t.id}').then(loadToursFromSupabase)">Löschen</button></td></tr>`).join('') : '<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Keine geplanten Touren</td></tr>';
 
-      const plannedTours = (tours || []).filter(t => t.status === 'geplant');
-
-      document.getElementById('kpiTotalTours').innerText = plannedTours.length;
-      document.getElementById('navBadgePlanned').innerText = plannedTours.length;
-      document.getElementById('navBadgeLive').innerText = liveActiveTours.length;
-
-      renderPlannedToursTable(plannedTours);
-
-      let totalStops = 0, doneStops = 0;
-      (tours || []).forEach(t => {
-        if (t.stops) {
-          totalStops += t.stops.length;
-          doneStops += t.stops.filter(s => s.status === 'erledigt').length;
-        }
-      });
-
-      const rate = totalStops > 0 ? Math.round((doneStops / totalStops) * 100) : 0;
-      document.getElementById('kpiCompletionRate').innerText = `${rate}%`;
-
-      renderLiveMonitor(liveActiveTours, 'liveToursContainer');
-      renderLiveMonitor(liveActiveTours, 'overviewLiveContainer');
+      renderLiveMonitor(live, 'liveToursContainer');
+      renderLiveMonitor(live, 'overviewLiveContainer');
       extractAndProcessProofs(tours || []);
     }
 
-    function renderPlannedToursTable(plannedTours) {
-      const tbody = document.getElementById('plannedToursTableBody');
-      if (!tbody) return;
-
-      if (plannedTours.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Keine geplanten Touren in der Warteschlange.</td></tr>';
+    function renderLiveMonitor(activeTours, containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      if (activeTours.length === 0) {
+        container.innerHTML = '<div style="text-align: center; padding: 30px; color: var(--text-muted);">Aktuell keine Live-Touren</div>';
         return;
       }
-
-      tbody.innerHTML = plannedTours.map(t => {
-        const driverName = t.profiles?.full_name || t.profiles?.email?.split('@')[0] || 'Unbekannt';
-        const stopCount = t.stops ? t.stops.length : 0;
-        const dateStr = new Date(t.created_at).toLocaleString('de-DE');
-
-        return `
-          <tr>
-            <td><strong>${t.title}</strong></td>
-            <td>${driverName}</td>
-            <td><span class="status-pill pending">${stopCount} Stopps</span></td>
-            <td style="font-size: 0.78rem; color: var(--text-sub); font-family: var(--font-mono);">${dateStr}</td>
-            <td style="text-align: right;">
-              <button class="btn-danger-sm" onclick="deletePlannedTour('${t.id}', '${t.title}')">Stornieren</button>
-            </td>
-          </tr>
-        `;
+      container.innerHTML = activeTours.map(t => {
+        const stops = t.stops || [];
+        const done = stops.filter(s => s.status === 'erledigt').length;
+        const pct = stops.length ? Math.round((done / stops.length) * 100) : 0;
+        const name = t.profiles?.full_name || 'Fahrer';
+        return `<div class="live-driver-card"><div class="driver-card-top"><div class="driver-identity"><div class="driver-initials">${name.substring(0,2).toUpperCase()}</div><div class="driver-name-block"><h4>${name}</h4><span>${t.title}</span></div></div><span class="status-pill active">Unterwegs</span></div><div class="progress-wrapper"><div class="progress-track"><div class="progress-fill" style="width: ${pct}%;"></div></div><div class="progress-meta"><span>${done} von ${stops.length} erledigt</span><span>${pct}%</span></div></div></div>`;
       }).join('');
     }
 
-    function renderLiveMonitor(activeTours, targetContainerId) {
-      const container = document.getElementById(targetContainerId);
-      if (!container) return;
-
-      if (activeTours.length === 0) {
-        container.innerHTML = `
-          <div style="text-align: center; padding: 36px 20px; background: rgba(3, 5, 8, 0.45); border-radius: 16px; border: 1px solid var(--card-border);">
-            <div style="font-size: 0.92rem; font-weight: 800; color: var(--text-main);">Aktuell keine aktiven Touren</div>
-            <div style="font-size: 0.78rem; color: var(--text-sub); margin-top: 4px;">Sobald ein Fahrer seine Tour startet, erscheinen Live-Fortschritt und GPS-Status hier.</div>
-          </div>
-        `;
-        return;
-      }
-
-      const driverMap = new Map();
-      activeTours.forEach(t => {
-        if (!driverMap.has(t.assigned_to)) driverMap.set(t.assigned_to, t);
-      });
-
-      container.innerHTML = '';
-
-      driverMap.forEach((tour) => {
-        const stops = (tour.stops || []).sort((a, b) => (a.sequence || 0) - (b.sequence || 0));
-        const total = stops.length;
-        const doneStops = stops.filter(s => s.status === 'erledigt');
-        const doneCount = doneStops.length;
-        const pct = total > 0 ? Math.round((doneCount / total) * 100) : 0;
-
-        const driverName = tour.profiles?.full_name || tour.profiles?.email?.split('@')[0] || 'Fahrer';
-        const initials = driverName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
-        const isAborted = tour.status === 'abgebrochen';
-
-        const lastDone = doneStops.length > 0 ? doneStops[doneStops.length - 1] : null;
-        const lastDoneText = lastDone
-          ? `${lastDone.address} ${lastDone.completed_at ? '(' + new Date(lastDone.completed_at).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) + ')' : ''}`
-          : 'Noch kein Stopp erfasst';
-
-        const nextOpen = stops.find(s => s.status !== 'erledigt');
-        const nextOpenText = nextOpen ? `#${nextOpen.sequence} ${nextOpen.address}` : 'Tour vollständig abgeschlossen';
-
-        const drawerId = `${targetContainerId}-acc-${tour.id}`;
-
-        container.innerHTML += `
-          <div class="live-driver-card ${isAborted ? 'aborted' : ''}">
-            <div class="driver-card-top" onclick="toggleDrawer('${drawerId}')">
-              <div class="driver-identity">
-                <div class="driver-initials" style="${isAborted ? 'color: var(--danger); border-color: var(--danger-border); background: var(--danger-bg);' : ''}">${initials}</div>
-                <div class="driver-name-block">
-                  <h4>${driverName}</h4>
-                  <span>${tour.title}</span>
-                </div>
-              </div>
-              <div style="display: flex; align-items: center; gap: 10px;">
-                <span class="status-pill ${isAborted ? 'danger' : 'active'}">${isAborted ? 'Abgebrochen' : 'Unterwegs'}</span>
-              </div>
-            </div>
-
-            ${isAborted ? `
-              <div style="margin-top: 12px; background: var(--danger-bg); border: 1px solid var(--danger-border); border-radius: 10px; padding: 10px 14px; font-size: 0.78rem; color: var(--danger);">
-                <strong>Abbruchgrund:</strong> ${tour.notes || 'Kein Grund übermittelt'}
-              </div>
-            ` : `
-              <div class="progress-wrapper">
-                <div class="progress-track"><div class="progress-fill" style="width: ${pct}%;"></div></div>
-                <div class="progress-meta">
-                  <span>Fortschritt: ${doneCount} von ${total} Stopps</span>
-                  <span style="color: var(--accent-light);">${pct}%</span>
-                </div>
-              </div>
-              <div class="telemetry-nodes">
-                <div class="node-tile">
-                  <div class="node-tile-label">Zuletzt erledigt</div>
-                  <div class="node-tile-val" title="${lastDoneText}">${lastDoneText}</div>
-                </div>
-                <div class="node-tile">
-                  <div class="node-tile-label">Nächster Stopp</div>
-                  <div class="node-tile-val" title="${nextOpenText}">${nextOpenText}</div>
-                </div>
-              </div>
-            `}
-
-            <div class="accordion-drawer" id="${drawerId}">
-              <div style="font-size: 0.68rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px;">Einzelstopp-Protokoll</div>
-              <div class="table-wrap">
-                <table>
-                  <thead>
-                    <tr>
-                      <th style="width: 40px;">#</th>
-                      <th>Adresse</th>
-                      <th>Status</th>
-                      <th>Beleg</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    ${stops.map(s => `
-                      <tr>
-                        <td><strong>${s.sequence}</strong></td>
-                        <td>${s.address}${s.notes ? `<div style="font-size: 0.72rem; color: var(--text-sub);">Notiz: ${s.notes}</div>` : ''}</td>
-                        <td>
-                          <span class="status-pill ${s.status === 'erledigt' ? 'active' : 'pending'}">${s.status}</span>
-                        </td>
-                        <td>
-                          ${s.photo_url
-                            ? `<img src="${s.photo_url}" class="proof-thumb" style="width: 32px; height: 32px;" onclick="openSingleImageModal('${s.photo_url}', '${s.address}', '${driverName}')">`
-                            : `<span style="font-size: 0.72rem; color: var(--text-muted);">—</span>`}
-                        </td>
-                      </tr>
-                    `).join('')}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        `;
-      });
-    }
-
-    function toggleDrawer(id) {
-      const el = document.getElementById(id);
-      if (el) el.classList.toggle('open');
-    }
-
-    /* ==========================================================================
-       AUDIT & PROOFS TABLE + PDF EXPORT
-       ========================================================================== */
     function extractAndProcessProofs(tours) {
       allExtractedProofs = [];
-      tours.forEach(tour => {
-        const driverName = tour.profiles?.full_name || tour.profiles?.email?.split('@')[0] || 'Unbekannt';
-        const isTourAborted = tour.status === 'abgebrochen';
-
-        if (tour.stops && tour.stops.length > 0) {
-          tour.stops.forEach(stop => {
-            const effectiveStatus = isTourAborted && stop.status !== 'erledigt' ? 'abgebrochen' : (stop.status || 'offen');
-            allExtractedProofs.push({
-              id: stop.id,
-              address: stop.address,
-              status: effectiveStatus,
-              photo_url: stop.photo_url,
-              tourTitle: tour.title,
-              driverName,
-              notes: stop.notes || (isTourAborted ? tour.notes : ''),
-              created_at: stop.completed_at || stop.created_at || tour.created_at || new Date().toISOString()
-            });
-          });
-        }
+      tours.forEach(t => {
+        const driverName = t.profiles?.full_name || 'Fahrer';
+        t.stops?.forEach(s => {
+          allExtractedProofs.push({ id: s.id, address: s.address, status: s.status, photo_url: s.photo_url, tourTitle: t.title, driverName, created_at: s.completed_at || t.created_at });
+        });
       });
-
-      const proofsWithPhoto = allExtractedProofs.filter(p => p.photo_url);
-      document.getElementById('kpiProofsToday').innerText = proofsWithPhoto.length;
+      document.getElementById('kpiProofsToday').innerText = allExtractedProofs.filter(p => p.photo_url).length;
       document.getElementById('navBadgeProofs').innerText = allExtractedProofs.length;
-
       filterAndRenderProofs();
     }
 
     function filterAndRenderProofs() {
-      const search = (document.getElementById('proofSearchInput')?.value || '').toLowerCase();
-      const date = document.getElementById('proofDateFilter')?.value;
-      const status = document.getElementById('proofStatusFilter')?.value;
-      const driver = (document.getElementById('proofDriverFilter')?.value || '').toLowerCase();
-      const onlyPhotos = document.getElementById('onlyPhotosToggle')?.checked;
-
-      const filtered = allExtractedProofs.filter(item => {
-        const mSearch = item.address.toLowerCase().includes(search) || item.driverName.toLowerCase().includes(search) || item.tourTitle.toLowerCase().includes(search);
-        const mDriver = !driver || item.driverName.toLowerCase() === driver;
-        const mStatus = !status || item.status.toLowerCase() === status.toLowerCase();
-        const mDate = !date || item.created_at.startsWith(date);
-        const mPhoto = !onlyPhotos || (item.photo_url && item.photo_url.length > 0);
-        return mSearch && mDriver && mStatus && mDate && mPhoto;
-      });
-
-      renderProofTable(filtered);
-    }
-
-    function renderProofTable(items) {
+      const search = document.getElementById('proofSearchInput').value.toLowerCase();
+      const filtered = allExtractedProofs.filter(p => p.address.toLowerCase().includes(search) || p.driverName.toLowerCase().includes(search));
       const tbody = document.getElementById('proofsTableBody');
-      const countBadge = document.getElementById('proofsCountBadge');
-      if (countBadge) countBadge.innerText = `${items.length} Einträge`;
-      if (!tbody) return;
-
-      if (items.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: var(--text-muted);">Keine passenden Leistungsnachweise gefunden.</td></tr>';
-        updateBatchActionBar();
-        return;
-      }
-
-      tbody.innerHTML = items.map((s, idx) => {
-        const checked = selectedProofIds.has(s.id) ? 'checked' : '';
-        let pillClass = 'pending';
-        if (s.status === 'erledigt') pillClass = 'active';
-        if (s.status === 'abgebrochen') pillClass = 'danger';
-
-        return `
-          <tr>
-            <td style="text-align: center;"><input type="checkbox" data-id="${s.id}" ${checked} onchange="toggleSelectProof('${s.id}')"></td>
-            <td>${s.photo_url ? `<img src="${s.photo_url}" class="proof-thumb" onclick="openProofModal(${idx})">` : `<span style="font-size: 0.72rem; color: var(--text-muted);">Kein Foto</span>`}</td>
-            <td>
-              <strong>${s.address}</strong>
-              ${s.notes ? `<div style="font-size: 0.74rem; color: var(--text-sub); margin-top: 2px;">Notiz: ${s.notes}</div>` : ''}
-            </td>
-            <td>${s.driverName}</td>
-            <td>${s.tourTitle}</td>
-            <td style="font-family: var(--font-mono); font-size: 0.76rem; color: var(--text-sub);">${new Date(s.created_at).toLocaleString('de-DE')}</td>
-            <td><span class="status-pill ${pillClass}">${s.status}</span></td>
-            <td style="text-align: right; white-space: nowrap;">
-              <button class="btn-secondary" style="padding: 5px 10px; font-size: 0.72rem;" onclick="openProofModal(${idx})">Inspektor</button>
-              <button class="btn-danger-sm" style="margin-left: 4px;" onclick="deleteSingleProof('${s.id}')">Löschen</button>
-            </td>
-          </tr>
-        `;
-      }).join('');
-
-      window.currentFilteredProofs = items;
-      updateBatchActionBar();
-    }
-
-    function toggleSelectProof(id) {
-      if (selectedProofIds.has(id)) selectedProofIds.delete(id);
-      else selectedProofIds.add(id);
-      updateBatchActionBar();
-    }
-
-    function toggleSelectAllProofs(master) {
-      const items = window.currentFilteredProofs || [];
-      items.forEach(i => {
-        if (master.checked) selectedProofIds.add(i.id);
-        else selectedProofIds.delete(i.id);
-      });
-      renderProofTable(items);
-    }
-
-    function updateBatchActionBar() {
-      const bar = document.getElementById('batchActionBar');
-      const countText = document.getElementById('selectedCountText');
-      if (!bar) return;
-      if (selectedProofIds.size > 0) {
-        bar.classList.add('visible');
-        countText.innerText = `${selectedProofIds.size} Einträge ausgewählt`;
-      } else {
-        bar.classList.remove('visible');
-      }
-    }
-
-    async function deleteSingleProof(id) {
-      if (!confirm('Diesen Audit-Datensatz wirklich löschen?')) return;
-      await supabaseClient.from('stops').delete().eq('id', id);
-      selectedProofIds.delete(id);
-      showToast('Eintrag gelöscht', 'danger');
-      await loadToursFromSupabase();
-    }
-
-    async function deleteSingleProofModal() {
-      if (!activeModalProof) return;
-      await deleteSingleProof(activeModalProof.id);
-      closeProofModal();
-    }
-
-    async function deleteSelectedProofs() {
-      if (selectedProofIds.size === 0) return;
-      if (!confirm(`${selectedProofIds.size} ausgewählte Einträge unwiderruflich löschen?`)) return;
-      await supabaseClient.from('stops').delete().in('id', Array.from(selectedProofIds));
-      selectedProofIds.clear();
-      showToast('Auswahl gelöscht', 'danger');
-      await loadToursFromSupabase();
+      tbody.innerHTML = filtered.length ? filtered.map((p, idx) => `<tr><td style="text-align: center;"><input type="checkbox" onchange="toggleSelectProof('${p.id}')"></td><td>${p.photo_url ? `<img src="${p.photo_url}" class="proof-thumb" onclick="openProofModal(${idx})">` : '—'}</td><td>${p.address}</td><td>${p.driverName}</td><td>${p.tourTitle}</td><td>${new Date(p.created_at).toLocaleString('de-DE')}</td><td><span class="status-pill active">${p.status}</span></td><td style="text-align: right;"><button class="btn-secondary" style="padding: 4px 8px; font-size: 0.72rem;" onclick="openProofModal(${idx})">Details</button></td></tr>`).join('') : '<tr><td colspan="8" style="text-align: center; color: var(--text-muted);">Keine Nachweise</td></tr>';
+      window.currentFilteredProofs = filtered;
     }
 
     function openProofModal(idx) {
-      const items = window.currentFilteredProofs || allExtractedProofs;
-      const proof = items[idx];
-      if (!proof) return;
-      activeModalProof = proof;
-
-      document.getElementById('modalAddress').innerText = proof.address;
-      document.getElementById('modalDriver').innerText = proof.driverName;
-      document.getElementById('modalTour').innerText = proof.tourTitle;
-      document.getElementById('modalTime').innerText = new Date(proof.created_at).toLocaleString('de-DE');
-
-      const statusEl = document.getElementById('modalStatus');
-      statusEl.innerText = proof.status.toUpperCase();
-      statusEl.style.color = proof.status === 'erledigt' ? 'var(--success)' : (proof.status === 'abgebrochen' ? 'var(--danger)' : 'var(--warning)');
-
-      const noteBox = document.getElementById('modalNoteBox');
-      if (proof.notes) {
-        document.getElementById('modalNotes').innerText = proof.notes;
-        noteBox.style.display = 'block';
-      } else {
-        noteBox.style.display = 'none';
-      }
-
-      const img = document.getElementById('modalImage');
-      if (proof.photo_url) {
-        img.src = proof.photo_url;
-        img.style.display = 'block';
-      } else {
-        img.style.display = 'none';
-      }
-
+      const p = window.currentFilteredProofs[idx];
+      activeModalProof = p;
+      document.getElementById('modalAddress').innerText = p.address;
+      document.getElementById('modalDriver').innerText = p.driverName;
+      document.getElementById('modalTour').innerText = p.tourTitle;
+      document.getElementById('modalTime').innerText = new Date(p.created_at).toLocaleString('de-DE');
+      document.getElementById('modalStatus').innerText = p.status.toUpperCase();
+      document.getElementById('modalImage').src = p.photo_url || '';
       document.getElementById('proofModal').classList.add('open');
     }
+    function closeProofModal() { document.getElementById('proofModal').classList.remove('open'); }
 
-    function openSingleImageModal(url, address, driver) {
-      document.getElementById('modalAddress').innerText = address;
-      document.getElementById('modalDriver').innerText = driver;
-      document.getElementById('modalTour').innerText = 'Live-Tour';
-      document.getElementById('modalTime').innerText = new Date().toLocaleString('de-DE');
-      document.getElementById('modalStatus').innerText = 'ERLEDIGT';
-      document.getElementById('modalStatus').style.color = 'var(--success)';
-      document.getElementById('modalNoteBox').style.display = 'none';
-
-      const img = document.getElementById('modalImage');
-      img.src = url;
-      img.style.display = 'block';
-      document.getElementById('proofModal').classList.add('open');
-    }
-
-    function closeProofModal() {
-      document.getElementById('proofModal').classList.remove('open');
-      activeModalProof = null;
-    }
-
-    /* ==========================================================================
-       COMPANY PROFILE & COURT-ADMISSIBLE PDF GENERATOR
-       ========================================================================== */
     function loadCompanyProfile() {
       const saved = localStorage.getItem('companyProfile');
       if (!saved) return;
-      try {
-        const d = JSON.parse(saved);
-        document.getElementById('compName').value = d.name || '';
-        document.getElementById('compLegalForm').value = d.legalForm || 'GbR';
-        document.getElementById('compSubtitle').value = d.subtitle || '';
-        document.getElementById('compOwner').value = d.owner || '';
-        document.getElementById('compStreet').value = d.street || '';
-        document.getElementById('compCity').value = d.city || '';
-        document.getElementById('compEmail').value = d.email || '';
-        document.getElementById('compPhone').value = d.phone || '';
-        document.getElementById('compTax').value = d.tax || '';
-        document.getElementById('compHr').value = d.hr || '';
-        document.getElementById('compIban').value = d.iban || '';
-        document.getElementById('compBic').value = d.bic || '';
-        if (d.logo) {
-          companyLogoBase64 = d.logo;
-          document.getElementById('removeLogoBtn').style.display = 'block';
-        }
-        updatePdfPreview();
-      } catch (e) {}
-    }
-
-    function updatePdfPreview() {
-      const name = document.getElementById('compName').value || 'Vindox Logistik';
-      const legalForm = document.getElementById('compLegalForm').value || 'GbR';
-      const subtitle = document.getElementById('compSubtitle').value || 'Logistik & Objektservice';
-      const owner = document.getElementById('compOwner').value || '-';
-      const street = document.getElementById('compStreet').value || 'Hauptstraße 1';
-      const city = document.getElementById('compCity').value || '51766 Engelskirchen';
-      const email = document.getElementById('compEmail').value || 'info@firma.de';
-      const phone = document.getElementById('compPhone').value || '-';
-      const tax = document.getElementById('compTax').value || '-';
-      const hr = document.getElementById('compHr').value || '';
-      const iban = document.getElementById('compIban').value || '-';
-      const bic = document.getElementById('compBic').value || '-';
-
-      document.getElementById('prevCompName').innerText = `${name} ${legalForm !== 'Einzelunternehmen' ? legalForm : ''}`;
-      document.getElementById('prevCompSubtitle').innerText = subtitle;
-      document.getElementById('prevCompStreet').innerText = street;
-      document.getElementById('prevCompCity').innerText = city;
-      document.getElementById('prevCompEmail').innerText = email;
-      document.getElementById('prevCompPhone').innerText = phone;
-      document.getElementById('prevCompOwner').innerText = owner;
-      document.getElementById('prevCompTax').innerText = tax;
-      document.getElementById('prevLegalFormLabel').innerText = legalForm;
-      document.getElementById('prevCompSitz').innerText = city.split(' ').slice(1).join(' ') || city;
-      document.getElementById('prevCompIban').innerText = iban;
-      document.getElementById('prevCompBic').innerText = bic;
-
-      const hrDisp = document.getElementById('prevCompHrDisplay');
-      if (hr) {
-        hrDisp.style.display = 'inline';
-        document.getElementById('prevCompHr').innerText = hr;
-      } else {
-        hrDisp.style.display = 'none';
-      }
-
-      const logoArea = document.getElementById('prevLogoArea');
-      const formLogo = document.getElementById('formLogoContainer');
-      if (companyLogoBase64) {
-        logoArea.innerHTML = `<img src="${companyLogoBase64}" style="max-height: 44px; max-width: 110px; object-fit: contain; margin-right: 12px;">`;
-        formLogo.innerHTML = `<img src="${companyLogoBase64}" style="max-height: 46px; object-fit: contain;"><div style="font-size: 0.72rem; color: var(--accent-light); margin-top: 4px;">Logo ersetzen</div>`;
-      } else {
-        logoArea.innerHTML = '';
-        formLogo.innerHTML = 'Logo auswählen (PNG / JPG)';
-      }
-    }
-
-    function handleLogoUpload(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        companyLogoBase64 = ev.target.result;
-        document.getElementById('removeLogoBtn').style.display = 'block';
-        updatePdfPreview();
-        showToast('Firmenlogo aktualisiert', 'success');
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function removeLogo() {
-      companyLogoBase64 = '';
-      document.getElementById('compLogoInput').value = '';
-      document.getElementById('removeLogoBtn').style.display = 'none';
+      const d = JSON.parse(saved);
+      document.getElementById('compName').value = d.name || '';
+      document.getElementById('compLegalForm').value = d.legalForm || 'GbR';
+      document.getElementById('compOwner').value = d.owner || '';
+      document.getElementById('compStreet').value = d.street || '';
+      document.getElementById('compCity').value = d.city || '';
       updatePdfPreview();
     }
-
+    function updatePdfPreview() {
+      document.getElementById('prevCompName').innerText = document.getElementById('compName').value || 'Vindox Logistik';
+      document.getElementById('prevCompStreet').innerText = `${document.getElementById('compStreet').value}, ${document.getElementById('compCity').value}`;
+    }
     function saveCompanyProfile(e) {
       e.preventDefault();
-      const data = {
-        name: document.getElementById('compName').value.trim(),
-        legalForm: document.getElementById('compLegalForm').value,
-        subtitle: document.getElementById('compSubtitle').value.trim(),
-        owner: document.getElementById('compOwner').value.trim(),
-        street: document.getElementById('compStreet').value.trim(),
-        city: document.getElementById('compCity').value.trim(),
-        email: document.getElementById('compEmail').value.trim(),
-        phone: document.getElementById('compPhone').value.trim(),
-        tax: document.getElementById('compTax').value.trim(),
-        hr: document.getElementById('compHr').value.trim(),
-        iban: document.getElementById('compIban').value.trim(),
-        bic: document.getElementById('compBic').value.trim(),
-        logo: companyLogoBase64
-      };
-      localStorage.setItem('companyProfile', JSON.stringify(data));
-      showToast('Unternehmensdaten gespeichert', 'success');
-    }
-
-    function getCompanyProfile() {
-      const saved = localStorage.getItem('companyProfile');
-      if (saved) return JSON.parse(saved);
-      return { name: 'Vindox Logistik', legalForm: 'GbR', subtitle: '', owner: '-', street: 'Hauptstraße 1', city: '51766 Engelskirchen', email: 'info@firma.de', phone: '', tax: '-', hr: '', iban: '-', bic: '-', logo: '' };
-    }
-
-    function generatePDFHTML(proofs, title = 'LEISTUNGSNACHWEIS / AUDIT-PROTOKOLL') {
-      const comp = getCompanyProfile();
-      const date = new Date().toLocaleDateString('de-DE');
-      const time = new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-      const total = proofs.length;
-      const done = proofs.filter(p => p.status === 'erledigt').length;
-      const docId = 'LN-' + new Date().getFullYear() + '-' + Math.floor(100000 + Math.random() * 900000);
-      const securityHash = 'SHA256-' + Math.random().toString(36).substring(2, 10).toUpperCase();
-      const fullCompanyName = `${comp.name} ${comp.legalForm !== 'Einzelunternehmen' ? comp.legalForm : ''}`.trim();
-      const logoHtml = comp.logo ? `<img src="${comp.logo}" style="max-height:48px; max-width:120px; object-fit:contain; margin-right:14px;">` : '';
-
-      const rows = proofs.map(p => `
-        <tr style="border-bottom: 1px solid #e2e8f0; page-break-inside: avoid;">
-          <td style="padding: 10px; width: 100px;">
-            ${p.photo_url ? `<img src="${p.photo_url}" style="width:90px; height:65px; object-fit:cover; border-radius:4px; border:1px solid #cbd5e1;">` : '<span style="color:#94a3b8; font-size:10px;">Kein Fotobeweis</span>'}
-          </td>
-          <td style="padding: 10px;">
-            <strong style="font-size:12px; color:#0f172a;">${p.address}</strong><br>
-            <span style="font-size:11px; color:#64748b;">Tour: ${p.tourTitle} | Fahrer: ${p.driverName}</span>
-            ${p.notes ? `<br><span style="font-size:11px; color:#ef4444; font-weight:600;">Notiz: ${p.notes}</span>` : ''}
-          </td>
-          <td style="padding: 10px; font-size:11px; white-space:nowrap; color:#334155;">
-            ${new Date(p.created_at).toLocaleString('de-DE')}<br>
-            <span style="font-size:9px; color:#059669; font-weight:700;">GPS-Geofencing verifiziert</span>
-          </td>
-          <td style="padding: 10px; text-align:right;">
-            <span style="padding:4px 8px; border-radius:4px; font-size:10px; font-weight:700; text-transform:uppercase; background:${p.status==='erledigt'?'#d1fae5':(p.status==='abgebrochen'?'#fee2e2':'#fef3c7')}; color:${p.status==='erledigt'?'#065f46':(p.status==='abgebrochen'?'#991b1b':'#92400e')}">${p.status}</span>
-          </td>
-        </tr>
-      `).join('');
-
-      return `
-        <div style="padding: 32px; font-family: sans-serif; color: #0f172a; background: #fff;">
-          <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid #2563EB; padding-bottom:16px; margin-bottom:20px;">
-            <div style="display:flex; align-items:center;">
-              ${logoHtml}
-              <div>
-                <strong style="font-size:20px; font-weight:800; color:#0f172a; display:block;">${fullCompanyName}</strong>
-                <span style="font-size:11px; color:#64748b; font-weight:600;">${comp.subtitle || ''}</span>
-              </div>
-            </div>
-            <div style="text-align:right; font-size:11px; color:#475569; line-height:1.5;">
-              <strong>${comp.street}</strong><br>
-              <strong>${comp.city}</strong><br>
-              E-Mail: ${comp.email || '-'}<br>
-              Tel: ${comp.phone || '-'}
-            </div>
-          </div>
-
-          <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:18px;">
-            <div>
-              <h2 style="font-size:15px; text-transform:uppercase; margin:0 0 4px 0; font-weight:800;">${title}</h2>
-              <p style="font-size:11px; color:#64748b; margin:0;">Ausführungsnachweis (${done}/${total} erbracht)</p>
-            </div>
-            <div style="text-align:right; font-size:10px; color:#64748b;">
-              <strong>Protokoll-ID:</strong> ${docId}<br>
-              <strong>Erstellt:</strong> ${date}, ${time} Uhr
-            </div>
-          </div>
-
-          <table style="width: 100%; border-collapse: collapse;">
-            <thead>
-              <tr style="background:#f8fafc; font-size:11px; text-align:left; text-transform:uppercase; color:#64748b; border-bottom:1px solid #cbd5e1;">
-                <th style="padding:8px 10px;">Fotobeweis</th>
-                <th style="padding:8px 10px;">Leistungsort & Details</th>
-                <th style="padding:8px 10px;">Zeitstempel</th>
-                <th style="padding:8px 10px; text-align:right;">Status</th>
-              </tr>
-            </thead>
-            <tbody>${rows}</tbody>
-          </table>
-
-          <div style="margin-top:24px; padding:10px 14px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; font-size:9px; color:#64748b; display:flex; justify-content:space-between;">
-            <span>Erfasst via Vindox Command Engine | DSGVO-konformes Audit-Protokoll</span>
-            <span>Integritäts-Hash: ${securityHash}</span>
-          </div>
-
-          <div style="margin-top:28px; border-top:1px solid #e2e8f0; padding-top:14px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; font-size:9px; color:#64748b; line-height:1.5;">
-            <div><strong style="color:#0f172a;">Unternehmen</strong><br>${fullCompanyName}<br>Vertretung: ${comp.owner}<br>Sitz: ${comp.city}</div>
-            <div><strong style="color:#0f172a;">Steuer & Register</strong><br>Steuernr./USt-ID: ${comp.tax}<br>${comp.hr ? `Register: ${comp.hr}` : ''}</div>
-            <div><strong style="color:#0f172a;">Bankverbindung</strong><br>IBAN: ${comp.iban}<br>BIC: ${comp.bic}</div>
-          </div>
-        </div>
-      `;
-    }
-
-    function exportSelectedProofsPDF() {
-      const proofs = allExtractedProofs.filter(p => selectedProofIds.has(p.id));
-      if (proofs.length === 0) return showToast('Bitte Nachweise auswählen', 'danger');
-      const el = document.createElement('div');
-      el.innerHTML = generatePDFHTML(proofs);
-      html2pdf().set({
-        margin: 10,
-        filename: `Vindox_Leistungsnachweis_${new Date().toISOString().slice(0, 10)}.pdf`,
-        image: { type: 'jpeg', quality: 0.96 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: 'mm', format: 'a4' }
-      }).from(el).save();
-      showToast('PDF-Export wird generiert', 'success');
-    }
-
-    function downloadSingleProofPDF() {
-      if (!activeModalProof) return;
-      const el = document.createElement('div');
-      el.innerHTML = generatePDFHTML([activeModalProof], 'EINZELNACHWEIS / AUDIT-PROTOKOLL');
-      html2pdf().set({
-        margin: 10,
-        filename: `Vindox_Einzelnachweis_${activeModalProof.id}.pdf`,
-        image: { type: 'jpeg', quality: 0.96 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: 'mm', format: 'a4' }
-      }).from(el).save();
+      localStorage.setItem('companyProfile', JSON.stringify({ name: document.getElementById('compName').value, legalForm: document.getElementById('compLegalForm').value, owner: document.getElementById('compOwner').value, street: document.getElementById('compStreet').value, city: document.getElementById('compCity').value }));
+      showToast('Unternehmensprofil gespeichert', 'success');
     }
 
     async function logout() {
