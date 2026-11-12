@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Vindox — Enterprise Command Center v4.0</title>
+  <title>Vindox — Enterprise Command Center (Ultimate Edition)</title>
 
   <link rel="apple-touch-icon" href="4570730E-A0A2-4546-B316-B15BE9DD5EE4.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -18,16 +18,16 @@
     :root {
       --bg: #07090E;
       --bg-elevated: #0B0E17;
-      --card-bg: rgba(13, 20, 38, 0.75);
+      --card-bg: rgba(13, 20, 38, 0.78);
       --card-solid: #0D1426;
       --card-border: rgba(255, 255, 255, 0.08);
-      --card-border-active: rgba(37, 99, 235, 0.6);
+      --card-border-active: rgba(37, 99, 235, 0.65);
 
       --accent-main: #1E3A8A;
       --accent-bright: #2563EB;
       --accent-light: #60A5FA;
       --accent-glow: rgba(37, 99, 235, 0.4);
-      --accent-subtle: rgba(37, 99, 235, 0.12);
+      --accent-subtle: rgba(37, 99, 235, 0.14);
 
       --text-main: #F8FAFC;
       --text-sub: #94A3B8;
@@ -48,8 +48,8 @@
       --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
       --font-mono: "SF Mono", "JetBrains Mono", monospace;
 
-      --shadow-card: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(37, 99, 235, 0.07);
-      --shadow-modal: 0 30px 70px rgba(0, 0, 0, 0.9), 0 0 50px rgba(37, 99, 235, 0.25);
+      --shadow-card: 0 15px 40px rgba(0, 0, 0, 0.65), 0 0 30px rgba(37, 99, 235, 0.08);
+      --shadow-modal: 0 30px 70px rgba(0, 0, 0, 0.9), 0 0 50px rgba(37, 99, 235, 0.3);
 
       --radius-sm: 10px;
       --radius-md: 14px;
@@ -73,7 +73,7 @@
       left: 10%;
       width: 60vw;
       height: 60vw;
-      background: radial-gradient(circle, rgba(37, 99, 235, 0.09) 0%, rgba(7, 9, 14, 0) 70%);
+      background: radial-gradient(circle, rgba(37, 99, 235, 0.1) 0%, rgba(7, 9, 14, 0) 70%);
       pointer-events: none;
       z-index: 0;
     }
@@ -87,7 +87,7 @@
 
     /* SIDEBAR */
     .sidebar {
-      background: rgba(11, 14, 23, 0.92);
+      background: rgba(11, 14, 23, 0.94);
       border-right: 1px solid var(--card-border);
       backdrop-filter: blur(25px);
       display: flex; flex-direction: column; justify-content: space-between;
@@ -110,7 +110,7 @@
     }
     .nav-btn-left { display: flex; align-items: center; gap: 12px; }
     .nav-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; opacity: 0.8; }
-    .nav-btn:hover { background: rgba(255, 255, 255, 0.04); color: var(--text-main); }
+    .nav-btn:hover { background: rgba(255, 255, 255, 0.045); color: var(--text-main); }
     .nav-btn.active { background: rgba(37, 99, 235, 0.16); border-color: rgba(37, 99, 235, 0.4); color: var(--text-main); font-weight: 700; box-shadow: 0 4px 18px rgba(37, 99, 235, 0.15); }
     .nav-btn.active svg { stroke: var(--accent-light); opacity: 1; }
 
@@ -128,7 +128,7 @@
 
     .topbar {
       height: 78px; padding: 0 32px; border-bottom: 1px solid var(--card-border);
-      background: rgba(7, 9, 14, 0.8); backdrop-filter: blur(20px); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+      background: rgba(7, 9, 14, 0.85); backdrop-filter: blur(20px); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
     }
     .topbar-left { display: flex; flex-direction: column; gap: 2px; }
     .topbar-eyebrow { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); }
@@ -331,7 +331,7 @@
           </div>
           <div class="brand-meta">
             <h1>Vindox</h1>
-            <span>Command v4.0</span>
+            <span>Command v5.0</span>
           </div>
         </div>
 
@@ -390,7 +390,7 @@
             <span class="pulse-dot"></span>
             <span>Realtime Sync</span>
           </div>
-          <span style="font-size: 0.7rem; font-family: var(--font-mono); color: var(--text-muted);">v4.0</span>
+          <span style="font-size: 0.7rem; font-family: var(--font-mono); color: var(--text-muted);">v5.0</span>
         </div>
       </div>
     </aside>
@@ -404,7 +404,7 @@
         </div>
         <div class="topbar-right">
           <div class="live-clock-pill" id="liveClockDisplay">--:--:-- Uhr</div>
-          <div class="chef-profile-pill">
+          <div class="chef-profile_pill" style="display:flex; align-items:center; gap:10px; background:var(--card-bg); border:1px solid var(--card-border); border-radius:20px; padding:6px 14px 6px 8px;">
             <div class="chef-avatar" id="chefAvatarInitials">CH</div>
             <span class="chef-name-text" id="chefGreetingLabel">Geschäftsführung</span>
           </div>
@@ -598,7 +598,7 @@
         <section id="view-team" class="view-section">
           <div class="grid-2-equal">
             <div class="panel-card">
-              <div class="panel-head"><div class="panel-head-title"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/></svg><span>Fahrer anlegen</span></div></div>
+              <div class="panel-head"><div class="panel-head-title"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5"/></svg><span>Fahrer anlegen</span></div></div>
               <form id="addWorkerForm" onsubmit="interceptAddEmployee(event)">
                 <div class="form-group"><label class="form-label">Name</label><input type="text" id="empName" class="input-control" placeholder="Max Mustermann" required></div>
                 <div class="form-group"><label class="form-label">Benutzername</label><input type="text" id="empUsername" class="input-control" placeholder="fahrer1" required></div>
