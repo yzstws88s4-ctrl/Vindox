@@ -5,32 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Vindox Tour App</title>
   
-  <!-- iOS PWA App Icon & Native Safari App Support -->
   <link rel="apple-touch-icon" href="4570730E-A0A2-4546-B316-B15BE9DD5EE4.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Vindox">
   
-  <!-- Web App Manifest -->
-  <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlZpbmRveCBUb3VyIEFwcCIsCiAgInNob3J0X25hbWUiOiAiVmluZG94IiwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwNTA3MEQiLAogICJ0aGVtZV9jb2xvciI6ICIjMDUwNzBEIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiNDU3MDczMEUtQTBBMi00NTQ2LUIzMTYtQjE1QkU5REQ1RUU0LnBuZyIsCiAgICAgICJzaXplcyI6ICI1MTJ4NTEyIiwKICAgICAgInR5cGUiOiAiaW1hZ2UvcG5nIiwKICAgICAgInB1cnBvc2UiOiAiYW55IG1hc2thYmxlIgogICAgfQogIF0KfQ==">
-  <meta name="theme-color" content="#05070D">
+  <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlZpbmRveCBUb3VyIEFwcCIsCiAgInNob3J0X25hbWUiOiAiVmluZG94IiwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwNDAyMDYiLAogICJ0aGVtZV9jb2xvciI6ICIjMDQyMDYiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICI0NTcwNz30UtQTBBMi00NTQ2LUIzMTYtQjE1QkU5REQ1RUU0LnBuZyIsCiAgICAgICJzaXplcyI6ICI1MTJ4NTEyIiwKICAgICAgInR5cGUiOiAiaW1hZ2UvcG5nIiwKICAgICAgInB1cnBvc2UiOiAiYW55IG1hc2thYmxlIgogICAgfQog ]}"></script>
+  <meta name="theme-color" content="#04060A">
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <style>
     :root {
-      --bg: #05070D;
-      --card-bg: rgba(9, 14, 28, 0.82);
-      --card-border: rgba(148, 163, 184, 0.11);
-      --card-border-active: rgba(59, 130, 246, 0.42);
+      --bg: #04060A;
+      --card-bg: #080D1A;
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-border-active: rgba(30, 58, 138, 0.6);
       
-      /* Tiefes, metallic-glänzendes Mitternachtsblau */
-      --midnight-deep: #071026;
-      --midnight-mid: #0F2352;
-      --midnight-royal: #1A3A7A;
-      --midnight-sheen: #3B82F6;
-      --midnight-highlight: #93C5FD;
-      --midnight-gradient: linear-gradient(135deg, #091533 0%, #132C63 45%, #1E429F 78%, #102554 100%);
-      --midnight-metallic-border: rgba(96, 165, 250, 0.35);
-      --accent-glow: rgba(29, 78, 216, 0.32);
+      /* ECHTES, TIEFES, GEDÄMPFTES MITTERNACHTSBLAU */
+      --midnight-deep: #060A17;
+      --midnight-mid: #0D1630;
+      --midnight-royal: #16264F;
+      --midnight-sheen: #1D3A78;
+      --midnight-highlight: #60A5FA;
+      --midnight-gradient: linear-gradient(135deg, #070D1D 0%, #0F1D3C 100%);
+      --midnight-metallic-border: rgba(59, 130, 246, 0.28);
+      --accent-glow: rgba(15, 29, 60, 0.4);
       
       --text-main: #F8FAFC;
       --text-sub: #94A3B8;
@@ -61,12 +59,11 @@
       background: transparent;
     }
     ::-webkit-scrollbar-thumb {
-      background: rgba(148, 163, 184, 0.16);
+      background: rgba(148, 163, 184, 0.15);
       border-radius: 4px;
     }
 
     body {
-      background: radial-gradient(circle at 50% 0%, #0B1633 0%, #05070D 58%);
       background-color: var(--bg);
       color: var(--text-main);
       display: flex;
@@ -82,7 +79,7 @@
       display: flex;
       flex-direction: column;
       position: relative;
-      padding-bottom: 118px;
+      padding-bottom: 110px;
     }
 
     header {
@@ -91,12 +88,10 @@
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid var(--card-border);
-      backdrop-filter: blur(22px);
-      -webkit-backdrop-filter: blur(22px);
       position: sticky;
       top: 0;
       z-index: 50;
-      background: rgba(5, 7, 13, 0.84);
+      background: rgba(4, 6, 10, 0.94);
     }
 
     .brand-group {
@@ -110,8 +105,8 @@
       height: 40px;
       border-radius: 12px;
       object-fit: cover;
-      box-shadow: 0 6px 22px var(--accent-glow), inset 0 1px 0 rgba(255, 255, 255, 0.25);
-      border: 1px solid var(--midnight-metallic-border);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.6);
+      border: 1px solid rgba(255, 255, 255, 0.12);
     }
 
     .brand-text h1 {
@@ -192,101 +187,19 @@
       display: flex;
     }
 
-    /* IN-APP ERFOLGSBANNER BEI TOURABSCHLUSS */
-    .tour-complete-banner {
-      display: none;
-      background: linear-gradient(145deg, rgba(10, 22, 54, 0.96), rgba(17, 39, 92, 0.92));
-      border: 1px solid rgba(96, 165, 250, 0.45);
-      border-radius: 22px;
-      padding: 18px;
-      box-shadow: 0 16px 38px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.18);
-      flex-direction: column;
-      gap: 10px;
-      animation: bannerSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .tour-complete-banner.active {
-      display: flex;
-    }
-
-    @keyframes bannerSlideIn {
-      from { opacity: 0; transform: translateY(-10px) scale(0.98); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    .tour-complete-top {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .tour-complete-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 13px;
-      background: rgba(16, 185, 129, 0.16);
-      border: 1px solid rgba(16, 185, 129, 0.38);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .tour-complete-icon svg {
-      width: 22px;
-      height: 22px;
-      fill: var(--success);
-    }
-
-    .tour-complete-text h4 {
-      font-size: 0.98rem;
-      font-weight: 800;
-      color: #F8FAFC;
-    }
-
-    .tour-complete-text p {
-      font-size: 0.78rem;
-      color: #CBD5E1;
-      margin-top: 2px;
-      line-height: 1.4;
-    }
-
-    .tour-complete-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-top: 10px;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      font-size: 0.72rem;
-      color: var(--midnight-highlight);
-      font-weight: 600;
-    }
-
     .hero-panel-container {
       position: relative;
       margin-top: 2px;
     }
 
     .panel-card {
-      background: linear-gradient(160deg, rgba(11, 20, 44, 0.88), rgba(7, 12, 26, 0.92));
-      border: 1px solid var(--midnight-metallic-border);
-      border-radius: 24px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border-active);
+      border-radius: 22px;
       padding: 18px;
-      backdrop-filter: blur(25px);
-      box-shadow: 0 14px 35px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(147, 197, 253, 0.18);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
       position: relative;
       overflow: hidden;
-    }
-
-    .panel-card::after {
-      content: '';
-      position: absolute;
-      top: -60%;
-      left: -20%;
-      width: 140%;
-      height: 80%;
-      background: radial-gradient(ellipse at center, rgba(59, 130, 246, 0.12) 0%, transparent 70%);
-      pointer-events: none;
     }
 
     .hero-content {
@@ -308,19 +221,18 @@
     }
 
     button, .btn-import-option, .nav-item, .manager-card, .btn-reorder, .btn-proof-trio {
-      transition: transform 0.14s cubic-bezier(0.2, 0, 0, 1), background-color 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+      transition: transform 0.12s ease, background-color 0.15s ease;
     }
 
     button:active, .btn-import-option:active, .manager-card:active, .btn-proof-trio:active {
       transform: scale(0.96) !important;
-      box-shadow: 0 0 18px var(--accent-glow) !important;
-      filter: brightness(1.15);
+      filter: brightness(1.1);
     }
 
     .btn-import-option {
-      background: linear-gradient(165deg, rgba(19, 38, 84, 0.45), rgba(10, 19, 43, 0.65));
-      border: 1px solid rgba(96, 165, 250, 0.22);
-      border-radius: 15px;
+      background: #0D1630;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
       padding: 16px 10px;
       display: flex;
       flex-direction: column;
@@ -331,19 +243,18 @@
       font-weight: 700;
       cursor: pointer;
       text-align: center;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
 
     .btn-import-option svg {
       width: 22px;
       height: 22px;
-      fill: var(--midnight-highlight);
+      fill: var(--text-sub);
     }
 
     .ai-progress-card {
       display: none;
-      background: rgba(15, 35, 82, 0.45);
-      border: 1px solid rgba(96, 165, 250, 0.35);
+      background: #0D1630;
+      border: 1px solid rgba(59, 130, 246, 0.3);
       border-radius: 14px;
       padding: 14px;
       margin-top: 12px;
@@ -355,7 +266,7 @@
       font-size: 0.75rem;
       font-weight: 700;
       margin-bottom: 8px;
-      color: var(--midnight-highlight);
+      color: var(--text-sub);
     }
 
     .ai-progress-bar-bg {
@@ -368,7 +279,7 @@
     .ai-progress-bar-fill {
       height: 100%;
       width: 0%;
-      background: var(--midnight-gradient);
+      background: var(--midnight-sheen);
       border-radius: 3px;
       transition: width 0.2s ease;
     }
@@ -405,12 +316,12 @@
     .current-stop-address svg {
       width: 15px;
       height: 15px;
-      fill: var(--midnight-sheen);
+      fill: var(--text-sub);
       flex-shrink: 0;
     }
 
     .current-stop-note {
-      background: rgba(15, 35, 82, 0.35);
+      background: #0D1630;
       border-radius: 10px;
       padding: 10px 12px;
       font-size: 0.78rem;
@@ -430,7 +341,7 @@
     .progress-bar-fill {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, #163270, #3B82F6);
+      background: var(--midnight-sheen);
       border-radius: 3px;
       transition: width 0.4s ease;
     }
@@ -455,8 +366,8 @@
     }
 
     .manager-stat-box {
-      background: rgba(15, 35, 82, 0.35);
-      border: 1px solid rgba(96, 165, 250, 0.18);
+      background: #0D1630;
+      border: 1px solid var(--card-border);
       border-radius: 14px;
       padding: 12px;
       display: flex;
@@ -492,7 +403,6 @@
       border: 1px solid var(--card-border);
       border-radius: 20px;
       padding: 16px;
-      backdrop-filter: blur(20px);
     }
 
     .accordion-header {
@@ -530,7 +440,7 @@
 
     .address-frame {
       border: 1px solid var(--card-border);
-      background: rgba(3, 5, 10, 0.78);
+      background: #04060A;
       border-radius: 14px;
       padding: 12px;
       min-height: 120px;
@@ -550,8 +460,8 @@
     }
 
     .frame-stop-item {
-      background: rgba(15, 35, 82, 0.25);
-      border: 1px solid rgba(96, 165, 250, 0.15);
+      background: #080D1A;
+      border: 1px solid var(--card-border);
       border-radius: 12px;
       padding: 10px 12px;
       display: flex;
@@ -585,19 +495,18 @@
       fill: var(--text-muted);
     }
 
-    /* METALLIC MITTERNACHTSBLAU BUTTONS */
+    /* SOLIDE, EDLE MITTERNACHTSBLAUE BUTTONS */
     .btn-action-primary {
       width: 100%;
-      background: var(--midnight-gradient);
-      border: 1px solid var(--midnight-metallic-border);
+      background: #0D1630;
+      border: 1px solid var(--card-border-active);
       color: #FFF;
       padding: 15px;
       border-radius: 16px;
       font-size: 0.92rem;
       font-weight: 800;
       cursor: pointer;
-      box-shadow: 0 8px 24px var(--accent-glow), inset 0 1px 0 rgba(255, 255, 255, 0.24);
-      letter-spacing: -0.01em;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
     }
 
     .cockpit-action-box {
@@ -608,8 +517,8 @@
 
     .btn-nav-giant {
       width: 100%;
-      background: linear-gradient(135deg, #08122B 0%, #142F6B 50%, #1E449E 100%);
-      border: 1px solid rgba(96, 165, 250, 0.42);
+      background: #0D1630;
+      border: 1px solid var(--card-border-active);
       color: #FFF;
       padding: 16px;
       border-radius: 16px;
@@ -620,7 +529,6 @@
       justify-content: center;
       gap: 10px;
       cursor: pointer;
-      box-shadow: 0 10px 28px rgba(15, 35, 82, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.26);
       text-decoration: none;
     }
 
@@ -632,8 +540,8 @@
 
     .btn-next-stop-bright {
       width: 100%;
-      background: linear-gradient(135deg, #F8FAFC, #E2E8F0);
-      color: #071026;
+      background: #F8FAFC;
+      color: #04060A;
       border: none;
       padding: 14px;
       border-radius: 14px;
@@ -644,18 +552,17 @@
       justify-content: center;
       gap: 8px;
       cursor: pointer;
-      box-shadow: 0 6px 22px rgba(255, 255, 255, 0.14);
     }
 
     .btn-next-stop-bright svg {
       width: 16px;
       height: 16px;
-      fill: #071026;
+      fill: #04060A;
     }
 
     .btn-prev-small {
       width: 100%;
-      background: rgba(15, 35, 82, 0.25);
+      background: #080D1A;
       border: 1px solid var(--card-border);
       color: var(--text-sub);
       padding: 10px;
@@ -690,13 +597,11 @@
       justify-content: space-between;
       align-items: center;
       cursor: pointer;
-      backdrop-filter: blur(15px);
     }
 
     .manager-card.active {
-      border-color: var(--midnight-metallic-border);
-      background: linear-gradient(145deg, rgba(13, 27, 62, 0.85), rgba(8, 15, 34, 0.9));
-      box-shadow: 0 6px 24px rgba(15, 35, 82, 0.35);
+      border-color: var(--card-border-active);
+      background: #0D1630;
     }
 
     .manager-card-info {
@@ -743,33 +648,28 @@
       cursor: pointer;
     }
 
-    /* SCHWEBENDE APPLE HIGH-END FLOATING DOCK NAVIGATION */
+    /* SAUBERE, KOMPAKTE MITTERNACHTSBLAUE NAVIGATION LEISTE */
     .bottom-nav-wrapper {
       position: fixed;
-      bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+      bottom: calc(14px + env(safe-area-inset-bottom, 0px));
       left: 50%;
       transform: translateX(-50%);
-      width: calc(100% - 36px);
-      max-width: 420px;
+      width: calc(100% - 32px);
+      max-width: 400px;
       z-index: 90;
       pointer-events: none;
     }
 
     .bottom-nav {
       pointer-events: auto;
-      background: rgba(10, 16, 32, 0.78);
-      backdrop-filter: blur(30px) saturate(180%);
-      -webkit-backdrop-filter: blur(30px) saturate(180%);
-      border: 1px solid rgba(148, 163, 184, 0.18);
-      border-radius: 999px;
+      background: #060A17;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      padding: 6px;
+      padding: 5px;
       gap: 4px;
-      box-shadow:
-        0 18px 40px rgba(0, 0, 0, 0.72),
-        0 2px 10px rgba(15, 35, 82, 0.45),
-        inset 0 1px 0 rgba(255, 255, 255, 0.16);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.8);
     }
 
     .nav-item {
@@ -781,38 +681,34 @@
       color: var(--text-sub);
       font-size: 0.67rem;
       font-weight: 700;
-      letter-spacing: 0.01em;
       cursor: pointer;
       padding: 8px 6px;
-      border-radius: 999px;
+      border-radius: 14px;
       position: relative;
     }
 
     .nav-item svg {
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
       fill: var(--text-sub);
-      transition: fill 0.2s ease, transform 0.2s ease;
+      transition: fill 0.15s ease;
     }
 
     .nav-item.active {
       color: #FFFFFF;
-      background: var(--midnight-gradient);
-      border: 1px solid rgba(96, 165, 250, 0.38);
-      box-shadow: 0 4px 14px rgba(29, 78, 216, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+      background: #0D1630;
+      border: 1px solid rgba(59, 130, 246, 0.4);
     }
 
     .nav-item.active svg {
       fill: #FFFFFF;
-      transform: translateY(-0.5px);
     }
 
     /* MODALS */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(2, 4, 10, 0.86);
-      backdrop-filter: blur(26px);
+      background: rgba(2, 4, 8, 0.88);
       z-index: 100;
       display: flex;
       align-items: center;
@@ -820,7 +716,7 @@
       padding: 16px;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.25s ease;
     }
 
     .modal-overlay.active {
@@ -830,22 +726,16 @@
 
     .modal-sheet {
       width: 100%;
-      max-width: 460px;
-      background: linear-gradient(170deg, #0A1124 0%, #060A16 100%);
-      border: 1px solid var(--midnight-metallic-border);
-      border-radius: 28px;
+      max-width: 440px;
+      background: #060A17;
+      border: 1px solid rgba(59, 130, 246, 0.35);
+      border-radius: 24px;
       padding: 20px 22px 24px;
       max-height: 88vh;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transform: translateY(20px) scale(0.95);
-      transition: transform 0.35s cubic-bezier(0.15, 0.85, 0.35, 1.2);
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(147, 197, 253, 0.16);
-    }
-
-    .modal-overlay.active .modal-sheet {
-      transform: translateY(0) scale(1);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
     }
 
     .modal-header {
@@ -868,8 +758,8 @@
       background: rgba(255, 255, 255, 0.08);
       border: none;
       color: var(--text-sub);
-      width: 32px;
-      height: 32px;
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
       cursor: pointer;
       display: flex;
@@ -878,8 +768,8 @@
     }
 
     .close-btn svg {
-      width: 15px;
-      height: 15px;
+      width: 14px;
+      height: 14px;
       fill: var(--text-sub);
     }
 
@@ -899,10 +789,10 @@
     }
 
     .input-field {
-      background: rgba(3, 6, 14, 0.7);
+      background: #04060A;
       border: 1px solid var(--card-border);
-      border-radius: 14px;
-      padding: 14px 16px;
+      border-radius: 12px;
+      padding: 13px 15px;
       color: var(--text-main);
       font-size: 0.9rem;
       outline: none;
@@ -919,14 +809,14 @@
     }
 
     .btn-proof-trio {
-      background: linear-gradient(165deg, rgba(19, 38, 84, 0.4), rgba(9, 17, 38, 0.65));
-      border: 1px solid rgba(96, 165, 250, 0.22);
-      border-radius: 14px;
-      padding: 13px 8px;
+      background: #0D1630;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 12px 8px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 7px;
+      gap: 6px;
       color: var(--text-main);
       font-size: 0.75rem;
       font-weight: 700;
@@ -934,12 +824,11 @@
     }
 
     .btn-proof-trio svg {
-      width: 21px;
-      height: 21px;
-      fill: var(--midnight-highlight);
+      width: 20px;
+      height: 20px;
+      fill: var(--text-sub);
     }
 
-    /* SAUBERE MEDIEN-AUFLISTUNG OHNE STEMPEL AUF DEN MEDIEN */
     .media-section-label {
       font-size: 0.7rem;
       text-transform: uppercase;
@@ -961,10 +850,10 @@
 
     .captured-item-thumb {
       position: relative;
-      height: 96px;
-      background: rgba(3, 6, 14, 0.85);
-      border: 1px solid var(--midnight-metallic-border);
-      border-radius: 14px;
+      height: 90px;
+      background: #04060A;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
       overflow: hidden;
     }
 
@@ -977,32 +866,31 @@
 
     .thumb-type-tag {
       position: absolute;
-      top: 6px;
-      left: 6px;
-      background: rgba(7, 16, 38, 0.85);
-      border: 1px solid rgba(96, 165, 250, 0.3);
-      color: var(--midnight-highlight);
+      top: 5px;
+      left: 5px;
+      background: rgba(4, 6, 10, 0.85);
+      color: var(--text-sub);
       font-size: 0.58rem;
       font-weight: 800;
-      padding: 2px 6px;
-      border-radius: 6px;
+      padding: 2px 5px;
+      border-radius: 4px;
       text-transform: uppercase;
     }
 
     .thumb-delete-btn {
       position: absolute;
-      top: 6px;
-      right: 6px;
+      top: 5px;
+      right: 5px;
       background: rgba(15, 23, 42, 0.85);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      border: none;
       color: #F8FAFC;
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.65rem;
+      font-size: 0.6rem;
       cursor: pointer;
     }
 
@@ -1010,9 +898,9 @@
       display: none;
       flex-direction: column;
       gap: 8px;
-      background: rgba(15, 35, 82, 0.22);
-      border: 1px solid rgba(96, 165, 250, 0.22);
-      border-radius: 16px;
+      background: #0D1630;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
       padding: 12px;
     }
 
@@ -1036,7 +924,7 @@
     .btn-clear-sig {
       background: none;
       border: none;
-      color: var(--midnight-highlight);
+      color: var(--text-sub);
       font-size: 0.72rem;
       font-weight: 700;
       cursor: pointer;
@@ -1044,43 +932,50 @@
 
     .signature-pad {
       width: 100%;
-      height: 110px;
-      background: rgba(3, 6, 14, 0.75);
+      height: 105px;
+      background: #04060A;
       border: 1px solid var(--card-border);
-      border-radius: 12px;
+      border-radius: 10px;
       touch-action: none;
     }
 
-    /* STRUKTURIERTE METADATEN-TABELLE UNTER DEN MEDIEN */
+    /* SCROLLBARE METADATEN-LISTE (WENN MEDIEN HINZUGEFÜGT WERDEN) */
+    .metadata-scroll-container {
+      max-height: 160px;
+      overflow-y: auto;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      background: #080D1A;
+    }
+
     .metadata-card {
-      background: rgba(7, 13, 29, 0.9);
-      border: 1px solid rgba(96, 165, 250, 0.22);
-      border-radius: 16px;
+      background: #080D1A;
+      border-radius: 14px;
       overflow: hidden;
     }
 
     .metadata-card-header {
-      background: rgba(15, 35, 82, 0.45);
-      padding: 9px 14px;
+      background: #0D1630;
+      padding: 8px 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid rgba(96, 165, 250, 0.16);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     .metadata-card-header span {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--midnight-highlight);
+      letter-spacing: 0.05em;
+      color: var(--text-sub);
     }
 
     .metadata-sync-pill {
-      font-size: 0.64rem;
+      font-size: 0.62rem;
       color: var(--success);
       background: rgba(16, 185, 129, 0.12);
-      padding: 2px 8px;
+      padding: 2px 7px;
       border-radius: 99px;
       font-weight: 700;
     }
@@ -1088,11 +983,11 @@
     .metadata-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.76rem;
+      font-size: 0.74rem;
     }
 
     .metadata-table tr {
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
     }
 
     .metadata-table tr:last-child {
@@ -1100,14 +995,14 @@
     }
 
     .metadata-table td {
-      padding: 8px 14px;
+      padding: 7px 12px;
       vertical-align: top;
     }
 
     .metadata-table td:first-child {
       color: var(--text-sub);
       font-weight: 600;
-      width: 40%;
+      width: 42%;
     }
 
     .metadata-table td:last-child {
@@ -1119,24 +1014,87 @@
     }
 
     .meta-mono {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 0.7rem;
-      color: var(--midnight-highlight);
+      font-family: monospace;
+      font-size: 0.68rem;
+      color: var(--text-sub);
     }
 
     .btn-submit {
       width: 100%;
-      background: var(--midnight-gradient);
-      border: 1px solid var(--midnight-metallic-border);
+      background: #0D1630;
+      border: 1px solid var(--card-border-active);
       color: #FFF;
-      padding: 15px;
-      border-radius: 16px;
-      font-size: 0.96rem;
+      padding: 14px;
+      border-radius: 14px;
+      font-size: 0.95rem;
       font-weight: 800;
       cursor: pointer;
-      box-shadow: 0 8px 25px var(--accent-glow), inset 0 1px 0 rgba(255, 255, 255, 0.25);
-      margin-top: 12px;
+      margin-top: 10px;
       flex-shrink: 0;
+    }
+
+    /* ERFOLGS-POPUP MODAL IM COCKPIT */
+    .success-popup-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(2, 4, 8, 0.9);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .success-popup-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .success-popup-card {
+      width: 100%;
+      max-width: 360px;
+      background: #080D1A;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      border-radius: 24px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 14px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+    }
+
+    .success-icon-circle {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .success-icon-circle svg {
+      width: 28px;
+      height: 28px;
+      fill: var(--success);
+    }
+
+    .success-popup-card h3 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #F8FAFC;
+    }
+
+    .success-popup-card p {
+      font-size: 0.8rem;
+      color: var(--text-sub);
+      line-height: 1.4;
     }
   </style>
 </head>
@@ -1166,23 +1124,6 @@
         <div class="section-title" id="sectionTitleText">Fahrt & Nachweis</div>
         <div class="section-subtitle-clean" id="sectionSubtitleText">Tour Erstellen</div>
         <div class="elegant-greeting" id="elegantGreetingText">Guten Abend</div>
-      </div>
-
-      <!-- IN-APP ERFOLGSMELDUNG WENN ALLE STOPPPS DER TOUR ABGESCHLOSSEN SIND -->
-      <div class="tour-complete-banner" id="tourCompleteBanner">
-        <div class="tour-complete-top">
-          <div class="tour-complete-icon">
-            <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-          </div>
-          <div class="tour-complete-text">
-            <h4>Tour erfolgreich abgeschlossen</h4>
-            <p id="tourCompleteSummary">Alle Stopps wurden inkl. Metadaten & Nachweisen versiegelt und an die Chef-App übermittelt.</p>
-          </div>
-        </div>
-        <div class="tour-complete-meta">
-          <span id="tourCompleteTime">Abgeschlossen</span>
-          <span>Chef-App Sync: Gespeichert</span>
-        </div>
       </div>
 
       <!-- HERO PANEL -->
@@ -1265,7 +1206,7 @@
           <div class="accordion-header" onclick="toggleAccordion()">
             <div class="accordion-header-left">
               <span style="font-size: 0.9rem; font-weight: 700;">Erfasste Zieladressen</span>
-              <span id="stopCountBadge" style="font-size: 0.75rem; color: var(--midnight-highlight); font-weight: 700;">(0 Stopps)</span>
+              <span id="stopCountBadge" style="font-size: 0.75rem; color: var(--text-sub); font-weight: 700;">(0 Stopps)</span>
             </div>
             <svg class="accordion-toggle-icon" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
           </div>
@@ -1310,7 +1251,7 @@
       </div>
     </main>
 
-    <!-- SCHWEBENDE APPLE HIGH-END DOCK NAVIGATION -->
+    <!-- SCHWEBENDE MITTERNACHTSBLAUE NAVIGATION LEISTE -->
     <div class="bottom-nav-wrapper">
       <nav class="bottom-nav">
         <div class="nav-item active" onclick="switchNavTab(1)" id="navTab1">
@@ -1326,6 +1267,18 @@
           Manager
         </div>
       </nav>
+    </div>
+  </div>
+
+  <!-- EINMALIGES COCKPIT ERFOLGS-POPUP -->
+  <div class="success-popup-overlay" id="successPopupOverlay">
+    <div class="success-popup-card">
+      <div class="success-icon-circle">
+        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+      </div>
+      <h3>Tour erfolgreich abgeschlossen</h3>
+      <p id="successPopupText">Alle Stopps wurden dokumentiert und in der Chef-App gespeichert. Die Tour wird nun zurückgesetzt.</p>
+      <button class="btn-action-primary" onclick="closeSuccessPopupAndReset()">Neue Tour starten</button>
     </div>
   </div>
 
@@ -1346,7 +1299,7 @@
         <input type="text" id="editAddressInput" class="input-field" placeholder="PLZ & Ort">
         <input type="text" id="editNoteInput" class="input-field" placeholder="Notiz / Hinweis für den Fahrer">
         <div style="display: flex; gap: 10px; margin-top: 6px;">
-          <button class="btn-action-primary" style="background: rgba(239, 68, 68, 0.18); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.35); box-shadow: none;" onclick="deleteStopFromModal()">Löschen</button>
+          <button class="btn-action-primary" style="background: rgba(239, 68, 68, 0.15); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.3); box-shadow: none;" onclick="deleteStopFromModal()">Löschen</button>
           <button class="btn-action-primary" onclick="saveEditedStop()">Speichern</button>
         </div>
       </div>
@@ -1374,13 +1327,13 @@
     </div>
   </div>
 
-  <!-- NACHWEIS-MASKE (OHNE STEMPEL AUF DEN MEDIEN, MIT SAUBERER METADATEN-AUFLISTUNG DARUNTER) -->
+  <!-- NACHWEIS-MASKE (MIT SCROLLBARER METADATEN-LISTE) -->
   <div class="modal-overlay" id="proofModal">
     <div class="modal-sheet">
       <div class="modal-header">
         <div class="modal-title-box">
           <h3>Leistungsnachweis erfassen</h3>
-          <p id="proofModalSubtitle" style="font-size:0.75rem; color:var(--midnight-highlight); font-weight:700; margin-top:2px;">Stopp</p>
+          <p id="proofModalSubtitle" style="font-size:0.75rem; color:var(--text-sub); font-weight:700; margin-top:2px;">Stopp</p>
         </div>
         <button class="close-btn" onclick="closeProofModal()">
           <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
@@ -1403,11 +1356,9 @@
           </button>
         </div>
 
-        <!-- MEDIEN-VORSCHAU (REIN & OHNE STEMPEL-OVERLAY) -->
         <div class="media-section-label" id="mediaListLabel" style="display:none;">Erfasste Medien</div>
         <div class="captured-items-grid" id="capturedItemsGrid"></div>
 
-        <!-- KUNDENUNTERSCHRIFT -->
         <div class="signature-container" id="signatureBox">
           <div class="signature-header">
             <span class="signature-label">Kundenunterschrift</span>
@@ -1416,15 +1367,17 @@
           <canvas class="signature-pad" id="sigCanvas"></canvas>
         </div>
 
-        <!-- STRUKTURIERTE METADATEN-TABELLE (IMMER SICHTBAR, AUCH OHNE MEDIEN) -->
-        <div class="metadata-card">
-          <div class="metadata-card-header">
-            <span>Erfasste Metadaten & Audit-Trail</span>
-            <span class="metadata-sync-pill">Chef-App Sync</span>
+        <!-- SCROLLBARER METADATEN-CONTAINER -->
+        <div class="metadata-scroll-container">
+          <div class="metadata-card">
+            <div class="metadata-card-header">
+              <span>Erfasste Metadaten & Audit-Trail</span>
+              <span class="metadata-sync-pill">Chef-App Sync</span>
+            </div>
+            <table class="metadata-table">
+              <tbody id="proofMetadataTableBody"></tbody>
+            </table>
           </div>
-          <table class="metadata-table">
-            <tbody id="proofMetadataTableBody"></tbody>
-          </table>
         </div>
       </div>
 
@@ -1434,9 +1387,10 @@
 
   <script>
     const DRIVER_ID = "F-8921";
-    const tourData = [];
-    const chefAppEvidenceArchive = [];
+    let tourData = [];
+    let chefAppEvidenceArchive = [];
     let currentEditingId = null;
+    let hasShownSuccessPopup = false;
 
     let currentGPS = "51.023400, 7.254100";
     let isDrawing = false;
@@ -1444,54 +1398,6 @@
     let sigCanvas, sigCtx;
     let currentStopProofItems = [];
     let activeProofHash = "";
-
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    function playClickSound() {
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-      const now = audioCtx.currentTime;
-
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(2400, now);
-      osc.frequency.exponentialRampToValueAtTime(800, now + 0.012);
-      
-      gain.gain.setValueAtTime(0.035, now);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.012);
-      
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start(now);
-      osc.stop(now + 0.012);
-
-      const osc2 = audioCtx.createOscillator();
-      const gain2 = audioCtx.createGain();
-
-      osc2.type = 'sine';
-      osc2.frequency.setValueAtTime(420, now);
-      osc2.frequency.exponentialRampToValueAtTime(140, now + 0.018);
-
-      gain2.gain.setValueAtTime(0.02, now);
-      gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.018);
-
-      osc2.connect(gain2);
-      gain2.connect(audioCtx.destination);
-      osc2.start(now);
-      osc2.stop(now + 0.018);
-    }
-
-    document.addEventListener('pointerdown', (e) => {
-      const target = e.target.closest('button, .btn-import-option, .nav-item, .manager-card, .btn-reorder, .btn-proof-trio');
-      if (target) {
-        playClickSound();
-        if (navigator.vibrate) {
-          navigator.vibrate(8);
-        }
-      }
-    }, { passive: true });
 
     function getTimeBasedGreeting() {
       const now = new Date();
@@ -1613,8 +1519,9 @@
         setTimeout(() => {
           progressCard.style.display = 'none';
           progressBar.style.width = '0%';
+          hasShownSuccessPopup = false;
           renderAddressFrame();
-          checkTourCompletionState();
+          updateCockpitUI();
         }, 400);
 
       } catch (err) {
@@ -1646,8 +1553,9 @@
         document.getElementById('manualNoteInput').value = '';
 
         closeManualModal();
+        hasShownSuccessPopup = false;
         renderAddressFrame();
-        checkTourCompletionState();
+        updateCockpitUI();
       }
     }
 
@@ -1660,7 +1568,7 @@
           if (nextPending) nextPending.status = 'active';
         }
         renderAddressFrame();
-        checkTourCompletionState();
+        updateCockpitUI();
       }
     }
 
@@ -1755,6 +1663,7 @@
         alert("Bitte füge zuerst mindestens eine Zieladresse hinzu!");
         return;
       }
+      hasShownSuccessPopup = false;
       switchNavTab(2);
     }
 
@@ -1792,23 +1701,24 @@
     }
 
     function checkTourCompletionState() {
-      const banner = document.getElementById('tourCompleteBanner');
       const allCompleted = tourData.length > 0 && tourData.every(s => s.status === 'completed');
+      const activeNavTab = document.getElementById('navTab2').classList.contains('active');
 
-      if (allCompleted) {
-        const nowStr = new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
-        document.getElementById('tourCompleteSummary').innerText =
-          `Alle ${tourData.length} Stopps wurden vollständig dokumentiert und inkl. Metadaten-Kacheln in der Chef-App gespeichert.`;
-        document.getElementById('tourCompleteTime').innerText = `Fertiggestellt um ${nowStr} Uhr`;
-        banner.classList.add('active');
-      } else {
-        banner.classList.remove('active');
+      if (allCompleted && activeNavTab && !hasShownSuccessPopup) {
+        hasShownSuccessPopup = true;
+        document.getElementById('successPopupOverlay').classList.add('active');
       }
     }
 
-    function updateCockpitUI() {
-      checkTourCompletionState();
+    function closeSuccessPopupAndReset() {
+      document.getElementById('successPopupOverlay').classList.remove('active');
+      tourData.length = 0;
+      hasShownSuccessPopup = false;
+      renderAddressFrame();
+      switchNavTab(1);
+    }
 
+    function updateCockpitUI() {
       if (tourData.length === 0) {
         document.getElementById('cockpitStateLabel').innerText = "Fahrt im Gange";
         document.getElementById('currentTitle').innerText = "Keine Stopps vorhanden";
@@ -1824,7 +1734,7 @@
 
       const allCompleted = tourData.every(s => s.status === 'completed');
       const activeIdx = getCurrentActiveStopIndex();
-      const currentStop = tourData[activeIdx];
+      const currentStop = tourData[activeIdx] || tourData[tourData.length - 1];
 
       document.getElementById('currentTitle').innerText = currentStop.title;
       document.getElementById('currentAddressText').innerText = currentStop.address;
@@ -1839,11 +1749,12 @@
         document.getElementById('tourProgressHeader').innerText = `Alle ${tourData.length} Stopps erledigt`;
         document.getElementById('cockpitStatusVal').innerText = "Abgeschlossen";
         document.getElementById('cockpitStatusVal').style.color = "var(--success)";
+        checkTourCompletionState();
       } else {
         document.getElementById('cockpitStateLabel').innerText = "Fahrt im Gange";
         document.getElementById('tourProgressHeader').innerText = `Stopp ${activeIdx + 1} von ${tourData.length}`;
         document.getElementById('cockpitStatusVal').innerText = "Aktiv";
-        document.getElementById('cockpitStatusVal').style.color = "var(--midnight-highlight)";
+        document.getElementById('cockpitStatusVal').style.color = "var(--text-main)";
       }
     }
 
@@ -1876,7 +1787,7 @@
             <p>${stop.address}${metaTag}</p>
           </div>
           <div class="manager-card-meta">
-            <span style="font-size: 0.68rem; font-weight:700; color: ${stop.status === 'completed' ? 'var(--success)' : (stop.status === 'active' ? 'var(--midnight-highlight)' : 'var(--text-sub)')}">
+            <span style="font-size: 0.68rem; font-weight:700; color: ${stop.status === 'completed' ? 'var(--success)' : (stop.status === 'active' ? 'var(--text-main)' : 'var(--text-sub)')}">
               ${stop.status === 'completed' ? 'Erledigt' : (stop.status === 'active' ? 'Aktiv' : 'Ausstehend')}
             </span>
             <div class="reorder-btns">
@@ -2079,10 +1990,10 @@
       sigCanvas = document.getElementById('sigCanvas');
       if (!sigCanvas) return;
       sigCtx = sigCanvas.getContext('2d');
-      sigCanvas.width = sigCanvas.offsetWidth || 380;
-      sigCanvas.height = sigCanvas.offsetHeight || 110;
-      sigCtx.strokeStyle = "#60A5FA";
-      sigCtx.lineWidth = 2.5;
+      sigCanvas.width = sigCanvas.offsetWidth || 360;
+      sigCanvas.height = sigCanvas.offsetHeight || 105;
+      sigCtx.strokeStyle = "#94A3B8";
+      sigCtx.lineWidth = 2.2;
       sigCtx.lineCap = "round";
 
       sigCanvas.onmousedown = startDrawing;
@@ -2141,7 +2052,6 @@
       stop.status = 'completed';
       stop.completedAt = capturedMetadata.isoTimestamp;
 
-      // Gesamte Kachel (Medien + Unterschrift + strukturierte Metadaten) für die Chef-App speichern
       const chefAppTilePayload = {
         stopId: stop.id,
         title: stop.title,
@@ -2151,13 +2061,7 @@
         metadata: capturedMetadata
       };
 
-      const existingArchiveIdx = chefAppEvidenceArchive.findIndex(item => item.stopId === stop.id);
-      if (existingArchiveIdx !== -1) {
-        chefAppEvidenceArchive[existingArchiveIdx] = chefAppTilePayload;
-      } else {
-        chefAppEvidenceArchive.push(chefAppTilePayload);
-      }
-
+      chefAppEvidenceArchive.push(chefAppTilePayload);
       try {
         localStorage.setItem('vindox_chef_evidence_tiles', JSON.stringify(chefAppEvidenceArchive));
       } catch (err) {}
