@@ -1716,9 +1716,6 @@
       });
     }
 
-    // =========================================================================
-    // SMARTE KI-ADRESS-EXTRAKTION (GPT-4o VISION)
-    // =========================================================================
     async function parseAddressScreenshot(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -1849,9 +1846,6 @@ STRIKTE REGELN (FEHLERVERMEIDUNG):
       }
     }
 
-    // =========================================================================
-    // ECHTE KI-ROUTENOPTIMIERUNG (SCHNELLSTE VS. SPARSAMSTE MIT ZIELZWANG)
-    // =========================================================================
     async function optimizeRouteWithAI(mode) {
       if (tourData.length < 2) {
         alert("Bitte füge mindestens 2 Stopps hinzu, um die Route zu optimieren.");
@@ -1889,7 +1883,6 @@ STRIKTE REGELN (FEHLERVERMEIDUNG):
           note: s.note || ""
         }));
 
-        // Mathematisch strikte Vorgaben für die KI, um echte Unterschiede zu erzwingen
         let modeInstruction = "";
         if (mode === 'fastest') {
           modeInstruction = "SCHNELLSTE ROUTE (Zeit-Optimierung): Sortiere die Stopps so, dass der Fahrer vorrangig über übergeordnete Straßen, Bundesstraßen, Landstraßen und schnelle Zubringer gelenkt wird, um die Gesamt-Fahrzeit absolut zu minimieren. Vermeide unnötiges Hin- und Herpendeln in Wohngebieten.";
@@ -1913,8 +1906,8 @@ ${JSON.stringify(stopsPayload)}
 
 STRIKTE REGELN:
 1. Jeder ursprüngliche "index" aus dem JSON muss exakt einmal in "ordered_indices" vorkommen. Kein Stopp darf verloren gehen oder doppelt vorkommen!
-2. Die Reihenfolge in "ordered_indices" muss die obige Optimierungsregel (${mode) strikt widerspiegeln.
-3. Gib eine kurze, knackige Zusammenfassung auf Deutsch in "summary" (max. 1 Satz, z.B. "Tour über Hauptverkehrsachsen optimiert • Letzter Stopp in Lindlar ideal für Heimfahrt.").
+2. Die Reihenfolge in "ordered_indices" muss die obige Optimierungsregel (${mode}) strikt widerspiegeln.
+3. Gib eine kurze, knackige Zusammenfassung auf Deutsch in "summary" (max. 1 Satz).
 4. Antworte AUSSCHLIESSLICH mit folgendem validen JSON-Objekt ohne Markdown-Code-Blocks:
 {
   "ordered_indices": [0, 2, 1],
@@ -1929,7 +1922,7 @@ STRIKTE REGELN:
           },
           body: JSON.stringify({
             model: "gpt-4o",
-            temperature: 0.1, // Ganz leichte Temperatur für dynamische Neuberechnung je nach Modus
+            temperature: 0.1,
             messages: [
               { role: "system", content: "Du bist ein präziser Routen-Optimierer und antwortest nur im geforderten JSON-Format." },
               { role: "user", content: promptText }
