@@ -124,12 +124,12 @@
       gap: 8px;
     }
 
-    .btn-key-settings {
+    .btn-settings-header {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--card-border);
       color: var(--text-sub);
-      width: 30px;
-      height: 30px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -137,14 +137,14 @@
       cursor: pointer;
     }
 
-    .btn-key-settings.configured {
+    .btn-settings-header.configured {
       border-color: rgba(96, 165, 250, 0.4);
       color: var(--accent-light);
     }
 
-    .btn-key-settings svg {
-      width: 14px;
-      height: 14px;
+    .btn-settings-header svg {
+      width: 16px;
+      height: 16px;
       fill: currentColor;
     }
 
@@ -331,11 +331,21 @@
       gap: 6px;
     }
 
+    .btn-route-sort svg {
+      width: 14px;
+      height: 14px;
+      fill: var(--accent-light);
+    }
+
     .btn-route-sort.active-mode {
       background: linear-gradient(135deg, var(--accent-main), var(--accent-bright));
       border-color: var(--accent-light);
       color: #FFF;
       box-shadow: 0 4px 14px var(--accent-glow);
+    }
+
+    .btn-route-sort.active-mode svg {
+      fill: #FFF;
     }
 
     .route-summary-pill {
@@ -1191,8 +1201,8 @@
         </div>
       </div>
       <div class="header-right-group">
-        <button class="btn-key-settings" id="apiKeySettingsBtn" onclick="openApiKeyModal()" title="OpenAI API-Key verwalten">
-          <svg viewBox="0 0 24 24"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+        <button class="btn-settings-header" id="settingsHeaderBtn" onclick="openSettingsModal()" title="Einstellungen & API-Key">
+          <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
         </button>
         <div class="network-badge">
           <span class="status-dot"></span> Online
@@ -1296,10 +1306,12 @@
             <!-- ROUTEN-OPTIMIERUNG (SCHNELLSTE VS. SPARSAMSTE) -->
             <div class="route-sort-bar" id="routeSortBar" style="display: none;">
               <button class="btn-route-sort" id="btnSortFastest" onclick="optimizeRouteWithAI('fastest')">
-                ⚡ Schnellste Route
+                <svg viewBox="0 0 24 24"><path d="M13 2.05v3.03c3.39.49 6 3.39 6 6.92 0 .9-.18 1.75-.48 2.54l2.6 1.53c.56-1.24.88-2.62.88-4.07 0-5.18-3.95-9.45-9-9.95zM12 19c-3.87 0-7-3.13-7-7 0-3.53 2.61-6.43 6-6.92V2.05c-5.05.5-9 4.77-9 9.95 0 5.52 4.48 10 10 10 2.21 0 4.25-.72 5.9-1.93l-2.15-1.63C14.56 18.66 13.32 19 12 19z"/></svg>
+                Schnellste Route
               </button>
               <button class="btn-route-sort" id="btnSortEco" onclick="optimizeRouteWithAI('eco')">
-                🌱 Sparsamste Route
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                Sparsamste Route
               </button>
             </div>
             <div class="route-summary-pill" id="routeSummaryPill"></div>
@@ -1360,22 +1372,27 @@
     </nav>
   </div>
 
-  <!-- MODAL: OPENAI API-KEY EINSTELLEN -->
-  <div class="modal-overlay" id="apiKeyModal">
+  <!-- MODAL: EINSTELLUNGEN & API-KEY -->
+  <div class="modal-overlay" id="settingsModal">
     <div class="modal-sheet" style="height: auto; max-height: 85vh;">
       <div class="modal-header">
         <div class="modal-title-box">
-          <h3>OpenAI KI-Schlüssel</h3>
-          <p style="font-size:0.74rem; color:var(--text-sub); margin-top:2px;">Wird nur lokal auf diesem Gerät gespeichert.</p>
+          <h3>Fahrer-Einstellungen</h3>
+          <p style="font-size:0.74rem; color:var(--text-sub); margin-top:2px;">Wird dauerhaft auf diesem Gerät gespeichert.</p>
         </div>
-        <button class="close-btn" onclick="closeApiKeyModal()">
+        <button class="close-btn" onclick="closeSettingsModal()">
           <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         </button>
       </div>
 
       <div class="input-group">
-        <input type="password" id="apiKeyInputField" class="input-field" placeholder="sk-proj-...">
-        <button class="btn-action-primary" onclick="saveApiKeyFromModal()">Schlüssel speichern</button>
+        <div style="font-size:0.75rem; font-weight:700; color:var(--text-sub); text-transform:uppercase;">OpenAI API-Key</div>
+        <input type="password" id="settingsApiKeyInput" class="input-field" placeholder="sk-proj-...">
+
+        <div style="font-size:0.75rem; font-weight:700; color:var(--text-sub); text-transform:uppercase; margin-top:6px;">Heimat- / Firmenadresse (Nach Tour)</div>
+        <input type="text" id="settingsHomeAddressInput" class="input-field" placeholder="z.B. Hauptstraße 1, 51766 Engelskirchen">
+
+        <button class="btn-action-primary" style="margin-top: 8px;" onclick="saveSettingsFromModal()">Einstellungen speichern</button>
       </div>
     </div>
   </div>
@@ -1495,12 +1512,6 @@
   </div>
 
   <script>
-    // =========================================================================
-    // OPTIONAL: Falls du den Key doch fest eintragen willst, füge ihn hier ein.
-    // Sicherer ist es aber, ihn über das Schlüssel-Icon oben rechts einzugeben!
-    const HARDCODED_OPENAI_KEY = ""; // <--- HIER DEINEN KEY EINFÜGEN (optional)
-    // =========================================================================
-
     const DRIVER_ID = "F-8921";
     let tourData = [];
     let chefAppEvidenceArchive = [];
@@ -1516,31 +1527,42 @@
 
     function getOpenAiKey() {
       const stored = localStorage.getItem('vindox_openai_key');
-      return (stored && stored.trim().length > 10) ? stored.trim() : HARDCODED_OPENAI_KEY.trim();
+      return (stored && stored.trim().length > 10) ? stored.trim() : "";
     }
 
-    function updateKeyIconState() {
-      const btn = document.getElementById('apiKeySettingsBtn');
+    function getHomeAddress() {
+      return localStorage.getItem('vindox_home_address') || "Heimatadresse / Firma";
+    }
+
+    function updateSettingsIconState() {
+      const btn = document.getElementById('settingsHeaderBtn');
       if (btn) {
         if (getOpenAiKey()) btn.classList.add('configured');
         else btn.classList.remove('configured');
       }
     }
 
-    function openApiKeyModal() {
-      document.getElementById('apiKeyInputField').value = getOpenAiKey();
-      document.getElementById('apiKeyModal').classList.add('active');
+    function openSettingsModal() {
+      document.getElementById('settingsApiKeyInput').value = getOpenAiKey();
+      document.getElementById('settingsHomeAddressInput').value = localStorage.getItem('vindox_home_address') || "";
+      document.getElementById('settingsModal').classList.add('active');
     }
 
-    function closeApiKeyModal() {
-      document.getElementById('apiKeyModal').classList.remove('active');
+    function closeSettingsModal() {
+      document.getElementById('settingsModal').classList.remove('active');
     }
 
-    function saveApiKeyFromModal() {
-      const val = document.getElementById('apiKeyInputField').value.trim();
-      localStorage.setItem('vindox_openai_key', val);
-      updateKeyIconState();
-      closeApiKeyModal();
+    function saveSettingsFromModal() {
+      const keyVal = document.getElementById('settingsApiKeyInput').value.trim();
+      const homeVal = document.getElementById('settingsHomeAddressInput').value.trim();
+      
+      localStorage.setItem('vindox_openai_key', keyVal);
+      if (homeVal) {
+        localStorage.setItem('vindox_home_address', homeVal);
+      }
+      
+      updateSettingsIconState();
+      closeSettingsModal();
     }
 
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -1646,7 +1668,7 @@
 
     function openScreenshotUploader() {
       if (!getOpenAiKey()) {
-        openApiKeyModal();
+        openSettingsModal();
         return;
       }
       document.getElementById('screenshotInput').click();
@@ -1701,7 +1723,7 @@
 
       const apiKey = getOpenAiKey();
       if (!apiKey) {
-        openApiKeyModal();
+        openSettingsModal();
         e.target.value = '';
         return;
       }
@@ -1735,7 +1757,7 @@ STRIKTE REGELN (FEHLERVERMEIDUNG):
    - "street": Straße und Hausnummer (z. B. "Kastanienweg 14")
    - "city": Postleitzahl und Ort (z. B. "51789 Lindlar")
    - "note": Kundenname, Empfänger, Etage oder Lieferhinweis, falls vorhanden (z. B. "Hannemüller, Gert"), sonst leerer String "".
-4. Entferne führende laufende Positionsnummern oder Listenpunkte vor der Adresse (z. B. aus "49. 21 51789 Lindlar Kastanienweg 14" wird street: "Kastanienweg 14", city: "51789 Lindlar").
+4. Entferne führende laufende Positionsnummern oder Listenpunkte vor der Adresse.
 5. Antworte AUSSCHLIESSLICH mit einem validen JSON-Array ohne Markdown-Wrapper oder Erklärungen:
 [
   {
@@ -1826,7 +1848,7 @@ STRIKTE REGELN (FEHLERVERMEIDUNG):
     }
 
     // =========================================================================
-    // KI-ROUTENOPTIMIERUNG: SCHNELLSTE VS. SPARSAMSTE ROUTE
+    // KI-ROUTENOPTIMIERUNG (INKL. ZIELADRESSE / HEIMAT)
     // =========================================================================
     async function optimizeRouteWithAI(mode) {
       if (tourData.length < 2) {
@@ -1836,7 +1858,7 @@ STRIKTE REGELN (FEHLERVERMEIDUNG):
 
       const apiKey = getOpenAiKey();
       if (!apiKey) {
-        openApiKeyModal();
+        openSettingsModal();
         return;
       }
 
@@ -1845,14 +1867,15 @@ STRIKTE REGELN (FEHLERVERMEIDUNG):
       const percentText = document.getElementById('aiPercent');
       const statusText = document.getElementById('aiProgressStatus');
       const summaryPill = document.getElementById('routeSummaryPill');
+      const homeAddress = getHomeAddress();
 
       document.getElementById('btnSortFastest').classList.toggle('active-mode', mode === 'fastest');
       document.getElementById('btnSortEco').classList.toggle('active-mode', mode === 'eco');
 
       progressCard.style.display = 'block';
       statusText.innerText = mode === 'fastest'
-        ? "KI berechnet schnellste Route (Zeit-Fokus)..."
-        : "KI berechnet sparsamste Route (Distanz- & Sprit-Fokus)...";
+        ? "KI berechnet schnellste Route (mit Zielausrichtung)..."
+        : "KI berechnet sparsamste Route (Eco & Zielausrichtung)...";
       progressBar.style.width = "45%";
       percentText.innerText = "45%";
 
@@ -1865,11 +1888,12 @@ STRIKTE REGELN (FEHLERVERMEIDUNG):
         }));
 
         const modeInstruction = mode === 'fastest'
-          ? "Sortiere die Stopps nach der SCHNELLSTEN FAHRZEIT (bevorzuge flüssige Hauptverkehrsachsen, Bundesstraßen und schnelle Zubringer, vermeide zeitraubendes Zickzack)."
-          : "Sortiere die Stopps nach der SPARSAMSTEN STRECKE / MINIMALEN KILOMETERN (kürzeste Gesamtstrecke, engste lokale Cluster-Bildung, minimaler Kraftstoffverbrauch und wenig Stop-and-Go).";
+          ? "Sortiere die Stopps nach der SCHNELLSTEN FAHRZEIT (flüssige Hauptverkehrsachsen, Bundesstraßen, zeiteffizienter Abschluss zur Zieladresse)."
+          : "Sortiere die Stopps nach der SPARSAMSTEN STRECKE / MINIMALEN KILOMETERN (kürzeste Gesamtstrecke, engste Cluster-Bildung, minimaler Kraftstoffverbrauch zur Zieladresse).";
 
         const promptText = `Du bist ein erfahrener deutscher Tourenplaner und Geodaten-Experte.
-Startpunkt (aktueller GPS-Standort des Fahrers): ${currentGPS}.
+Startpunkt des Fahrers: ${currentGPS}.
+Fester Zielpunkt / Heimatadresse nach Tour: ${homeAddress}.
 
 AUFGABE:
 ${modeInstruction}
@@ -1878,9 +1902,10 @@ Hier sind die zu sortierenden Stopps als JSON:
 ${JSON.stringify(stopsPayload)}
 
 REGELN:
-1. Jeder ursprüngliche "index" muss exakt einmal in "ordered_indices" vorkommen. Keine Stopps weglassen oder hinzuerfinden!
-2. Gib eine kurze, realistische Einschätzung auf Deutsch in "summary" (max. 1 Satz, z. B. "Cluster-Reihenfolge über Hauptachsen optimiert (~18% Zeitersparnis).").
-3. Antworte AUSSCHLIESSLICH mit folgendem JSON-Objekt ohne Markdown:
+1. Jeder ursprüngliche "index" muss exakt einmal in "ordered_indices" vorkommen. Keine Stopps weglassen!
+2. Die Tour soll so verlaufen, dass der letzte Stopp ideal auf dem Weg zur Zieladresse (${homeAddress}) liegt.
+3. Gib eine kurze, realistische Einschätzung auf Deutsch in "summary" (max. 1 Satz).
+4. Antworte AUSSCHLIESSLICH mit folgendem JSON-Objekt ohne Markdown:
 {
   "ordered_indices": [0, 2, 1],
   "summary": "..."
@@ -1916,7 +1941,6 @@ REGELN:
         const newOrder = result.ordered_indices.map(idx => tourData[idx]).filter(Boolean);
         if (newOrder.length === tourData.length) {
           tourData = newOrder;
-          // Aktiven Status sauber auf ersten offenen Stopp setzen
           let foundActive = false;
           tourData.forEach(s => {
             if (s.status !== 'completed') {
@@ -1935,7 +1959,7 @@ REGELN:
 
         if (result.summary) {
           summaryPill.style.display = 'block';
-          summaryPill.innerText = (mode === 'fastest' ? "⚡ Schnellste Route: " : "🌱 Sparsamste Route: ") + result.summary;
+          summaryPill.innerText = (mode === 'fastest' ? "Schnellste Route: " : "Sparsamste Route: ") + result.summary;
         }
 
         setTimeout(() => {
@@ -2515,14 +2539,13 @@ REGELN:
       }
     }
 
-    // GPS direkt beim Öffnen aktualisieren für präzise Routenoptimierung
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((pos) => {
         currentGPS = `${pos.coords.latitude.toFixed(6)}, ${pos.coords.longitude.toFixed(6)}`;
       }, () => {});
     }
 
-    updateKeyIconState();
+    updateSettingsIconState();
     const initialSub = getSubtitles(1);
     document.getElementById('sectionTitleText').innerText = initialSub.top;
     document.getElementById('sectionSubtitleText').innerText = initialSub.main;
