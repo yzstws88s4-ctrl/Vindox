@@ -310,54 +310,45 @@
     }
 
     .route-sort-bar {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+      display: flex;
+      flex-direction: column;
       gap: 8px;
       margin-bottom: 10px;
     }
 
     .btn-route-sort {
-      background: rgba(29, 78, 216, 0.14);
-      border: 1px solid rgba(96, 165, 250, 0.3);
-      color: #E2E8F0;
-      border-radius: 11px;
-      padding: 10px 8px;
-      font-size: 0.74rem;
-      font-weight: 700;
+      width: 100%;
+      background: linear-gradient(135deg, var(--accent-main), var(--accent-bright));
+      border: 1px solid var(--accent-light);
+      color: #FFF;
+      border-radius: 12px;
+      padding: 14px 12px;
+      font-size: 0.85rem;
+      font-weight: 800;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 8px;
+      box-shadow: 0 4px 16px var(--accent-glow);
     }
 
     .btn-route-sort svg {
-      width: 14px;
-      height: 14px;
-      fill: var(--accent-light);
-    }
-
-    .btn-route-sort.active-mode {
-      background: linear-gradient(135deg, var(--accent-main), var(--accent-bright));
-      border-color: var(--accent-light);
-      color: #FFF;
-      box-shadow: 0 4px 14px var(--accent-glow);
-    }
-
-    .btn-route-sort.active-mode svg {
+      width: 18px;
+      height: 18px;
       fill: #FFF;
     }
 
     .route-summary-pill {
       display: none;
-      font-size: 0.72rem;
+      font-size: 0.74rem;
       color: #93C5FD;
       background: rgba(29, 78, 216, 0.1);
       border: 1px solid rgba(29, 78, 216, 0.25);
       border-radius: 10px;
-      padding: 8px 10px;
+      padding: 10px 12px;
       margin-bottom: 10px;
-      line-height: 1.35;
+      line-height: 1.4;
     }
 
     .cockpit-header {
@@ -1201,7 +1192,7 @@
         </div>
       </div>
       <div class="header-right-group">
-        <button class="btn-settings-header" id="settingsHeaderBtn" onclick="openSettingsModal()" title="Einstellungen & API-Key">
+        <button class="btn-settings-header" id="settingsHeaderBtn" onclick="openSettingsModal()" title="Einstellungen & Zieladresse">
           <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
         </button>
         <div class="network-badge">
@@ -1303,15 +1294,11 @@
           </div>
           
           <div class="accordion-body">
-            <!-- ROUTEN-OPTIMIERUNG (SCHNELLSTE VS. SPARSAMSTE) -->
+            <!-- SCHNELLSTE ROUTE OPTIMIERUNG (EINZIGER BUTTON) -->
             <div class="route-sort-bar" id="routeSortBar" style="display: none;">
-              <button class="btn-route-sort" id="btnSortFastest" onclick="optimizeRouteWithAI('fastest')">
+              <button class="btn-route-sort" onclick="optimizeFastestRouteWithTarget()">
                 <svg viewBox="0 0 24 24"><path d="M13 2.05v3.03c3.39.49 6 3.39 6 6.92 0 .9-.18 1.75-.48 2.54l2.6 1.53c.56-1.24.88-2.62.88-4.07 0-5.18-3.95-9.45-9-9.95zM12 19c-3.87 0-7-3.13-7-7 0-3.53 2.61-6.43 6-6.92V2.05c-5.05.5-9 4.77-9 9.95 0 5.52 4.48 10 10 10 2.21 0 4.25-.72 5.9-1.93l-2.15-1.63C14.56 18.66 13.32 19 12 19z"/></svg>
-                Schnellste Route
-              </button>
-              <button class="btn-route-sort" id="btnSortEco" onclick="optimizeRouteWithAI('eco')">
-                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-                Sparsamste Route
+                Schnellste Route mit Zieladresse berechnen
               </button>
             </div>
             <div class="route-summary-pill" id="routeSummaryPill"></div>
@@ -1372,7 +1359,7 @@
     </nav>
   </div>
 
-  <!-- MODAL: EINSTELLUNGEN & API-KEY -->
+  <!-- MODAL: EINSTELLUNGEN & ZIELADRESSE -->
   <div class="modal-overlay" id="settingsModal">
     <div class="modal-sheet" style="height: auto; max-height: 85vh;">
       <div class="modal-header">
@@ -1389,7 +1376,7 @@
         <div style="font-size:0.75rem; font-weight:700; color:var(--text-sub); text-transform:uppercase;">OpenAI API-Key</div>
         <input type="password" id="settingsApiKeyInput" class="input-field" placeholder="sk-proj-...">
 
-        <div style="font-size:0.75rem; font-weight:700; color:var(--text-sub); text-transform:uppercase; margin-top:6px;">Heimat- / Firmenadresse (Ziel nach Tour)</div>
+        <div style="font-size:0.75rem; font-weight:700; color:var(--text-sub); text-transform:uppercase; margin-top:6px;">Heimat- / Firmenadresse (Zwingendes Touren-Ziel)</div>
         <input type="text" id="settingsHomeAddressInput" class="input-field" placeholder="z.B. Hauptstraße 1, 51766 Engelskirchen">
 
         <button class="btn-action-primary" style="margin-top: 8px;" onclick="saveSettingsFromModal()">Einstellungen speichern</button>
@@ -1537,7 +1524,7 @@
     function updateSettingsIconState() {
       const btn = document.getElementById('settingsHeaderBtn');
       if (btn) {
-        if (getOpenAiKey()) btn.classList.add('configured');
+        if (getOpenAiKey() && getHomeAddress()) btn.classList.add('configured');
         else btn.classList.remove('configured');
       }
     }
@@ -1749,15 +1736,14 @@
 DEINE AUFGABE:
 Analysiere das übergebene Bild. Extrahiere ALLE echten physischen Ziel-/Lieferadressen in der Reihenfolge, wie sie auf dem Dokument erscheinen.
 
-STRIKTE REGELN (FEHLERVERMEIDUNG):
-1. Ignoriere rigoros jeden UI- und System-Müll: Keine App-Buttons (wie "Zurück", "Speichern", "Weiter", "Löschen"), keine Webseiten-URLs oder Domains, keine Browser-Leisten, keine Statusleisten (Uhrzeit, 5G, Akku), keine allgemeinen Kopf-/Fußzeilen ohne Lieferadresse.
+STRIKTE REGELN:
+1. Ignoriere rigoros jeden UI- und System-Müll: Keine App-Buttons, URLs, Browser-Leisten, Statusleisten oder Kopf-/Fußzeilen.
 2. Extrahiere NUR reale Lieferadressen (Straße + Hausnummer sowie Postleitzahl + Ort).
 3. Trenne sauber:
    - "street": Straße und Hausnummer (z. B. "Kastanienweg 14")
    - "city": Postleitzahl und Ort (z. B. "51789 Lindlar")
-   - "note": Kundenname, Empfänger, Etage oder Lieferhinweis, falls vorhanden (z. B. "Hannemüller, Gert"), sonst leerer String "".
-4. Entferne führende laufende Positionsnummern oder Listenpunkte vor der Adresse.
-5. Antworte AUSSCHLIESSLICH mit einem validen JSON-Array ohne Markdown-Wrapper oder Erklärungen:
+   - "note": Kundenname oder Hinweis, falls vorhanden (z. B. "Hannemüller, Gert"), sonst "".
+4. Antworte AUSSCHLIESSLICH mit einem validen JSON-Array ohne Markdown-Wrapper:
 [
   {
     "street": "Kastanienweg 14",
@@ -1781,7 +1767,7 @@ STRIKTE REGELN (FEHLERVERMEIDUNG):
               {
                 role: "user",
                 content: [
-                  { type: "text", text: "Extrahiere alle echten Lieferadressen aus diesem Bild und ignoriere alles andere." },
+                  { type: "text", text: "Extrahiere alle echten Lieferadressen aus diesem Bild." },
                   { type: "image_url", image_url: { url: base64Image, detail: "high" } }
                 ]
               }
@@ -1790,9 +1776,7 @@ STRIKTE REGELN (FEHLERVERMEIDUNG):
         });
 
         const data = await response.json();
-        if (data.error) {
-          throw new Error(data.error.message || "OpenAI API Fehler");
-        }
+        if (data.error) throw new Error(data.error.message || "OpenAI API Fehler");
 
         progressBar.style.width = "88%";
         percentText.innerText = "88%";
@@ -1846,7 +1830,10 @@ STRIKTE REGELN (FEHLERVERMEIDUNG):
       }
     }
 
-    async function optimizeRouteWithAI(mode) {
+    // =========================================================================
+    // ECHTE SCHNELLSTE ROUTE MIT ZWINGENDER ZIELADRESSE
+    // =========================================================================
+    async function optimizeFastestRouteWithTarget() {
       if (tourData.length < 2) {
         alert("Bitte füge mindestens 2 Stopps hinzu, um die Route zu optimieren.");
         return;
@@ -1858,20 +1845,26 @@ STRIKTE REGELN (FEHLERVERMEIDUNG):
         return;
       }
 
+      let homeAddress = getHomeAddress();
+      if (!homeAddress) {
+        // Falls noch keine Heimatadresse hinterlegt ist, kurz direkt im Dialog abfragen
+        homeAddress = prompt("Bitte gib deine Zieladresse ein (Heimat / Firma nach der Tour):", "Hauptstraße 1, 51766 Engelskirchen");
+        if (homeAddress) {
+          localStorage.setItem('vindox_home_address', homeAddress.trim());
+          updateSettingsIconState();
+        } else {
+          return;
+        }
+      }
+
       const progressCard = document.getElementById('aiProgressCard');
       const progressBar = document.getElementById('aiProgressBar');
       const percentText = document.getElementById('aiPercent');
       const statusText = document.getElementById('aiProgressStatus');
       const summaryPill = document.getElementById('routeSummaryPill');
-      const homeAddress = getHomeAddress();
-
-      document.getElementById('btnSortFastest').classList.toggle('active-mode', mode === 'fastest');
-      document.getElementById('btnSortEco').classList.toggle('active-mode', mode === 'eco');
 
       progressCard.style.display = 'block';
-      statusText.innerText = mode === 'fastest'
-        ? "KI berechnet schnellste Route (Hauptachsen & Ziel)..."
-        : "KI berechnet sparsamste Strecke (Kilometer-Minimierung & Ziel)...";
+      statusText.innerText = "KI berechnet schnellste Route inkl. Zielausrichtung...";
       progressBar.style.width = "40%";
       percentText.innerText = "40%";
 
@@ -1883,32 +1876,21 @@ STRIKTE REGELN (FEHLERVERMEIDUNG):
           note: s.note || ""
         }));
 
-        let modeInstruction = "";
-        if (mode === 'fastest') {
-          modeInstruction = "SCHNELLSTE ROUTE (Zeit-Optimierung): Sortiere die Stopps so, dass der Fahrer vorrangig über übergeordnete Straßen, Bundesstraßen, Landstraßen und schnelle Zubringer gelenkt wird, um die Gesamt-Fahrzeit absolut zu minimieren. Vermeide unnötiges Hin- und Herpendeln in Wohngebieten.";
-        } else {
-          modeInstruction = "SPARSAMSTE ROUTE (Eco & Kilometer-Minimierung): Sortiere die Stopps nach dem Prinzip der engsten geografischen Nachbarschaft (Cluster-Bildung), sodass die absolut wenigsten Gesamtkilometer und der geringste Kraftstoffverbrauch entstehen. Ignoriere dabei Zeitverluste durch kleinere Nebenstraßen, solange die Strecke kürzer ist.";
-        }
-
-        const targetClause = homeAddress 
-          ? `Zwingender finaler Ausstieg / Zieladresse nach der Tour: "${homeAddress}". Der letzte Stopp (Index am Ende von ordered_indices) MUSS geografisch am nächstgelegenen zu dieser Zieladresse liegen, damit der Heimweg optimal verläuft!`
-          : `Keine feste Heimatadresse hinterlegt. Beende die Tour logisch am letzten Stopp.`;
-
         const promptText = `Du bist ein professioneller Logistik-Algorithmus zur Routen-Sequenzierung.
 Aktueller Standort des Fahrers (GPS): ${currentGPS}.
-${targetClause}
+ZWINGENDER FINALER ZIELPUNKT NACH DER TOUR: "${homeAddress}".
 
-OPTIMIERUNGS-MODUS:
-${modeInstruction}
+AUFGABE:
+Berechne die absolut SCHNELLSTE Route über Hauptverkehrsachsen, Bundes- und Landstraßen, um die Fahrzeit und Wegezeit zu minimieren.
+DER LETZTE STOPP (letzter Index im Array "ordered_indices") MUSS GEOGRAFISCH AM NÄCHSTGELEGENEN ZU DER ZIELADRESSE ("${homeAddress}") SEIN, damit der anschließende Heimweg optimal und direkt verläuft!
 
 ZU SORTIERENDE STOPPS ALS JSON:
 ${JSON.stringify(stopsPayload)}
 
 STRIKTE REGELN:
-1. Jeder ursprüngliche "index" aus dem JSON muss exakt einmal in "ordered_indices" vorkommen. Kein Stopp darf verloren gehen oder doppelt vorkommen!
-2. Die Reihenfolge in "ordered_indices" muss die obige Optimierungsregel (${mode}) strikt widerspiegeln.
-3. Gib eine kurze, knackige Zusammenfassung auf Deutsch in "summary" (max. 1 Satz).
-4. Antworte AUSSCHLIESSLICH mit folgendem validen JSON-Objekt ohne Markdown-Code-Blocks:
+1. Jeder ursprüngliche "index" muss exakt einmal in "ordered_indices" vorkommen. Kein Stopp darf verloren gehen!
+2. Gib eine kurze, knackige Zusammenfassung auf Deutsch in "summary" (max. 1 Satz, z.B. "Schnellste Tour über Hauptachsen berechnet • Letzter Stopp optimal für Heimweg in Engelskirchen.").
+3. Antworte AUSSCHLIESSLICH mit folgendem validen JSON-Objekt ohne Markdown:
 {
   "ordered_indices": [0, 2, 1],
   "summary": "..."
@@ -1922,7 +1904,7 @@ STRIKTE REGELN:
           },
           body: JSON.stringify({
             model: "gpt-4o",
-            temperature: 0.1,
+            temperature: 0,
             messages: [
               { role: "system", content: "Du bist ein präziser Routen-Optimierer und antwortest nur im geforderten JSON-Format." },
               { role: "user", content: promptText }
@@ -1935,7 +1917,7 @@ STRIKTE REGELN:
 
         progressBar.style.width = "85%";
         percentText.innerText = "85%";
-        statusText.innerText = "Wende Routen-Reihenfolge an...";
+        statusText.innerText = "Wende schnellste Routen-Reihenfolge an...";
 
         const rawText = data.choices[0].message.content || "{}";
         const cleanJson = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
@@ -1966,7 +1948,7 @@ STRIKTE REGELN:
 
         if (result.summary) {
           summaryPill.style.display = 'block';
-          summaryPill.innerText = (mode === 'fastest' ? "Schnellste Route: " : "Sparsamste Route: ") + result.summary;
+          summaryPill.innerText = "Schnellste Route: " + result.summary;
         }
 
         setTimeout(() => {
@@ -2090,7 +2072,7 @@ STRIKTE REGELN:
       
       badge.innerText = `(${tourData.length} Stopps)`;
       if (sortBar) {
-        sortBar.style.display = tourData.length >= 2 ? 'grid' : 'none';
+        sortBar.style.display = tourData.length >= 2 ? 'flex' : 'none';
       }
 
       if (tourData.length === 0) {
