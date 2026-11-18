@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Vindox – End-to-End Logistik & Beweissicherungs-Plattform</title>
+
+  <!-- PWA & Favicon Settings -->
+  <meta name="apple-mobile-web-app-title" content="Vindox">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="logo.png">
+  <link rel="icon" type="image/png" href="logo.png">
+
+  <script>
+    if (!localStorage.getItem('vindox_theme')) {
+      localStorage.setItem('vindox_theme', 'dark');
+    }
+    document.documentElement.setAttribute('data-theme', localStorage.getItem('vindox_theme'));
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --bg: #030712;
+      --surface: rgba(17, 24, 39, 0.65);
+      --surface-solid: #0f172a;
+      --text: #f9fafb;
+      --text-sub: #9ca3af;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --accent-glow: rgba(37, 99, 235, 0.25);
+      --accent-line: rgba(37, 99, 235, 0.4);
+      --border: rgba(255, 255, 255, 0.08);
+      --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+    }
+
+    * { 
+      box-sizing: border-box; 
+      -webkit-tap-highlight-color: transparent; 
+    }
+
+    html, body {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Ambient Glow */
+    .glow-bg-1 {
+      position: absolute;
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 800px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(37, 99, 235, 0.2) 0%, rgba(3,7,18,0) 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(16px);
+      background: rgba(3, 7, 18, 0.85);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .brand img {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      border: 1px solid var(--accent-line);
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
+
+    .brand-name {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--text-sub);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    .btn-login {
+      background: var(--accent);
+      color: #ffffff;
+      padding: 9px 18px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 13.5px;
+      text-decoration: none;
+      box-shadow: 0 4px 18px var(--accent-glow);
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-login:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+    }
+
+    .container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 20px;
+      position: relative;
+      z-index: 1;
+      width: 100%;
+    }
+
+    /* NEUES ATF (Above The Fold) DESIGN – Kompromisslos & Präsent */
+    .hero {
+      text-align: center;
+      padding: 70px 0 60px 0;
+      position: relative;
+    }
+
+    .hero-pretitle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #60a5fa;
+      background: rgba(37, 99, 235, 0.1);
+      border: 1px solid rgba(37, 99, 235, 0.25);
+      padding: 6px 14px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+    }
+
+    .hero-title {
+      font-size: clamp(38px, 6vw, 68px);
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      line-height: 1.08;
+      margin: 0 auto 22px auto;
+      max-width: 920px;
+      color: #ffffff;
+    }
+
+    .hero-title span {
+      background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(16px, 2.2vw, 19px);
+      color: var(--text-sub);
+      max-width: 700px;
+      margin: 0 auto 40px auto;
+      font-weight: 400;
+      line-height: 1.65;
+    }
+
+    .hero-stats-row {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 50px;
+      padding-top: 30px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .hero-stat-item {
+      text-align: center;
+    }
+
+    .hero-stat-num {
+      font-size: 22px;
+      font-weight: 800;
+      color: #f9fafb;
+    }
+
+    .hero-stat-label {
+      font-size: 12.5px;
+      color: var(--text-sub);
+    }
+
+    .section-title {
+      text-align: center;
+      margin: 70px 0 14px 0;
+      font-size: clamp(24px, 4vw, 34px);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      color: var(--text-sub);
+      max-width: 650px;
+      margin: 0 auto 40px auto;
+      font-size: 15px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 24px;
+      backdrop-filter: blur(12px);
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      border-color: var(--accent-line);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow);
+    }
+
+    .card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: rgba(37, 99, 235, 0.12);
+      border: 1px solid var(--accent-line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+
+    .card-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: #60a5fa;
+      stroke-width: 2;
+      fill: none;
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 0 0 10px 0;
+    }
+
+    .card-desc {
+      color: var(--text-sub);
+      font-size: 14px;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    /* Vergleichsbox */
+    .comparison-box {
+      margin: 60px 0;
+      background: var(--surface-solid);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 30px;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .comp-card {
+      padding: 24px;
+      border-radius: 14px;
+    }
+
+    .comp-card.before {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+    }
+
+    .comp-card.after {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.6) 100%);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      box-shadow: 0 10px 30px -10px rgba(16, 185, 129, 0.1);
+    }
+
+    .comp-title {
+      font-size: 16px;
+      font-weight: 800;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text);
+    }
+
+    .comp-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-size: 13.5px;
+      color: var(--text-sub);
+    }
+
+    .comp-list li {
+      margin-bottom: 18px;
+      line-height: 1.5;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .comp-list li:last-child {
+      margin-bottom: 0;
+    }
+
+    .comp-list li strong {
+      color: var(--text);
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .comp-list li p {
+      margin: 0;
+      padding: 0;
+    }
+
+    @media (max-width: 840px) {
+      .comparison-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      header { padding: 12px 16px; }
+      .calc-main-grid { grid-template-columns: 1fr !important; }
+      .hero-stats-row { gap: 20px; }
+    }
+
+    /* Pricing Section */
+    .pricing-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .pricing-card.featured {
+      border-color: var(--accent);
+      box-shadow: 0 0 30px var(--accent-glow);
+      background: linear-gradient(180deg, rgba(17, 24, 39, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+    }
+
+    .price-tag {
+      font-size: 38px;
+      font-weight: 800;
+      margin: 16px 0 6px 0;
+    }
+
+    .pricing-features {
+      list-style: none;
+      padding: 0;
+      margin: 24px 0;
+      font-size: 14px;
+      color: var(--text-sub);
+    }
+
+    .pricing-features li {
+      margin-bottom: 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      line-height: 1.4;
+    }
+
+    .pricing-features li svg {
+      width: 16px;
+      height: 16px;
+      stroke: #60a5fa;
+      stroke-width: 2.5;
+      fill: none;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 30px 20px;
+      text-align: center;
+      color: var(--text-sub);
+      font-size: 13.5px;
+      margin-top: 70px;
+    }
+
+    footer a {
+      color: var(--text-sub);
+      text-decoration: none;
+      margin: 0 8px;
+      font-weight: 600;
+    }
+
+    footer a:hover { color: var(--accent); }
+
+    .legal-modal-backdrop {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(3, 7, 18, 0.88);
+      backdrop-filter: blur(10px);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
+
+    .legal-modal-content {
+      background: var(--surface-solid);
+      border: 1px solid var(--accent-line);
+      width: 100%;
+      max-width: 650px;
+      max-height: 85vh;
+      border-radius: 18px;
+      padding: 24px;
+      position: relative;
+      overflow-y: auto;
+      color: var(--text);
+    }
+
+    .legal-modal-close {
+      position: absolute;
+      top: 16px; right: 20px;
+      border: none; background: transparent;
+      font-size: 24px; cursor: pointer; color: var(--text-sub);
+    }
+
+    .legal-tab-nav {
+      display: flex; gap: 8px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .legal-tab-btn {
+      background: none; border: none;
+      padding: 6px 12px; cursor: pointer;
+      font-weight: 700; color: var(--text-sub);
+      border-radius: 6px; font-size: 0.85rem;
+      font-family: inherit;
+    }
+
+    .legal-tab-btn.active {
+      background: rgba(37, 99, 235, 0.25);
+      color: #60a5fa;
+    }
+
+    .legal-tab-content { display: none; }
+    .legal-tab-content.active { display: block; }
+    .legal-tab-content h2 { margin-top: 0; font-size: 1.2rem; }
+    .legal-tab-content h3 { font-size: 0.95rem; margin-top: 16px; margin-bottom: 4px; }
+    .legal-tab-content p { font-size: 0.85rem; line-height: 1.6; color: var(--text-sub); }
+  </style>
+</head>
+<body>
+
+  <div class="glow-bg-1"></div>
+
+  <header>
+    <a href="#" class="brand">
+      <img src="logo.png" alt="Vindox Logo">
+      <span class="brand-name">Vindox</span>
+    </a>
+    <div class="nav-links">
+      <a href="#features">Technologie</a>
+      <a href="#comparison">Vergleich</a>
+      <a href="#roi">Wirtschaftlichkeit</a>
+      <a href="#pricing">Tarife</a>
+      <a href="login.html" class="btn-login">Anmelden &rarr;</a>
+    </div>
+  </header>
+
+  <div class="container">
+    
+    <!-- Hero Section (Neues, extrem sauberes ATF Design) -->
+    <section class="hero">
+      <div class="hero-pretitle">
+        <span>B2B Operations & Beweissicherung</span>
+      </div>
+      <h1 class="hero-title">Vom Zettel-Chaos zur perfekten Tour & <span>harten Beweisen.</span></h1>
+      <p class="hero-subtitle">
+        Vindox verbindet ultraleichte mobile Fahrer-Apps mit einem kompromisslosen Kontrollzentrum für Flotten und Servicebetriebe. Inklusive KI-Zettelleser, OSRM-Straßenrouting und SHA-256 Audit-Trail.
+      </p>
+
+      <!-- Subtiler Trust-Row unter der Subline -->
+      <div class="hero-stats-row">
+        <div class="hero-stat-item">
+          <div class="hero-stat-num">100%</div>
+          <div class="hero-stat-label">Gerichtsfester Nachweis</div>
+        </div>
+        <div class="hero-stat-item">
+          <div class="hero-stat-num">0 Sek.</div>
+          <div class="hero-stat-label">App-Store Download</div>
+        </div>
+        <div class="hero-stat-item">
+          <div class="hero-stat-num">2 Min.</div>
+          <div class="hero-stat-label">Setup & Startklar</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <h2 class="section-title" id="features">Vier Hauptkomponenten. Null Kompromisse.</h2>
+    <p class="section-subtitle">Entwickelt für maximale Effizienz auf der Straße und absolute Kontrolle im Büro.</p>
+
+    <div class="grid-3">
+      
+      <div class="card">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+        </div>
+        <h3 class="card-title">Mobile Fahrer-App (PWA)</h3>
+        <p class="card-desc">Sofort einsatzbereit im Smartphone-Browser. Keine Installation im App Store nötig, extrem schnell und kinderleicht bedienbar für jeden Fahrer.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>
+        </div>
+        <h3 class="card-title">KI-Zettel- & OCR-Erfassung</h3>
+        <p class="card-desc">Laden Sie Screenshots oder Lieferscheine hoch. Die KI filtert alle echten Zieladressen heraus und bereitet sie in Sekundenschnelle als Stopps auf.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h3 class="card-title">OSRM Smart-Routing</h3>
+        <p class="card-desc">Berechnet die schnellste Straßen-Route auf Basis von Live-GPS und plant den automatischen Heimweg zurück zur festen Firmenadresse mit ein.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <h3 class="card-title">SHA-256 Audit-Trail</h3>
+        <p class="card-desc">Jeder Stopp wird mit exakten GPS-Koordinaten, Zeitstempel, Fotobeweis und digitaler Kundenunterschrift fälschungssicher abgesichert.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+        </div>
+        <h3 class="card-title">Executive Command Center</h3>
+        <p class="card-desc">Das Büro-Dashboard mit Live-Monitor in Echtzeit, digitaler Fahrer-Verwaltung und vollständiger Kontrolle über alle laufenden Touren.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <h3 class="card-title">Sofort-Rechnung per Mausklick</h3>
+        <p class="card-desc">Generieren Sie aus den erfassten Touren und hinterlegten Firmendaten direkt fertige Rechnungen im professionellen PDF-Layout.</p>
+      </div>
+
+    </div>
+
+    <!-- Vorher / Nachher Vergleich -->
+    <div class="comparison-box" id="comparison">
+      <h2 style="text-align:center; margin-top:0; font-size:22px; font-weight:800;">Der Vindox Unterschied im Alltag</h2>
+      <p style="text-align:center; color:var(--text-sub); margin-bottom:24px; font-size:14px;">Warum herkömmliche Workarounds und teure Altsysteme ausgedient haben.</p>
+
+      <div class="comparison-grid">
+        <div class="comp-card before">
+          <div class="comp-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            <span style="color: #ffffff;">Ohne Vindox (Bisherig)</span>
+          </div>
+          <ul class="comp-list">
+            <li>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2.5" style="flex-shrink:0; margin-top:4px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              <div>
+                <strong>Aussage gegen Aussage:</strong>
+                <p>Kunden behaupten, die Lieferung war beschädigt oder kam zu spät.</p>
+              </div>
+            </li>
+            <li>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2.5" style="flex-shrink:0; margin-top:4px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              <div>
+                <strong>WhatsApp & Zettel-Chaos:</strong>
+                <p>Adressen werden mühsam über Chatgruppen verteilt, Fahrer verfahren sich.</p>
+              </div>
+            </li>
+            <li>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2.5" style="flex-shrink:0; margin-top:4px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              <div>
+                <strong>Blinder Fleck im Büro:</strong>
+                <p>Der Chef weiß nie genau, wo sich seine Fahrer gerade befinden.</p>
+              </div>
+            </li>
+            <li>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2.5" style="flex-shrink:0; margin-top:4px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              <div>
+                <strong>Mühsame Abrechnung:</strong>
+                <p>Stundenlanges Zusammensuchen von Belegen für die Monatsrechnung.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="comp-card after">
+          <div class="comp-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span style="color: #6ee7b7;">Mit Vindox (Plattform)</span>
+          </div>
+          <ul class="comp-list">
+            <li>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5" style="flex-shrink:0; margin-top:4px;"><polyline points="20 6 9 17 4 12"/></svg>
+              <div>
+                <strong>Gerichtsfeste Beweise:</strong>
+                <p>SHA-256 Hash, GPS & Fotobeweis schlagen jede unberechtigte Reklamation.</p>
+              </div>
+            </li>
+            <li>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5" style="flex-shrink:0; margin-top:4px;"><polyline points="20 6 9 17 4 12"/></svg>
+              <div>
+                <strong>Perfekte Routen in Sekunden:</strong>
+                <p>KI liest Zettel ein, OSRM optimiert die Straße inkl. Heimweg automatisch.</p>
+              </div>
+            </li>
+            <li>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5" style="flex-shrink:0; margin-top:4px;"><polyline points="20 6 9 17 4 12"/></svg>
+              <div>
+                <strong>Live-Monitor im Büro:</strong>
+                <p>Volle Flottenübersicht in Echtzeit, während Sie Ihren Kaffee trinken.</p>
+              </div>
+            </li>
+            <li>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5" style="flex-shrink:0; margin-top:4px;"><polyline points="20 6 9 17 4 12"/></svg>
+              <div>
+                <strong>Rechnung per Mausklick:</strong>
+                <p>Saubere PDFs direkt aus den erfassten Touren generieren und versenden.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wirtschaftlichkeits-Rechner (4 Kategorien: Fahrer, Stopps, Reklamationen, Gerichtsfälle) -->
+    <div class="calc-box" id="roi" style="background: linear-gradient(135deg, #0b1329 0%, #030712 100%); border: 1px solid rgba(37, 99, 235, 0.3); border-radius: 24px; padding: 36px; margin: 60px 0; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8);">
+      
+      <!-- Header -->
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px; flex-wrap: wrap; gap: 20px;">
+        <div>
+          <span style="font-size: 11px; font-weight: 800; color: #60a5fa; text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 6px;">ROI & Wirtschaftlichkeit</span>
+          <h2 style="margin: 0; font-size: 26px; font-weight: 800; color: #f9fafb; letter-spacing: -0.02em;">Der Ersparnis- & Mehrwert-Rechner</h2>
+          <p style="color: #9ca3af; margin: 6px 0 0 0; font-size: 14px;">Ermitteln Sie Ihren echten Netto-Vorteil – sauber aufgeschlüsselt nach Ihren tatsächlichen Betriebswerten.</p>
+        </div>
+        
+        <!-- Toggle (Monatlich / Jährlich) -->
+        <div style="display: flex; flex-direction: column; gap: 12px; align-items: flex-end;">
+          <div style="display: inline-flex; background: rgba(255, 255, 255, 0.05); padding: 4px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.08);">
+            <button id="btnPeriodMonth" class="calc-toggle-btn active" onclick="setPeriod('month')" style="background: #2563eb; color: #fff; border: none; padding: 6px 14px; font-size: 12px; font-weight: 700; border-radius: 7px; cursor: pointer;">Monatlich</button>
+            <button id="btnPeriodYear" class="calc-toggle-btn" onclick="setPeriod('year')" style="background: transparent; color: #9ca3af; border: none; padding: 6px 14px; font-size: 12px; font-weight: 700; border-radius: 7px; cursor: pointer;">J&auml;hrlich</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid: Links die 4 Kategorien (Regler), Rechts das Ergebnis -->
+      <div style="display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 36px; align-items: center;" class="calc-main-grid">
+        
+        <!-- Linke Seite: Die 4 Kategorien -->
+        <div style="display: flex; flex-direction: column; gap: 20px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.06); padding: 24px; border-radius: 18px;">
+          
+          <!-- Kategorie 1: Fahrer -->
+          <div>
+            <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 13.5px; margin-bottom: 6px; color: #f9fafb;">
+              <span>1. Fahrer / Fahrzeuge:</span>
+              <span id="valDrivers" style="color: #60a5fa; font-size: 15px;">5</span>
+            </div>
+            <input type="range" id="inputDrivers" min="1" max="50" value="5" oninput="calculateROI()" style="width: 100%; height: 6px; border-radius: 5px; background: rgba(255,255,255,0.1); accent-color: #2563eb; cursor: pointer;">
+          </div>
+
+          <!-- Kategorie 2: Stopps / Touren -->
+          <div>
+            <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 13.5px; margin-bottom: 6px; color: #f9fafb;">
+              <span>2. Stopps / Auftr&auml;ge (<span id="lblTourPeriod">pro Monat</span>):</span>
+              <span id="valTours" style="color: #60a5fa; font-size: 15px;">150</span>
+            </div>
+            <input type="range" id="inputTours" min="20" max="2000" step="10" value="150" oninput="calculateROI()" style="width: 100%; height: 6px; border-radius: 5px; background: rgba(255,255,255,0.1); accent-color: #2563eb; cursor: pointer;">
+          </div>
+
+          <!-- Kategorie 3: Reklamationen -->
+          <div>
+            <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 13.5px; margin-bottom: 6px; color: #f9fafb;">
+              <span>3. Reklamationen (<span id="lblReklamationPeriod">pro Monat</span>):</span>
+              <span id="valIncidents" style="color: #60a5fa; font-size: 15px;">4</span>
+            </div>
+            <input type="range" id="inputIncidents" min="0" max="30" value="4" oninput="calculateROI()" style="width: 100%; height: 6px; border-radius: 5px; background: rgba(255,255,255,0.1); accent-color: #2563eb; cursor: pointer;">
+          </div>
+
+          <!-- Kategorie 4: Gerichtsfälle -->
+          <div>
+            <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 13.5px; margin-bottom: 6px; color: #f9fafb;">
+              <span>4. Gerichtsfälle / Streitfälle (<span id="lblCourtPeriod">pro Jahr</span>):</span>
+              <span id="valCourt" style="color: #60a5fa; font-size: 15px;">1</span>
+            </div>
+            <input type="range" id="inputCourt" min="0" max="10" value="1" oninput="calculateROI()" style="width: 100%; height: 6px; border-radius: 5px; background: rgba(255,255,255,0.1); accent-color: #2563eb; cursor: pointer;">
+          </div>
+
+          <div style="font-size: 11.5px; color: #9ca3af; line-height: 1.4; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 10px;">
+            ℹ️ <strong>Transparente Logik:</strong> Automatische Tarif-Erkennung (Solo 49 &euro; bis 1 Fahrer, Flotte 149 &euro; ab 2 Fahrern).
+          </div>
+        </div>
+
+        <!-- Rechte Seite: Aufschlüsselung & Netto-Vorteil -->
+        <div style="background: rgba(37, 99, 235, 0.06); border: 1px solid rgba(37, 99, 235, 0.3); border-radius: 18px; padding: 26px; display: flex; flex-direction: column; justify-content: space-between;">
+          
+          <div style="font-size: 12px; font-weight: 800; color: #93c5fd; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px;">Wertschöpfung & Ersparnis</div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13px;">
+            <div style="display: flex; justify-content: space-between; padding-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,0.06);">
+              <span style="color: #9ca3af;">Abgewendete Reklamationen:</span>
+              <span id="resReklamation" style="color: #f87171; font-weight: 700;">300 &euro;</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,0.06);">
+              <span style="color: #9ca3af;">Sprit & Weg (OSRM-Routing):</span>
+              <span id="resSprit" style="color: #34d399; font-weight: 700;">120 &euro;</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,0.06);">
+              <span style="color: #9ca3af;">Bürozeit & Zettel-Entlastung:</span>
+              <span id="resTour" style="color: #fbbf24; font-weight: 700;">225 &euro;</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,0.06);">
+              <span style="color: #9ca3af;">Abgewendete Gerichtskosten:</span>
+              <span id="resGericht" style="color: #a78bfa; font-weight: 700;">1.500 &euro;</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,0.06);">
+              <span style="color: #9ca3af;">Vindox Software-Invest:</span>
+              <span id="resCost" style="color: #93c5fd; font-weight: 700;">- 1.788 &euro;</span>
+            </div>
+          </div>
+
+          <!-- Endergebnis Box -->
+          <div style="margin-top: 18px; padding-top: 18px; border-top: 1px solid rgba(37, 99, 235, 0.4); text-align: center;">
+            <div style="font-size: 11px; font-weight: 800; color: #9ca3af; letter-spacing: 0.08em; text-transform: uppercase;" id="lblResultTitle">Netto-Vorteil (Zeit & Geld)</div>
+            <div style="font-size: clamp(30px, 4vw, 40px); font-weight: 800; color: #60a5fa; margin: 4px 0;" id="resProfit">357 &euro;</div>
+            <div style="font-size: 11.5px; color: #9ca3af;" id="lblProfitSubtitle">Echtes Ersparnis-Plus nach Abzug aller Kosten</div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Pricing Section -->
+    <h2 class="section-title" id="pricing">Klare, faire Konditionen</h2>
+    <p class="section-subtitle">Wählen Sie das Modell, das perfekt zu Ihrer Unternehmensgröße passt.</p>
+
+    <div class="grid-2" style="max-width: 860px; margin: 0 auto 20px auto;">
+      
+      <!-- Vindox Solo Tarif -->
+      <div class="pricing-card">
+        <div>
+          <div style="font-size:11px; font-weight:800; color:#60a5fa; text-transform:uppercase; letter-spacing:0.05em;">Für Solo-Fahrer & Selbstständige</div>
+          <h3 style="font-size: 22px; margin: 4px 0;">Vindox Solo</h3>
+          <p style="color:var(--text-sub); font-size: 13.5px; margin: 0;">Die professionelle Tour-App mit vereinfachtem Chef-Dashboard für Einzelsieger</p>
+          
+          <div class="price-tag">49 &euro; <span style="font-size:15px; color:var(--text-sub); font-weight: 500;">/Monat netto</span></div>
+          
+          <ul class="pricing-features">
+            <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> <span><strong>Volle Tour-App (PWA)</strong> für das Smartphone</span></li>
+            <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> <span><strong>KI-Zettelleser & OCR-Scan</strong> für schnelle Erfassung</span></li>
+            <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> <span><strong>OSRM-Smart-Routing</strong> inkl. Heimweg-Optimierung</span></li>
+            <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> <span><strong>SHA-256 Audit-Trail</strong> mit Fotobeweis & Unterschrift</span></li>
+            <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> <span>Vereinfachtes Dashboard zur Nachweisführung</span></li>
+          </ul>
+        </div>
+        <a href="https://buy.stripe.com/00wdR86bH0Fybu308rdby00" class="btn-login" style="width: 100%; justify-content: center; padding: 12px;">Solo-Zugang Freischalten</a>
+      </div>
+
+      <!-- Vindox Flotte Tarif -->
+      <div class="pricing-card featured">
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:11px; font-weight:800; color:#93c5fd; text-transform:uppercase; letter-spacing:0.05em;">Für wachsende Teams</span>
+            <span class="badge" style="margin:0; padding:3px 8px; font-size:10.5px;">Vollversion</span>
+          </div>
+          <h3 style="font-size: 22px; margin: 4px 0;">Vindox Flotte & Team</h3>
+          <p style="color:var(--text-sub); font-size: 13.5px; margin: 0;">Das komplette Executive Command Center für Chefs mit mehreren Fahrern</p>
+          
+          <div class="price-tag">149 &euro; <span style="font-size:15px; color:var(--text-sub); font-weight: 500;">/Monat netto</span></div>
+
+          <ul class="pricing-features">
+            <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> <span><strong>Executive Command Center</strong> in Vollversion</span></li>
+            <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> <span><strong>Echtzeit-Live-Monitor</strong> für die gesamte Flotte</span></li>
+            <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> <span><strong>Digitale Fahrer-Verwaltung</strong> & Tour-Zuweisung</span></li>
+            <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> <span><strong>Integrierte Rechnungsstellung</strong> inkl. PDF-Export</span></li>
+            <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> <span>Unbegrenzte Tour-Erfassung & rechtssichere Archive</span></li>
+          </ul>
+        </div>
+        <a href="https://buy.stripe.com/bJedR82ZvewodCbg7pdby01" class="btn-login" style="width: 100%; justify-content: center; padding: 12px; background:#2563eb;">Flotten-Paket Einrichten</a>
+      </div>
+
+    </div>
+
+    <div style="text-align: center; margin-bottom: 60px; font-size: 13.5px; color: var(--text-sub); font-weight: 500;">
+      Monatlich kündbar • Keine versteckten Kosten • DSGVO-konform
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2026 Vindox • Björn Koch. Alle Rechte vorbehalten.</p>
+    <p>
+      <a href="#" onclick="openLegalModal('impressum'); return false;">Impressum</a>
+      <span>•</span>
+      <a href="#" onclick="openLegalModal('datenschutz'); return false;">Datenschutzerklärung</a>
+      <span>•</span>
+      <a href="#" onclick="openLegalModal('agb'); return false;">AGB (B2B)</a>
+      <span>•</span>
+      <a href="avv.pdf" target="_blank">AVV</a>
+    </p>
+  </footer>
+
+  <!-- Modal Impressum / Datenschutz / AGB -->
+  <div id="legalModal" class="legal-modal-backdrop" onclick="closeLegalModal(event)">
+    <div class="legal-modal-content">
+      <button class="legal-modal-close" onclick="closeLegalModalDirect()">&times;</button>
+      
+      <div class="legal-tab-nav">
+        <button id="tabBtnImpressum" class="legal-tab-btn" onclick="switchLegalTab('impressum')">Impressum</button>
+        <button id="tabBtnDatenschutz" class="legal-tab-btn" onclick="switchLegalTab('datenschutz')">Datenschutzerklärung</button>
+        <button id="tabBtnAgb" class="legal-tab-btn" onclick="switchLegalTab('agb')">AGB (B2B)</button>
+      </div>
+
+      <div id="contentImpressum" class="legal-tab-content">
+        <h2>Impressum</h2>
+        <p><strong>Angaben gemäß § 5 DDG:</strong></p>
+        <p>
+          Björn Koch<br>
+          Vindox<br>
+          Thüringer Straße 37<br>
+          51766 Engelskirchen<br>
+          Deutschland
+        </p>
+        <p><strong>Kontakt:</strong><br>Telefon: 0160 1840201<br>E-Mail: hello@vindox.de</p>
+        <p><strong>Umsatzsteuer:</strong><br>Umsatzsteuerbefreit nach § 19 UStG</p>
+      </div>
+
+      <div id="contentDatenschutz" class="legal-tab-content">
+        <h2>Datenschutzerklärung</h2>
+        <p><strong>Allgemeine Hinweise:</strong> Vindox verarbeitet personenbezogene Daten (z.B. GPS-Daten, Zeitstempel, E-Mail-Adressen) ausschließlich im Rahmen der DSGVO zur Durchführung von Touren und Audits im B2B-Verhältnis.</p>
+        <p>Verantwortlicher: Björn Koch, Thüringer Straße 37, 51766 Engelskirchen, E-Mail: hello@vindox.de</p>
+      </div>
+
+      <div id="contentAgb" class="legal-tab-content">
+        <h2>Allgemeine Geschäftsbedingungen (AGB) – B2B</h2>
+        
+        <h3>§ 1 Geltungsbereich & Vertragspartner</h3>
+        <p>1. Diese AGB gelten für alle Verträge über die Nutzung der B2B-SaaS-Plattform Vindox zwischen Björn Koch, Vindox, Thüringer Straße 37, 51766 Engelskirchen (Anbieter) und dem Kunden.</p>
+        <p>2. Das Angebot richtet sich ausschließlich an Unternehmer im Sinne des § 14 BGB. Ein Vertragsschluss mit Verbrauchern (§ 13 BGB) ist ausgeschlossen.</p>
+
+        <h3>§ 2 Leistungsumfang</h3>
+        <p>1. Der Anbieter stellt dem Kunden die cloudbasierte Software Vindox zur Routen- und Tourendisposition, Fahrerführung sowie zur Foto- und Statusdokumentation zur Verfügung.</p>
+
+        <h3>§ 3 Preise, Abrechnung & Zahlungsbedingungen</h3>
+        <p>1. Die Vergütung richtet sich nach dem gewählten Tarif (Solo oder Flotte). Alle Preise verstehen sich netto zzgl. gesetzlicher Umsatzsteuer.</p>
+        <p>2. Die Abrechnung erfolgt monatlich im Voraus über den Zahlungsdienstleister Stripe.</p>
+
+        <h3>§ 4 Pflichten des Kunden & Datenschutz (AVV)</h3>
+        <p>1. Der Kunde ist verpflichtet, Zugangsdaten geheim zu halten und vor unbefugtem Zugriff zu schützen.</p>
+        <p>2. Der Kunde stellt sicher, dass Mitarbeiter über die GPS- und Foto-Erfassung informiert sind.</p>
+        <p>3. Es gilt die Vereinbarung zur Auftragsverarbeitung (AVV) gemäß Art. 28 DSGVO.</p>
+
+        <h3>§ 5 Vertragslaufzeit & Kündigung</h3>
+        <p>1. Der Vertrag verlängert sich monatlich und ist jederzeit zum Ende des Abrechnungszeitraums kündbar.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentPeriod = 'month';
+
+    function setPeriod(period) {
+      currentPeriod = period;
+      document.getElementById('btnPeriodMonth').style.background = period === 'month' ? '#2563eb' : 'transparent';
+      document.getElementById('btnPeriodMonth').style.color = period === 'month' ? '#fff' : '#9ca3af';
+      document.getElementById('btnPeriodYear').style.background = period === 'year' ? '#2563eb' : 'transparent';
+      document.getElementById('btnPeriodYear').style.color = period === 'year' ? '#fff' : '#9ca3af';
+
+      if (period === 'year') {
+        document.getElementById('lblTourPeriod').innerText = 'pro Jahr';
+        document.getElementById('lblReklamationPeriod').innerText = 'pro Jahr';
+        document.getElementById('lblCourtPeriod').innerText = 'pro Jahr';
+      } else {
+        document.getElementById('lblTourPeriod').innerText = 'pro Monat';
+        document.getElementById('lblReklamationPeriod').innerText = 'pro Monat';
+        document.getElementById('lblCourtPeriod').innerText = 'pro Jahr';
+      }
+
+      calculateROI();
+    }
+
+    function calculateROI() {
+      const drivers = parseInt(document.getElementById('inputDrivers').value);
+      const toursInput = parseInt(document.getElementById('inputTours').value);
+      const incidentsInput = parseInt(document.getElementById('inputIncidents').value);
+      const courtCases = parseInt(document.getElementById('inputCourt').value);
+
+      document.getElementById('valDrivers').innerText = drivers;
+      document.getElementById('valTours').innerText = toursInput;
+      document.getElementById('valIncidents').innerText = incidentsInput;
+      document.getElementById('valCourt').innerText = courtCases;
+
+      const isYear = currentPeriod === 'year';
+
+      const annualTours = isYear ? toursInput : (toursInput * 12);
+      const annualIncidents = isYear ? incidentsInput : (incidentsInput * 12);
+      const annualCourtCases = courtCases;
+
+      const savingReklamationAnnual = annualIncidents * 75;
+      const savingSpritAnnual = Math.round(annualTours * 0.80);
+      const savingTourAnnual = Math.round(annualTours * 1.50);
+      const savingGerichtAnnual = annualCourtCases * 1500;
+
+      const softwareCostMonthly = (drivers === 1) ? 49 : 149;
+      const softwareCostAnnual = softwareCostMonthly * 12;
+
+      const uiMultiplier = isYear ? 1 : (1 / 12);
+
+      const dispReklamation = Math.round(savingReklamationAnnual * uiMultiplier);
+      const dispSprit = Math.round(savingSpritAnnual * uiMultiplier);
+      const dispTour = Math.round(savingTourAnnual * uiMultiplier);
+      const dispGericht = Math.round(savingGerichtAnnual * uiMultiplier);
+      const dispCost = Math.round(softwareCostAnnual * uiMultiplier);
+
+      const totalSavingsAnnual = savingReklamationAnnual + savingSpritAnnual + savingTourAnnual + savingGerichtAnnual;
+      const netProfitAnnual = totalSavingsAnnual - softwareCostAnnual;
+      const dispNetProfit = Math.round(netProfitAnnual * uiMultiplier);
+
+      document.getElementById('lblResultTitle').innerText = isYear ? "J&auml;hrlicher Netto-Vorteil" : "Monatlicher Netto-Vorteil";
+      document.getElementById('lblProfitSubtitle').innerText = isYear ? "Gesamtersparnis minus Jahres-Softwarekosten" : "Echtes Ersparnis-Plus nach Abzug aller Monatskosten";
+
+      document.getElementById('resReklamation').innerText = dispReklamation.toLocaleString('de-DE') + ' €';
+      document.getElementById('resSprit').innerText = dispSprit.toLocaleString('de-DE') + ' €';
+      document.getElementById('resTour').innerText = dispTour.toLocaleString('de-DE') + ' €';
+      document.getElementById('resGericht').innerText = dispGericht.toLocaleString('de-DE') + ' €';
+      document.getElementById('resCost').innerText = '- ' + dispCost.toLocaleString('de-DE') + ' €';
+      document.getElementById('resProfit').innerText = dispNetProfit.toLocaleString('de-DE') + ' €';
+    }
+
+    function openLegalModal(tab) {
+      document.getElementById('legalModal').style.display = 'flex';
+      switchLegalTab(tab);
+    }
+    function closeLegalModalDirect() {
+      document.getElementById('legalModal').style.display = 'none';
+    }
+    function closeLegalModal(event) {
+      if (event.target.id === 'legalModal') closeLegalModalDirect();
+    }
+    function switchLegalTab(tabName) {
+      document.getElementById('contentImpressum').classList.remove('active');
+      document.getElementById('contentDatenschutz').classList.remove('active');
+      document.getElementById('contentAgb').classList.remove('active');
+      
+      document.getElementById('tabBtnImpressum').classList.remove('active');
+      document.getElementById('tabBtnDatenschutz').classList.remove('active');
+      document.getElementById('tabBtnAgb').classList.remove('active');
+
+      if (tabName === 'impressum') {
+        document.getElementById('contentImpressum').classList.add('active');
+        document.getElementById('tabBtnImpressum').classList.add('active');
+      } else if (tabName === 'datenschutz') {
+        document.getElementById('contentDatenschutz').classList.add('active');
+        document.getElementById('tabBtnDatenschutz').classList.add('active');
+      } else if (tabName === 'agb') {
+        document.getElementById('contentAgb').classList.add('active');
+        document.getElementById('tabBtnAgb').classList.add('active');
+      }
+    }
+
+    calculateROI();
+  </script>
+</body>
+</html>
