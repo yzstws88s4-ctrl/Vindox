@@ -1389,7 +1389,7 @@
         <div style="font-size:0.75rem; font-weight:700; color:var(--text-sub); text-transform:uppercase;">OpenAI API-Key</div>
         <input type="password" id="settingsApiKeyInput" class="input-field" placeholder="sk-proj-...">
 
-        <div style="font-size:0.75rem; font-weight:700; color:var(--text-sub); text-transform:uppercase; margin-top:6px;">Heimat- / Firmenadresse (Nach Tour)</div>
+        <div style="font-size:0.75rem; font-weight:700; color:var(--text-sub); text-transform:uppercase; margin-top:6px;">Heimat- / Firmenadresse (Ziel nach Tour)</div>
         <input type="text" id="settingsHomeAddressInput" class="input-field" placeholder="z.B. Hauptstraße 1, 51766 Engelskirchen">
 
         <button class="btn-action-primary" style="margin-top: 8px;" onclick="saveSettingsFromModal()">Einstellungen speichern</button>
@@ -1531,7 +1531,7 @@
     }
 
     function getHomeAddress() {
-      return localStorage.getItem('vindox_home_address') || "Heimatadresse / Firma";
+      return localStorage.getItem('vindox_home_address') || "";
     }
 
     function updateSettingsIconState() {
@@ -1559,6 +1559,8 @@
       localStorage.setItem('vindox_openai_key', keyVal);
       if (homeVal) {
         localStorage.setItem('vindox_home_address', homeVal);
+      } else {
+        localStorage.removeItem('vindox_home_address');
       }
       
       updateSettingsIconState();
@@ -1848,7 +1850,7 @@ STRIKTE REGELN (FEHLERVERMEIDUNG):
     }
 
     // =========================================================================
-    // KI-ROUTENOPTIMIERUNG (INKL. ZIELADRESSE / HEIMAT)
+    // ECHTE KI-ROUTENOPTIMIERUNG (SCHNELLSTE VS. SPARSAMSTE MIT ZIELZWANG)
     // =========================================================================
     async function optimizeRouteWithAI(mode) {
       if (tourData.length < 2) {
@@ -1874,10 +1876,10 @@ STRIKTE REGELN (FEHLERVERMEIDUNG):
 
       progressCard.style.display = 'block';
       statusText.innerText = mode === 'fastest'
-        ? "KI berechnet schnellste Route (mit Zielausrichtung)..."
-        : "KI berechnet sparsamste Route (Eco & Zielausrichtung)...";
-      progressBar.style.width = "45%";
-      percentText.innerText = "45%";
+        ? "KI berechnet schnellste Route (Hauptachsen & Ziel)..."
+        : "KI berechnet sparsamste Strecke (Kilometer-Minimierung & Ziel)...";
+      progressBar.style.width = "40%";
+      percentText.innerText = "40%";
 
       try {
         const stopsPayload = tourData.map((s, i) => ({
@@ -1887,25 +1889,33 @@ STRIKTE REGELN (FEHLERVERMEIDUNG):
           note: s.note || ""
         }));
 
-        const modeInstruction = mode === 'fastest'
-          ? "Sortiere die Stopps nach der SCHNELLSTEN FAHRZEIT (flüssige Hauptverkehrsachsen, Bundesstraßen, zeiteffizienter Abschluss zur Zieladresse)."
-          : "Sortiere die Stopps nach der SPARSAMSTEN STRECKE / MINIMALEN KILOMETERN (kürzeste Gesamtstrecke, engste Cluster-Bildung, minimaler Kraftstoffverbrauch zur Zieladresse).";
+        // Mathematisch strikte Vorgaben für die KI, um echte Unterschiede zu erzwingen
+        let modeInstruction = "";
+        if (mode === 'fastest') {
+          modeInstruction = "SCHNELLSTE ROUTE (Zeit-Optimierung): Sortiere die Stopps so, dass der Fahrer vorrangig über übergeordnete Straßen, Bundesstraßen, Landstraßen und schnelle Zubringer gelenkt wird, um die Gesamt-Fahrzeit absolut zu minimieren. Vermeide unnötiges Hin- und Herpendeln in Wohngebieten.";
+        } else {
+          modeInstruction = "SPARSAMSTE ROUTE (Eco & Kilometer-Minimierung): Sortiere die Stopps nach dem Prinzip der engsten geografischen Nachbarschaft (Cluster-Bildung), sodass die absolut wenigsten Gesamtkilometer und der geringste Kraftstoffverbrauch entstehen. Ignoriere dabei Zeitverluste durch kleinere Nebenstraßen, solange die Strecke kürzer ist.";
+        }
 
-        const promptText = `Du bist ein erfahrener deutscher Tourenplaner und Geodaten-Experte.
-Startpunkt des Fahrers: ${currentGPS}.
-Fester Zielpunkt / Heimatadresse nach Tour: ${homeAddress}.
+        const targetClause = homeAddress 
+          ? `Zwingender finaler Ausstieg / Zieladresse nach der Tour: "${homeAddress}". Der letzte Stopp (Index am Ende von ordered_indices) MUSS geografisch am nächstgelegenen zu dieser Zieladresse liegen, damit der Heimweg optimal verläuft!`
+          : `Keine feste Heimatadresse hinterlegt. Beende die Tour logisch am letzten Stopp.`;
 
-AUFGABE:
+        const promptText = `Du bist ein professioneller Logistik-Algorithmus zur Routen-Sequenzierung.
+Aktueller Standort des Fahrers (GPS): ${currentGPS}.
+${targetClause}
+
+OPTIMIERUNGS-MODUS:
 ${modeInstruction}
 
-Hier sind die zu sortierenden Stopps als JSON:
+ZU SORTIERENDE STOPPS ALS JSON:
 ${JSON.stringify(stopsPayload)}
 
-REGELN:
-1. Jeder ursprüngliche "index" muss exakt einmal in "ordered_indices" vorkommen. Keine Stopps weglassen!
-2. Die Tour soll so verlaufen, dass der letzte Stopp ideal auf dem Weg zur Zieladresse (${homeAddress}) liegt.
-3. Gib eine kurze, realistische Einschätzung auf Deutsch in "summary" (max. 1 Satz).
-4. Antworte AUSSCHLIESSLICH mit folgendem JSON-Objekt ohne Markdown:
+STRIKTE REGELN:
+1. Jeder ursprüngliche "index" aus dem JSON muss exakt einmal in "ordered_indices" vorkommen. Kein Stopp darf verloren gehen oder doppelt vorkommen!
+2. Die Reihenfolge in "ordered_indices" muss die obige Optimierungsregel (${mode) strikt widerspiegeln.
+3. Gib eine kurze, knackige Zusammenfassung auf Deutsch in "summary" (max. 1 Satz, z.B. "Tour über Hauptverkehrsachsen optimiert • Letzter Stopp in Lindlar ideal für Heimfahrt.").
+4. Antworte AUSSCHLIESSLICH mit folgendem validen JSON-Objekt ohne Markdown-Code-Blocks:
 {
   "ordered_indices": [0, 2, 1],
   "summary": "..."
@@ -1919,9 +1929,9 @@ REGELN:
           },
           body: JSON.stringify({
             model: "gpt-4o",
-            temperature: 0,
+            temperature: 0.1, // Ganz leichte Temperatur für dynamische Neuberechnung je nach Modus
             messages: [
-              { role: "system", content: "Du optimierst Lieferrouten und antwortest ausschließlich im strikten JSON-Format." },
+              { role: "system", content: "Du bist ein präziser Routen-Optimierer und antwortest nur im geforderten JSON-Format." },
               { role: "user", content: promptText }
             ]
           })
@@ -1929,6 +1939,10 @@ REGELN:
 
         const data = await response.json();
         if (data.error) throw new Error(data.error.message);
+
+        progressBar.style.width = "85%";
+        percentText.innerText = "85%";
+        statusText.innerText = "Wende Routen-Reihenfolge an...";
 
         const rawText = data.choices[0].message.content || "{}";
         const cleanJson = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
