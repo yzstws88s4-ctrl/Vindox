@@ -15,14 +15,14 @@
   <style>
     :root {
       --bg: #07090E;
-      --card-bg: rgba(13, 20, 38, 0.85);
+      --card-bg: rgba(13, 20, 38, 0.88);
       --card-border: rgba(255, 255, 255, 0.08);
       --card-border-active: rgba(29, 78, 216, 0.55);
       
       --accent-main: #173EA6;
       --accent-bright: #1E4ED8;
       --accent-light: #60A5FA;
-      --accent-glow: rgba(29, 78, 216, 0.3);
+      --accent-glow: rgba(29, 78, 216, 0.35);
       
       --text-main: #F8FAFC;
       --text-sub: #94A3B8;
@@ -73,7 +73,7 @@
       display: flex;
       flex-direction: column;
       position: relative;
-      padding-bottom: 110px;
+      padding-bottom: 130px;
     }
 
     header {
@@ -313,7 +313,7 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
-      margin-bottom: 10px;
+      margin-top: 6px;
     }
 
     .btn-route-sort {
@@ -321,16 +321,16 @@
       background: linear-gradient(135deg, var(--accent-main), var(--accent-bright));
       border: 1px solid var(--accent-light);
       color: #FFF;
-      border-radius: 12px;
-      padding: 14px 12px;
-      font-size: 0.85rem;
+      border-radius: 14px;
+      padding: 15px 12px;
+      font-size: 0.9rem;
       font-weight: 800;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      box-shadow: 0 4px 16px var(--accent-glow);
+      gap: 10px;
+      box-shadow: 0 6px 20px var(--accent-glow);
     }
 
     .btn-route-sort:disabled {
@@ -346,13 +346,13 @@
 
     .route-summary-pill {
       display: none;
-      font-size: 0.75rem;
+      font-size: 0.76rem;
       color: #93C5FD;
       background: rgba(29, 78, 216, 0.12);
       border: 1px solid rgba(29, 78, 216, 0.3);
-      border-radius: 10px;
-      padding: 10px 12px;
-      margin-bottom: 10px;
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 10px;
       line-height: 1.45;
       font-weight: 600;
     }
@@ -471,102 +471,37 @@
       display: flex;
     }
 
-    .accordion-card {
+    .status-card-clean {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 20px;
-      padding: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
       backdrop-filter: blur(20px);
     }
 
-    .accordion-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-    }
-
-    .accordion-header-left {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .accordion-toggle-icon {
-      width: 18px;
-      height: 18px;
-      fill: var(--text-sub);
-      transition: transform 0.3s ease;
-    }
-
-    .accordion-card.open .accordion-toggle-icon {
-      transform: rotate(180deg);
-    }
-
-    .accordion-body {
-      display: none;
-      margin-top: 14px;
-    }
-
-    .accordion-card.open .accordion-body {
-      display: block;
-    }
-
-    .address-frame {
-      border: 1px solid var(--card-border);
-      background: rgba(3, 5, 8, 0.7);
-      border-radius: 14px;
-      padding: 12px;
-      min-height: 120px;
-      max-height: 300px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .empty-frame-notice {
-      margin: auto;
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      text-align: center;
-      line-height: 1.5;
-    }
-
-    .frame-stop-item {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 10px 12px;
+    .status-card-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    .frame-stop-info h5 {
-      font-size: 0.85rem;
-      font-weight: 700;
+    .status-card-top h4 {
+      font-size: 0.95rem;
+      font-weight: 800;
       color: var(--text-main);
-      margin-bottom: 2px;
     }
 
-    .frame-stop-info p {
-      font-size: 0.72rem;
-      color: var(--text-sub);
-    }
-
-    .btn-delete-stop {
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 4px;
-      opacity: 0.6;
-    }
-
-    .btn-delete-stop svg {
-      width: 14px;
-      height: 14px;
-      fill: var(--text-muted);
+    .status-badge-pill {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--accent-light);
+      background: rgba(29, 78, 216, 0.15);
+      border: 1px solid rgba(29, 78, 216, 0.35);
+      padding: 4px 12px;
+      border-radius: 20px;
     }
 
     .btn-action-primary {
@@ -574,9 +509,9 @@
       background: linear-gradient(135deg, var(--accent-main), var(--accent-bright));
       border: none;
       color: #FFF;
-      padding: 15px;
+      padding: 16px;
       border-radius: 16px;
-      font-size: 0.92rem;
+      font-size: 0.95rem;
       font-weight: 800;
       cursor: pointer;
       box-shadow: 0 6px 20px var(--accent-glow);
@@ -593,22 +528,22 @@
       background: linear-gradient(135deg, #173EA6, #1E4ED8, #2563EB);
       border: none;
       color: #FFF;
-      padding: 16px;
+      padding: 18px;
       border-radius: 16px;
-      font-size: 1.05rem;
+      font-size: 1.1rem;
       font-weight: 800;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
       cursor: pointer;
-      box-shadow: 0 8px 25px rgba(23, 62, 166, 0.4);
+      box-shadow: 0 8px 25px rgba(23, 62, 166, 0.45);
       text-decoration: none;
     }
 
     .btn-nav-giant svg {
-      width: 20px;
-      height: 20px;
+      width: 22px;
+      height: 22px;
       fill: #FFF;
     }
 
@@ -617,9 +552,9 @@
       background: linear-gradient(135deg, #F8FAFC, #E2E8F0);
       color: #0F172A;
       border: none;
-      padding: 14px;
-      border-radius: 14px;
-      font-size: 0.95rem;
+      padding: 16px;
+      border-radius: 16px;
+      font-size: 1rem;
       font-weight: 800;
       display: flex;
       align-items: center;
@@ -630,8 +565,8 @@
     }
 
     .btn-next-stop-bright svg {
-      width: 16px;
-      height: 16px;
+      width: 18px;
+      height: 18px;
       fill: #0F172A;
     }
 
@@ -640,9 +575,9 @@
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid var(--card-border);
       color: var(--text-sub);
-      padding: 10px;
-      border-radius: 12px;
-      font-size: 0.75rem;
+      padding: 12px;
+      border-radius: 14px;
+      font-size: 0.8rem;
       font-weight: 700;
       display: flex;
       align-items: center;
@@ -652,8 +587,8 @@
     }
 
     .btn-prev-small svg {
-      width: 13px;
-      height: 13px;
+      width: 14px;
+      height: 14px;
       fill: var(--text-sub);
     }
 
@@ -707,23 +642,24 @@
     .reorder-btns {
       display: flex;
       flex-direction: column;
-      gap: 3px;
+      gap: 4px;
     }
 
     .btn-reorder {
-      background: rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.08);
       border: 1px solid var(--card-border);
       color: var(--text-main);
-      width: 24px;
-      height: 24px;
-      border-radius: 6px;
-      font-size: 0.7rem;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      font-size: 0.75rem;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
     }
 
+    /* VERGRÖßERTE, SCHICKERE & ERGONOMISCHERE BOTTOM NAV (FAHRERMODUS) */
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -731,34 +667,36 @@
       transform: translateX(-50%);
       width: 100%;
       max-width: 480px;
-      background: rgba(7, 9, 14, 0.92);
-      backdrop-filter: blur(25px);
-      -webkit-backdrop-filter: blur(25px);
-      border-top: 1px solid var(--card-border);
+      background: rgba(7, 9, 14, 0.95);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
       display: flex;
       justify-content: space-around;
-      padding: 10px 0 16px;
+      padding: 14px 0 24px;
       z-index: 90;
+      box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.7);
     }
 
     .nav-item {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       color: var(--text-muted);
-      font-size: 0.68rem;
+      font-size: 0.72rem;
       font-weight: 700;
       cursor: pointer;
       width: 33%;
       position: relative;
+      padding: 4px 0;
     }
 
     .nav-item svg {
-      width: 22px;
-      height: 22px;
+      width: 26px;
+      height: 26px;
       fill: var(--text-muted);
-      transition: fill 0.2s ease;
+      transition: fill 0.2s ease, transform 0.2s ease;
     }
 
     .nav-item.active {
@@ -766,18 +704,20 @@
     }
 
     .nav-item.active svg {
-      fill: var(--accent-bright);
+      fill: var(--accent-light);
+      transform: scale(1.08);
+      filter: drop-shadow(0 0 8px var(--accent-bright));
     }
 
     .nav-item.active::before {
       content: '';
       position: absolute;
-      top: -11px;
-      width: 28px;
-      height: 2.5px;
-      background: var(--accent-bright);
+      top: -14px;
+      width: 36px;
+      height: 3px;
+      background: var(--accent-light);
       border-radius: 3px;
-      box-shadow: 0 0 12px var(--accent-bright);
+      box-shadow: 0 0 14px var(--accent-light);
     }
 
     /* MODALS */
@@ -1271,7 +1211,7 @@
 
           <!-- Hero Content 3 -->
           <div class="hero-content" id="heroTab3">
-            <div style="font-size: 0.92rem; font-weight: 700;">Touren-Manager Übersicht</div>
+            <div style="font-size: 0.92rem; font-weight: 700;">Touren-Manager & Korrektur</div>
             <div style="font-size: 0.78rem; color: var(--text-sub); margin-top: 4px;">Tippe auf einen Stopp zum Bearbeiten oder nutze die Pfeile zum Sortieren.</div>
             
             <div class="manager-hero-stats">
@@ -1288,36 +1228,29 @@
         </div>
       </div>
 
-      <!-- UNTERER INHALT TAB 1 -->
+      <!-- UNTERER INHALT TAB 1 (ERSTELLEN - CLEAN & KOMPAKT) -->
       <div class="sub-content active" id="subTab1">
-        <div class="accordion-card open" id="addressAccordion">
-          <div class="accordion-header" onclick="toggleAccordion()">
-            <div class="accordion-header-left">
-              <span style="font-size: 0.9rem; font-weight: 700;">Erfasste Zieladressen</span>
-              <span id="stopCountBadge" style="font-size: 0.75rem; color: var(--accent-bright); font-weight: 700;">(0 Stopps)</span>
-            </div>
-            <svg class="accordion-toggle-icon" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+        <div class="status-card-clean" id="statusCardClean" style="display: none;">
+          <div class="status-card-top">
+            <h4>Eingelesene Tour</h4>
+            <div class="status-badge-pill" id="cleanStopCountBadge">0 Stopps</div>
           </div>
           
-          <div class="accordion-body">
-            <!-- SCHNELLSTE ROUTE OPTIMIERUNG (ECHTES STRASSEN-ROUTING) -->
-            <div class="route-sort-bar" id="routeSortBar" style="display: none;">
-              <button class="btn-route-sort" id="btnOptimizeRoute" onclick="optimizeFastestRouteWithOSRM()">
-                <svg viewBox="0 0 24 24"><path d="M13 2.05v3.03c3.39.49 6 3.39 6 6.92 0 .9-.18 1.75-.48 2.54l2.6 1.53c.56-1.24.88-2.62.88-4.07 0-5.18-3.95-9.45-9-9.95zM12 19c-3.87 0-7-3.13-7-7 0-3.53 2.61-6.43 6-6.92V2.05c-5.05.5-9 4.77-9 9.95 0 5.52 4.48 10 10 10 2.21 0 4.25-.72 5.9-1.93l-2.15-1.63C14.56 18.66 13.32 19 12 19z"/></svg>
-                Schnellste Route mit Zieladresse berechnen
-              </button>
-            </div>
-            <div class="route-summary-pill" id="routeSummaryPill"></div>
-
-            <div class="address-frame" id="addressFrame">
-              <div class="empty-frame-notice" id="emptyNotice">
-                Noch keine Adressen hinzugefügt.<br>Lade einen Screenshot oder Beleg hoch oder füge Stopps manuell hinzu.
-              </div>
-            </div>
+          <div style="font-size: 0.8rem; color: var(--text-sub); line-height: 1.4;">
+            Alle Zieladressen wurden erfolgreich erfasst. Du kannst sie im <strong style="color:var(--text-main);">Manager (Tab 3)</strong> einsehen und bei Bedarf anpassen.
           </div>
+
+          <div class="route-sort-bar">
+            <button class="btn-route-sort" id="btnOptimizeRoute" onclick="optimizeFastestRouteWithOSRM()">
+              <svg viewBox="0 0 24 24"><path d="M13 2.05v3.03c3.39.49 6 3.39 6 6.92 0 .9-.18 1.75-.48 2.54l2.6 1.53c.56-1.24.88-2.62.88-4.07 0-5.18-3.95-9.45-9-9.95zM12 19c-3.87 0-7-3.13-7-7 0-3.53 2.61-6.43 6-6.92V2.05c-5.05.5-9 4.77-9 9.95 0 5.52 4.48 10 10 10 2.21 0 4.25-.72 5.9-1.93l-2.15-1.63C14.56 18.66 13.32 19 12 19z"/></svg>
+              Schnellste Route berechnen
+            </button>
+          </div>
+
+          <div class="route-summary-pill" id="routeSummaryPill"></div>
         </div>
 
-        <button class="btn-action-primary" onclick="startTourFromTab1()">
+        <button class="btn-action-primary" id="btnStartTour" style="display: none;" onclick="startTourFromTab1()">
           Tour freigeben & ins Cockpit wechseln
         </button>
       </div>
@@ -1342,13 +1275,13 @@
         </div>
       </div>
 
-      <!-- MANAGER LISTE -->
+      <!-- MANAGER LISTE (HIER SIND DIE ADRESSEN ZUR KORREKTUR) -->
       <div class="sub-content" id="subTab3">
         <div class="manager-list" id="managerList"></div>
       </div>
     </main>
 
-    <!-- BOTTOM NAV BAR -->
+    <!-- VERGRÖßERTE BOTTOM NAV BAR (FÜR SICHERES DRÜCKEN WÄHREND DER FAHRT) -->
     <nav class="bottom-nav">
       <div class="nav-item active" onclick="switchNavTab(1)" id="navTab1">
         <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
@@ -1636,11 +1569,6 @@
       return { top: "Fahrt & Nachweis", main: "Manager" };
     }
 
-    function toggleAccordion() {
-      const accordion = document.getElementById('addressAccordion');
-      accordion.classList.toggle('open');
-    }
-
     function launchDirectNavigation() {
       if (tourData.length === 0) {
         alert("Keine aktive Tour oder Stopps vorhanden!");
@@ -1823,9 +1751,7 @@ STRIKTE REGELN:
           progressCard.style.display = 'none';
           progressBar.style.width = '0%';
           hasShownSuccessPopup = false;
-          document.getElementById('addressAccordion').classList.add('open');
-          renderAddressFrame();
-          updateCockpitUI();
+          refreshUIState();
         }, 500);
 
       } catch (err) {
@@ -1837,7 +1763,7 @@ STRIKTE REGELN:
     }
 
     // =========================================================================
-    // ECHTE STRASSEN-ROUTENOPTIMIERUNG (PHOTON/NOMINATIM GEOCODING + OSRM TRIP)
+    // ECHTE STRASSEN-ROUTENOPTIMIERUNG (OSRM TRIP)
     // =========================================================================
     function getLiveGPSCoordinates() {
       return new Promise((resolve) => {
@@ -1862,7 +1788,6 @@ STRIKTE REGELN:
     }
 
     async function geocodeGermanAddress(fullAddress) {
-      // 1. Versuch: Photon (Komoot/OSM - schnell, tolerant bei Schreibweisen, DACH-optimiert)
       try {
         const photonUrl = `https://photon.komoot.io/api/?q=${encodeURIComponent(fullAddress)}&limit=1&lang=de`;
         const res = await fetch(photonUrl);
@@ -1875,7 +1800,6 @@ STRIKTE REGELN:
         }
       } catch (e) {}
 
-      // 2. Fallback: Nominatim OpenStreetMap
       try {
         const nomUrl = `https://nominatim.openstreetmap.org/search?format=json&countrycodes=de&limit=1&q=${encodeURIComponent(fullAddress)}`;
         const res = await fetch(nomUrl, { headers: { 'Accept-Language': 'de' } });
@@ -1922,20 +1846,17 @@ STRIKTE REGELN:
       percentText.innerText = "15%";
 
       try {
-        // 1. Startpunkt (Live-GPS)
         const startCoords = await getLiveGPSCoordinates();
 
-        // 2. Zieladresse (Heimat / Firma) geocoden
         statusText.innerText = "Prüfe Zieladresse auf Straßenkarte...";
         progressBar.style.width = "30%";
         percentText.innerText = "30%";
 
         const endCoords = await geocodeGermanAddress(homeAddress);
         if (!endCoords) {
-          throw new Error(`Deine Zieladresse "${homeAddress}" konnte auf der Karte nicht gefunden werden. Bitte prüfe die Schreibweise unter Einstellungen (Zahnrad oben).`);
+          throw new Error(`Deine Zieladresse "${homeAddress}" konnte auf der Karte nicht gefunden werden. Bitte unter Einstellungen prüfen.`);
         }
 
-        // 3. Alle Stopps geocoden
         const stopCoordsList = [];
         for (let i = 0; i < tourData.length; i++) {
           const pct = 30 + Math.round(((i + 1) / tourData.length) * 45);
@@ -1947,7 +1868,6 @@ STRIKTE REGELN:
           const query = `${stop.title}, ${stop.address}`;
           let coords = await geocodeGermanAddress(query);
           
-          // Fallback nur mit PLZ/Ort falls Hausnummer unbekannt
           if (!coords && stop.address) {
             coords = await geocodeGermanAddress(stop.address);
           }
@@ -1959,8 +1879,6 @@ STRIKTE REGELN:
           stopCoordsList.push(coords);
         }
 
-        // 4. OSRM Trip-API aufrufen (Echtes deutsches Straßennetz, schnellste Fahrzeit)
-        // Koordinaten-Aufbau: [Start(GPS), Stopp_0, Stopp_1, ..., Stopp_N-1, Ziel(Home)]
         statusText.innerText = "OSRM berechnet schnellste Straßen-Route...";
         progressBar.style.width = "85%";
         percentText.innerText = "85%";
@@ -1971,16 +1889,14 @@ STRIKTE REGELN:
 
         const osrmResponse = await fetch(osrmUrl);
         if (!osrmResponse.ok) {
-          throw new Error("Routing-Server vorübergehend nicht erreichbar. Bitte kurz erneut versuchen.");
+          throw new Error("Routing-Server vorübergehend nicht erreichbar.");
         }
 
         const osrmData = await osrmResponse.json();
         if (osrmData.code !== "Ok" || !osrmData.waypoints || !osrmData.trips || osrmData.trips.length === 0) {
-          throw new Error("Es konnte keine durchgehende Straßenroute berechnet werden.");
+          throw new Error("Es konnte keine Straßenroute berechnet werden.");
         }
 
-        // OSRM gibt pro Eingabe-Punkt `waypoint_index` zurück (= Position in der optimierten Reihenfolge)
-        // Index 0 = Start (GPS), Index 1..N = unsere Stopps, Index N+1 = Ziel (Home)
         const rankedStops = [];
         for (let i = 0; i < tourData.length; i++) {
           const wp = osrmData.waypoints[i + 1];
@@ -1993,7 +1909,6 @@ STRIKTE REGELN:
         rankedStops.sort((a, b) => a.orderPos - b.orderPos);
         tourData = rankedStops.map(item => item.stop);
 
-        // Status sauber setzen (erster unerledigter Stopp wird 'active')
         let foundActive = false;
         tourData.forEach(s => {
           if (s.status !== 'completed') {
@@ -2020,8 +1935,7 @@ STRIKTE REGELN:
         setTimeout(() => {
           progressCard.style.display = 'none';
           progressBar.style.width = '0%';
-          renderAddressFrame();
-          updateCockpitUI();
+          refreshUIState();
         }, 450);
 
       } catch (err) {
@@ -2056,8 +1970,7 @@ STRIKTE REGELN:
 
         closeManualModal();
         hasShownSuccessPopup = false;
-        renderAddressFrame();
-        updateCockpitUI();
+        refreshUIState();
       }
     }
 
@@ -2069,8 +1982,7 @@ STRIKTE REGELN:
           const nextPending = tourData.find(s => s.status === 'pending');
           if (nextPending) nextPending.status = 'active';
         }
-        renderAddressFrame();
-        updateCockpitUI();
+        refreshUIState();
       }
     }
 
@@ -2132,39 +2044,21 @@ STRIKTE REGELN:
       renderManagerList();
     }
 
-    function renderAddressFrame() {
-      const frame = document.getElementById('addressFrame');
-      const badge = document.getElementById('stopCountBadge');
-      const sortBar = document.getElementById('routeSortBar');
-      const summaryPill = document.getElementById('routeSummaryPill');
-      
-      badge.innerText = `(${tourData.length} Stopps)`;
-      if (sortBar) {
-        sortBar.style.display = tourData.length >= 2 ? 'flex' : 'none';
-      }
+    function refreshUIState() {
+      const statusCard = document.getElementById('statusCardClean');
+      const startBtn = document.getElementById('btnStartTour');
+      const badge = document.getElementById('cleanStopCountBadge');
 
-      if (tourData.length === 0) {
-        if (summaryPill) summaryPill.style.display = 'none';
-        frame.innerHTML = `<div class="empty-frame-notice">Noch keine Adressen hinzugefügt.<br>Lade einen Screenshot oder Beleg hoch oder füge Stopps manuell hinzu.</div>`;
-        return;
+      if (tourData.length > 0) {
+        statusCard.style.display = 'flex';
+        startBtn.style.display = 'block';
+        badge.innerText = `${tourData.length} Stopps erfasst`;
+      } else {
+        statusCard.style.display = 'none';
+        startBtn.style.display = 'none';
       }
-
-      frame.innerHTML = '';
-      tourData.forEach((stop, i) => {
-        const item = document.createElement('div');
-        item.className = 'frame-stop-item';
-        const subLine = [stop.address, stop.note].filter(Boolean).join(' • ');
-        item.innerHTML = `
-          <div class="frame-stop-info">
-            <h5>${i + 1}. ${stop.title}</h5>
-            <p>${subLine}</p>
-          </div>
-          <button class="btn-delete-stop" onclick="deleteStop(${stop.id})">
-            <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-          </button>
-        `;
-        frame.appendChild(item);
-      });
+      renderManagerList();
+      updateCockpitUI();
     }
 
     function startTourFromTab1() {
@@ -2223,7 +2117,7 @@ STRIKTE REGELN:
       document.getElementById('successPopupOverlay').classList.remove('active');
       tourData.length = 0;
       hasShownSuccessPopup = false;
-      renderAddressFrame();
+      refreshUIState();
       switchNavTab(1);
     }
 
@@ -2276,7 +2170,7 @@ STRIKTE REGELN:
       document.getElementById('mCompletedStops').innerText = completedCount;
 
       if (tourData.length === 0) {
-        container.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.82rem; margin-top: 25px;">Die Tourenliste ist aktuell leer.</div>`;
+        container.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.82rem; margin-top: 25px;">Die Tourenliste im Manager ist aktuell leer.<br>Erfasse zuerst Stopps im Tab "Erstellen".</div>`;
         return;
       }
 
@@ -2606,7 +2500,7 @@ STRIKTE REGELN:
     const initialSub = getSubtitles(1);
     document.getElementById('sectionTitleText').innerText = initialSub.top;
     document.getElementById('sectionSubtitleText').innerText = initialSub.main;
-    renderAddressFrame();
+    refreshUIState();
 
     if ('serviceWorker' in navigator) {
       const swCode = `
