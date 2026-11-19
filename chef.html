@@ -106,10 +106,16 @@ body {
 
 .sidebar-brand {
   font-size: 14px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--text-main); display: flex; align-items: center; gap: 10px;
+  color: var(--text-main); display: flex; align-items: center; gap: 12px;
   padding-bottom: 18px; border-bottom: 1px solid var(--border); margin-bottom: 16px;
 }
-.sidebar-brand img { height: 28px; object-fit: contain; }
+.sidebar-brand img {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
 
 .sidebar-nav {
   display: flex;
@@ -451,7 +457,8 @@ tr:last-child td { border-bottom: none; }
   <aside class="app-sidebar">
     <div>
       <div class="sidebar-brand">
-        <img src="logo1.png" alt="Logo" onerror="this.style.display='none'"> Vindox Command
+        <img src="4570730E-A0A2-4546-B316-B15BE9DD5EE4.png" alt="Vindox Logo">
+        <span>Vindox Command</span>
       </div>
       <nav class="sidebar-nav">
         <div class="nav-item active" onclick="openModule('pane-live', this)">
