@@ -199,18 +199,62 @@
     }
 
     .elegant-greeting {
-      font-size: 0.92rem;
-      font-weight: 600;
+      font-size: 0.88rem;
+      font-weight: 700;
       color: #CBD5E1;
       letter-spacing: 0.04em;
       text-transform: uppercase;
-      margin-top: 6px;
+      margin-top: 8px;
       display: none;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
     .elegant-greeting.active {
       display: flex;
+    }
+
+    /* PULSIERENDE LIVE-UHRZEIT */
+    @keyframes liveClockPulse {
+      0%, 100% {
+        box-shadow: 0 0 8px rgba(96, 165, 250, 0.2), inset 0 0 6px rgba(96, 165, 250, 0.1);
+        border-color: rgba(96, 165, 250, 0.35);
+        text-shadow: 0 0 8px rgba(96, 165, 250, 0.35);
+      }
+      50% {
+        box-shadow: 0 0 18px rgba(96, 165, 250, 0.55), inset 0 0 10px rgba(96, 165, 250, 0.25);
+        border-color: rgba(96, 165, 250, 0.8);
+        text-shadow: 0 0 14px rgba(96, 165, 250, 0.75);
+      }
+    }
+
+    @keyframes liveDotBlink {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.45; transform: scale(0.8); }
+    }
+
+    .live-clock-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 4px 11px;
+      border-radius: 99px;
+      background: rgba(29, 78, 216, 0.16);
+      border: 1px solid rgba(96, 165, 250, 0.45);
+      color: #93C5FD;
+      font-variant-numeric: tabular-nums;
+      font-weight: 800;
+      font-size: 0.82rem;
+      letter-spacing: 0.03em;
+      animation: liveClockPulse 2.4s ease-in-out infinite;
+    }
+
+    .live-clock-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #60A5FA;
+      box-shadow: 0 0 8px #60A5FA;
+      animation: liveDotBlink 2.4s ease-in-out infinite;
     }
 
     .hero-panel-container {
@@ -245,11 +289,11 @@
       margin-top: 14px;
     }
 
-    button, .btn-import-option, .nav-item, .manager-card, .btn-reorder, .btn-proof-trio, .btn-route-sort {
+    button, .btn-import-option, .nav-item, .manager-card, .btn-reorder, .btn-proof-trio, .btn-route-sort, .btn-pack-mode, .pos-jump-badge {
       transition: transform 0.12s ease, background-color 0.15s ease;
     }
 
-    button:active, .btn-import-option:active, .manager-card:active, .btn-proof-trio:active, .btn-route-sort:active {
+    button:active, .btn-import-option:active, .manager-card:active, .btn-proof-trio:active, .btn-route-sort:active, .btn-pack-mode:active, .pos-jump-badge:active {
       transform: scale(0.96) !important;
       filter: brightness(1.15);
     }
@@ -312,7 +356,7 @@
     .route-sort-bar {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
       margin-top: 6px;
     }
 
@@ -344,6 +388,29 @@
       fill: #FFF;
     }
 
+    /* KISTE PACKEN (LIFO) BUTTON */
+    .btn-pack-mode {
+      width: 100%;
+      background: rgba(16, 185, 129, 0.14);
+      border: 1px solid rgba(16, 185, 129, 0.45);
+      color: #6EE7B7;
+      border-radius: 14px;
+      padding: 14px 12px;
+      font-size: 0.86rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+    }
+
+    .btn-pack-mode svg {
+      width: 18px;
+      height: 18px;
+      fill: #34D399;
+    }
+
     .route-summary-pill {
       display: none;
       font-size: 0.76rem;
@@ -369,12 +436,31 @@
       font-weight: 700;
     }
 
+    .cockpit-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
     .current-stop-title {
       font-size: 1.35rem;
       font-weight: 800;
       color: var(--text-main);
       line-height: 1.25;
-      margin-bottom: 4px;
+    }
+
+    .bag-badge-cockpit {
+      background: rgba(96, 165, 250, 0.18);
+      border: 1px solid rgba(96, 165, 250, 0.5);
+      color: #93C5FD;
+      font-size: 0.85rem;
+      font-weight: 900;
+      padding: 5px 11px;
+      border-radius: 10px;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
 
     .current-stop-address {
@@ -592,6 +678,13 @@
       fill: var(--text-sub);
     }
 
+    /* VERBESSERTE MANAGER LISTE & SORTIERUNG */
+    .manager-toolbar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
     .manager-list {
       display: flex;
       flex-direction: column;
@@ -602,10 +695,11 @@
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 16px;
-      padding: 14px;
+      padding: 12px 14px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 10px;
       cursor: pointer;
       backdrop-filter: blur(15px);
     }
@@ -615,51 +709,142 @@
       box-shadow: 0 0 20px rgba(29, 78, 216, 0.15);
     }
 
+    .pos-jump-badge {
+      min-width: 36px;
+      height: 36px;
+      border-radius: 11px;
+      background: rgba(29, 78, 216, 0.22);
+      border: 1px solid rgba(96, 165, 250, 0.45);
+      color: #93C5FD;
+      font-size: 0.9rem;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
     .manager-card-info {
       flex: 1;
+      min-width: 0;
       display: flex;
       flex-direction: column;
       gap: 3px;
     }
 
+    .manager-title-line {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
     .manager-card-info h4 {
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       font-weight: 700;
       color: var(--text-main);
     }
 
+    .bag-tag-mini {
+      font-size: 0.66rem;
+      font-weight: 800;
+      background: rgba(255, 255, 255, 0.08);
+      color: #CBD5E1;
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+
     .manager-card-info p {
-      font-size: 0.75rem;
+      font-size: 0.74rem;
       color: var(--text-sub);
     }
 
     .manager-card-meta {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 6px;
+      flex-shrink: 0;
     }
 
-    .reorder-btns {
-      display: flex;
-      flex-direction: column;
+    .reorder-grid-2x2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 4px;
     }
 
     .btn-reorder {
-      background: rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.07);
       border: 1px solid var(--card-border);
       color: var(--text-main);
-      width: 28px;
+      width: 30px;
       height: 28px;
       border-radius: 8px;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
+      font-weight: 800;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
     }
 
-    /* VERGRÖßERTE, SCHICKERE & ERGONOMISCHERE BOTTOM NAV (FAHRERMODUS) */
+    .btn-reorder.extreme {
+      color: var(--accent-light);
+      border-color: rgba(96, 165, 250, 0.25);
+    }
+
+    /* PACK-ASSISTENT LISTE (LIFO) */
+    .pack-item-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .pack-item-card.packed {
+      opacity: 0.42;
+      background: rgba(16, 185, 129, 0.06);
+      border-color: rgba(16, 185, 129, 0.3);
+    }
+
+    .pack-step-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, 0.16);
+      border: 1px solid rgba(16, 185, 129, 0.45);
+      color: #6EE7B7;
+      font-size: 0.82rem;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .pack-item-card.packed .pack-step-circle {
+      background: var(--success);
+      color: #07090E;
+    }
+
+    .pack-bag-highlight {
+      font-size: 0.95rem;
+      font-weight: 900;
+      color: #6EE7B7;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      padding: 5px 10px;
+      border-radius: 10px;
+      white-space: nowrap;
+    }
+
+    /* BOTTOM NAV */
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -801,7 +986,7 @@
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
       padding-right: 2px;
     }
 
@@ -1160,7 +1345,7 @@
           <!-- Hero Content 1 -->
           <div class="hero-content active" id="heroTab1">
             <div style="font-size: 0.92rem; font-weight: 700;">Intelligente Touren-Erfassung</div>
-            <div style="font-size: 0.78rem; color: var(--text-sub); margin-top: 4px; line-height: 1.4;">Lade einen Screenshot oder Lieferschein hoch. Die KI filtert alle echten Zieladressen heraus.</div>
+            <div style="font-size: 0.78rem; color: var(--text-sub); margin-top: 4px; line-height: 1.4;">Lade einen Screenshot oder Lieferschein hoch. Die KI merkt sich automatisch jede Etiketten-Nummer (#1, #2, ...).</div>
             
             <div class="import-action-grid">
               <button class="btn-import-option" onclick="openScreenshotUploader()">
@@ -1191,7 +1376,11 @@
               <span id="tourProgressHeader">Keine Tour aktiv</span>
             </div>
             
-            <div class="current-stop-title" id="currentTitle">Keine Stopps vorhanden</div>
+            <div class="cockpit-title-row">
+              <div class="current-stop-title" id="currentTitle">Keine Stopps vorhanden</div>
+              <span class="bag-badge-cockpit" id="currentBagBadge" style="display:none;">Tüte #1</span>
+            </div>
+
             <div class="current-stop-address">
               <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
               <span id="currentAddressText">Bitte erst im Tab "Erstellen" erfassen</span>
@@ -1211,8 +1400,8 @@
 
           <!-- Hero Content 3 -->
           <div class="hero-content" id="heroTab3">
-            <div style="font-size: 0.92rem; font-weight: 700;">Touren-Manager & Korrektur</div>
-            <div style="font-size: 0.78rem; color: var(--text-sub); margin-top: 4px;">Tippe auf einen Stopp zum Bearbeiten oder nutze die Pfeile zum Sortieren.</div>
+            <div style="font-size: 0.92rem; font-weight: 700;">Touren-Manager & Kisten-Packmodus</div>
+            <div style="font-size: 0.78rem; color: var(--text-sub); margin-top: 4px;">Tippe auf die <strong style="color:#93C5FD;">blaue Nummer</strong> für Direkt-Sprung, nutze die Pfeile oder starte den Pack-Assistenten.</div>
             
             <div class="manager-hero-stats">
               <div class="manager-stat-box">
@@ -1237,13 +1426,18 @@
           </div>
           
           <div style="font-size: 0.8rem; color: var(--text-sub); line-height: 1.4;">
-            Alle Zieladressen wurden erfolgreich erfasst. Du kannst sie im <strong style="color:var(--text-main);">Manager (Tab 3)</strong> einsehen und bei Bedarf anpassen.
+            1. Schnellste Route berechnen &bull; 2. Kiste rückwärts packen (LIFO), damit Stopp #1 oben liegt.
           </div>
 
           <div class="route-sort-bar">
             <button class="btn-route-sort" id="btnOptimizeRoute" onclick="optimizeFastestRouteWithOSRM()">
               <svg viewBox="0 0 24 24"><path d="M13 2.05v3.03c3.39.49 6 3.39 6 6.92 0 .9-.18 1.75-.48 2.54l2.6 1.53c.56-1.24.88-2.62.88-4.07 0-5.18-3.95-9.45-9-9.95zM12 19c-3.87 0-7-3.13-7-7 0-3.53 2.61-6.43 6-6.92V2.05c-5.05.5-9 4.77-9 9.95 0 5.52 4.48 10 10 10 2.21 0 4.25-.72 5.9-1.93l-2.15-1.63C14.56 18.66 13.32 19 12 19z"/></svg>
               Schnellste Route berechnen
+            </button>
+
+            <button class="btn-pack-mode" onclick="openPackModal()">
+              <svg viewBox="0 0 24 24"><path d="M20 6h-3V4c0-1.11-.89-2-2-2H9c-1.11 0-2 .89-2 2v2H4c-1.11 0-2 .89-2 2v11c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zM9 4h6v2H9V4zm11 15H4V8h16v11z"/></svg>
+              Kiste packen (Rückwärts / LIFO)
             </button>
           </div>
 
@@ -1275,13 +1469,22 @@
         </div>
       </div>
 
-      <!-- MANAGER LISTE (HIER SIND DIE ADRESSEN ZUR KORREKTUR) -->
+      <!-- MANAGER LISTE -->
       <div class="sub-content" id="subTab3">
+        <div class="manager-toolbar" id="managerToolbar" style="display:none;">
+          <button class="btn-pack-mode" style="flex:1;" onclick="openPackModal()">
+            <svg viewBox="0 0 24 24"><path d="M20 6h-3V4c0-1.11-.89-2-2-2H9c-1.11 0-2 .89-2 2v2H4c-1.11 0-2 .89-2 2v11c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zM9 4h6v2H9V4zm11 15H4V8h16v11z"/></svg>
+            Kiste packen
+          </button>
+          <button class="btn-prev-small" style="width:auto; padding:0 14px;" onclick="reverseEntireTour()">
+            ↕ Tour drehen
+          </button>
+        </div>
         <div class="manager-list" id="managerList"></div>
       </div>
     </main>
 
-    <!-- VERGRÖßERTE BOTTOM NAV BAR (FÜR SICHERES DRÜCKEN WÄHREND DER FAHRT) -->
+    <!-- VERGRÖßERTE BOTTOM NAV BAR -->
     <nav class="bottom-nav">
       <div class="nav-item active" onclick="switchNavTab(1)" id="navTab1">
         <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
@@ -1296,6 +1499,27 @@
         Manager
       </div>
     </nav>
+  </div>
+
+  <!-- MODAL: KISTE PACKEN (LIFO ASSISTENT) -->
+  <div class="modal-overlay" id="packModal">
+    <div class="modal-sheet" style="max-height: 88vh;">
+      <div class="modal-header">
+        <div class="modal-title-box">
+          <h3>Kiste packen (Rückwärts-Modus)</h3>
+          <p id="packModalSubtitle" style="font-size:0.74rem; color:#6EE7B7; font-weight:700; margin-top:2px;">Letzten Stopp zuerst unten einlegen – Stopp 1 liegt am Ende oben!</p>
+        </div>
+        <button class="close-btn" onclick="closePackModal()">
+          <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </div>
+
+      <div class="modal-body-scroll" id="packListContainer"></div>
+
+      <button class="btn-action-primary" style="margin-top: 12px;" onclick="finishPackingAndStart()">
+        Fertig gepackt &rarr; Ab ins Cockpit
+      </button>
+    </div>
   </div>
 
   <!-- MODAL: EINSTELLUNGEN & ZIELADRESSE -->
@@ -1351,6 +1575,7 @@
         <input type="text" id="editTitleInput" class="input-field" placeholder="Straße & Hausnummer">
         <input type="text" id="editAddressInput" class="input-field" placeholder="PLZ & Ort">
         <input type="text" id="editNoteInput" class="input-field" placeholder="Notiz / Hinweis für den Fahrer">
+        <input type="number" id="editBagNumberInput" class="input-field" placeholder="Etiketten- / Tüten-Nummer (z.B. 14)">
         <div style="display: flex; gap: 10px; margin-top: 6px;">
           <button class="btn-action-primary" style="background: rgba(239, 68, 68, 0.2); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.4); box-shadow: none;" onclick="deleteStopFromModal()">Löschen</button>
           <button class="btn-action-primary" onclick="saveEditedStop()">Speichern</button>
@@ -1440,6 +1665,7 @@
   <script>
     const DRIVER_ID = "F-8921";
     let tourData = [];
+    let packedStopIds = new Set();
     let chefAppEvidenceArchive = [];
     let currentEditingId = null;
     let hasShownSuccessPopup = false;
@@ -1532,7 +1758,7 @@
     }
 
     document.addEventListener('pointerdown', (e) => {
-      const target = e.target.closest('button, .btn-import-option, .nav-item, .manager-card, .btn-reorder, .btn-proof-trio, .btn-route-sort');
+      const target = e.target.closest('button, .btn-import-option, .nav-item, .manager-card, .btn-reorder, .btn-proof-trio, .btn-route-sort, .btn-pack-mode, .pos-jump-badge, .pack-item-card');
       if (target) {
         playClickSound();
         if (navigator.vibrate) {
@@ -1541,17 +1767,19 @@
       }
     }, { passive: true });
 
+    // PULSIERENDE LIVE-UHRZEIT INKL. SEKUNDEN
     function getTimeBasedGreeting() {
       const now = new Date();
       const hour = now.getHours();
       const minutes = String(now.getMinutes()).padStart(2, '0');
-      const timeStr = `${hour}:${minutes} Uhr`;
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      const timeStr = `${String(hour).padStart(2, '0')}:${minutes}:${seconds} Uhr`;
 
       let greeting = "Guten Abend";
       if (hour >= 5 && hour < 12) greeting = "Guten Morgen";
       else if (hour >= 12 && hour < 18) greeting = "Guten Tag";
 
-      return `${greeting} <span style="opacity:0.4; font-weight:400;">•</span> <span style="color:#94A3B8; font-weight:500;">${timeStr}</span>`;
+      return `<span>${greeting}</span> <span class="live-clock-pill"><span class="live-clock-dot"></span>${timeStr}</span>`;
     }
 
     function updateGreetingClock() {
@@ -1677,9 +1905,11 @@ STRIKTE REGELN:
    - "street": Straße und Hausnummer (z. B. "Kastanienweg 14")
    - "city": Postleitzahl und Ort (z. B. "51789 Lindlar")
    - "note": Kundenname oder Hinweis, falls vorhanden (z. B. "Hannemüller, Gert"), sonst "".
+   - "bagNumber": Falls auf dem Beleg eine Positions-/Etikettennummer davor steht, gib sie als Ganzzahl an, sonst null.
 4. Antworte AUSSCHLIESSLICH mit einem validen JSON-Array ohne Markdown-Wrapper:
 [
   {
+    "bagNumber": 1,
     "street": "Kastanienweg 14",
     "city": "51789 Lindlar",
     "note": "Hannemüller, Gert"
@@ -1724,14 +1954,20 @@ STRIKTE REGELN:
           throw new Error("Es konnten keine echten Lieferadressen auf dem Bild erkannt werden.");
         }
 
+        const startBagIndex = tourData.length;
         extractedStops.forEach((item, index) => {
           const streetVal = (item.street || "").trim();
           const cityVal = (item.city || "").trim();
           const noteVal = (item.note || "").trim();
           if (!streetVal && !cityVal) return;
 
+          const detectedBagNum = (typeof item.bagNumber === 'number' && item.bagNumber > 0)
+            ? item.bagNumber
+            : (startBagIndex + index + 1);
+
           tourData.push({
             id: Date.now() + index,
+            bagNumber: detectedBagNum,
             title: streetVal || cityVal,
             address: streetVal ? cityVal : "",
             note: noteVal,
@@ -1745,7 +1981,7 @@ STRIKTE REGELN:
 
         progressBar.style.width = "100%";
         percentText.innerText = "100%";
-        statusText.innerText = `✓ ${extractedStops.length} Stopps sauber erkannt`;
+        statusText.innerText = `✓ ${extractedStops.length} Stopps inkl. Etiketten-Nr. erkannt`;
 
         setTimeout(() => {
           progressCard.style.display = 'none';
@@ -1760,6 +1996,73 @@ STRIKTE REGELN:
       } finally {
         e.target.value = '';
       }
+    }
+
+    // =========================================================================
+    // KISTEN-PACKMODUS (LIFO: LAST IN, FIRST OUT)
+    // =========================================================================
+    function openPackModal() {
+      if (tourData.length === 0) {
+        alert("Bitte erst Stopps erfassen!");
+        return;
+      }
+      renderPackList();
+      document.getElementById('packModal').classList.add('active');
+    }
+
+    function closePackModal() {
+      document.getElementById('packModal').classList.remove('active');
+    }
+
+    function togglePackItem(stopId) {
+      if (packedStopIds.has(stopId)) {
+        packedStopIds.delete(stopId);
+      } else {
+        packedStopIds.add(stopId);
+      }
+      renderPackList();
+    }
+
+    function renderPackList() {
+      const container = document.getElementById('packListContainer');
+      container.innerHTML = '';
+
+      // Rückwärts durch die optimierte Route (letzter Stopp zuerst in die Kiste)
+      const reversed = [...tourData].reverse();
+      const packedCount = reversed.filter(s => packedStopIds.has(s.id)).length;
+
+      document.getElementById('packModalSubtitle').innerText =
+        `${packedCount} von ${reversed.length} Tüten in der Box • Von oben nach unten abhaken`;
+
+      reversed.forEach((stop, packIdx) => {
+        const routePosition = tourData.length - packIdx;
+        const isPacked = packedStopIds.has(stop.id);
+        const positionHint = packIdx === 0
+          ? "GANZ UNTEN einlegen (Letzter Stopp)"
+          : (packIdx === reversed.length - 1 ? "GANZ OBEN auflegen (1. Stopp der Tour!)" : `Einlegen für Stopp #${routePosition}`);
+
+        const itemEl = document.createElement('div');
+        itemEl.className = `pack-item-card ${isPacked ? 'packed' : ''}`;
+        itemEl.onclick = () => togglePackItem(stop.id);
+
+        itemEl.innerHTML = `
+          <div class="pack-step-circle">${isPacked ? '✓' : (packIdx + 1)}</div>
+          <div style="flex:1; min-width:0;">
+            <div style="font-size:0.68rem; font-weight:800; color:${packIdx === reversed.length - 1 ? '#6EE7B7' : 'var(--accent-light)'}; text-transform:uppercase; margin-bottom:2px;">
+              ${positionHint}
+            </div>
+            <div style="font-size:0.9rem; font-weight:800; color:var(--text-main);">${stop.title}</div>
+            <div style="font-size:0.74rem; color:var(--text-sub);">${stop.address}${stop.note ? ' • ' + stop.note : ''}</div>
+          </div>
+          <div class="pack-bag-highlight">Tüte #${stop.bagNumber || routePosition}</div>
+        `;
+        container.appendChild(itemEl);
+      });
+    }
+
+    function finishPackingAndStart() {
+      closePackModal();
+      startTourFromTab1();
     }
 
     // =========================================================================
@@ -1812,6 +2115,20 @@ STRIKTE REGELN:
       } catch (e) {}
 
       return null;
+    }
+
+    function syncActiveStopOrder() {
+      let foundActive = false;
+      tourData.forEach(s => {
+        if (s.status !== 'completed') {
+          if (!foundActive) {
+            s.status = 'active';
+            foundActive = true;
+          } else {
+            s.status = 'pending';
+          }
+        }
+      });
     }
 
     async function optimizeFastestRouteWithOSRM() {
@@ -1908,18 +2225,9 @@ STRIKTE REGELN:
 
         rankedStops.sort((a, b) => a.orderPos - b.orderPos);
         tourData = rankedStops.map(item => item.stop);
+        packedStopIds.clear();
 
-        let foundActive = false;
-        tourData.forEach(s => {
-          if (s.status !== 'completed') {
-            if (!foundActive) {
-              s.status = 'active';
-              foundActive = true;
-            } else {
-              s.status = 'pending';
-            }
-          }
-        });
+        syncActiveStopOrder();
 
         const trip = osrmData.trips[0];
         const totalMinutes = Math.round(trip.duration / 60);
@@ -1930,7 +2238,7 @@ STRIKTE REGELN:
         statusText.innerText = "✓ Schnellste Straßen-Route berechnet";
 
         summaryPill.style.display = 'block';
-        summaryPill.innerHTML = `Echte Straßen-Optimierung aktiv: <strong>ca. ${totalMinutes} Min. Fahrzeit</strong> (${totalKm} km inkl. Heimweg nach <em>${homeAddress}</em>)`;
+        summaryPill.innerHTML = `Route optimiert: <strong>ca. ${totalMinutes} Min.</strong> (${totalKm} km inkl. Heimweg nach <em>${homeAddress}</em>). Tippe jetzt auf <strong>„Kiste packen“</strong>!`;
 
         setTimeout(() => {
           progressCard.style.display = 'none';
@@ -1954,6 +2262,7 @@ STRIKTE REGELN:
       if (title && address) {
         tourData.push({
           id: Date.now(),
+          bagNumber: tourData.length + 1,
           title: title,
           address: address,
           note: note || "",
@@ -1978,22 +2287,20 @@ STRIKTE REGELN:
       const idx = tourData.findIndex(s => s.id === id);
       if (idx !== -1) {
         tourData.splice(idx, 1);
-        if (tourData.length > 0 && !tourData.some(s => s.status === 'active') && tourData.some(s => s.status === 'pending')) {
-          const nextPending = tourData.find(s => s.status === 'pending');
-          if (nextPending) nextPending.status = 'active';
-        }
+        syncActiveStopOrder();
         refreshUIState();
       }
     }
 
+    // SCHNELLE SORTIER-FUNKTIONEN IM MANAGER
     function moveStopUp(e, id) {
       e.stopPropagation();
       const idx = tourData.findIndex(s => s.id === id);
       if (idx > 0) {
-        const temp = tourData[idx];
-        tourData[idx] = tourData[idx - 1];
-        tourData[idx - 1] = temp;
+        [tourData[idx], tourData[idx - 1]] = [tourData[idx - 1], tourData[idx]];
+        syncActiveStopOrder();
         renderManagerList();
+        updateCockpitUI();
       }
     }
 
@@ -2001,11 +2308,64 @@ STRIKTE REGELN:
       e.stopPropagation();
       const idx = tourData.findIndex(s => s.id === id);
       if (idx !== -1 && idx < tourData.length - 1) {
-        const temp = tourData[idx];
-        tourData[idx] = tourData[idx + 1];
-        tourData[idx + 1] = temp;
+        [tourData[idx], tourData[idx + 1]] = [tourData[idx + 1], tourData[idx]];
+        syncActiveStopOrder();
         renderManagerList();
+        updateCockpitUI();
       }
+    }
+
+    function moveStopToTop(e, id) {
+      e.stopPropagation();
+      const idx = tourData.findIndex(s => s.id === id);
+      if (idx > 0) {
+        const [item] = tourData.splice(idx, 1);
+        tourData.unshift(item);
+        syncActiveStopOrder();
+        renderManagerList();
+        updateCockpitUI();
+      }
+    }
+
+    function moveStopToBottom(e, id) {
+      e.stopPropagation();
+      const idx = tourData.findIndex(s => s.id === id);
+      if (idx !== -1 && idx < tourData.length - 1) {
+        const [item] = tourData.splice(idx, 1);
+        tourData.push(item);
+        syncActiveStopOrder();
+        renderManagerList();
+        updateCockpitUI();
+      }
+    }
+
+    function jumpStopToPosition(e, id) {
+      e.stopPropagation();
+      const currentIdx = tourData.findIndex(s => s.id === id);
+      if (currentIdx === -1) return;
+
+      const input = prompt(`Neue Position für "${tourData[currentIdx].title}" eingeben (1 bis ${tourData.length}):`, String(currentIdx + 1));
+      if (!input) return;
+
+      const targetPos = parseInt(input, 10);
+      if (isNaN(targetPos) || targetPos < 1 || targetPos > tourData.length) {
+        alert(`Bitte eine Zahl zwischen 1 und ${tourData.length} eingeben.`);
+        return;
+      }
+
+      const [item] = tourData.splice(currentIdx, 1);
+      tourData.splice(targetPos - 1, 0, item);
+      syncActiveStopOrder();
+      renderManagerList();
+      updateCockpitUI();
+    }
+
+    function reverseEntireTour() {
+      if (tourData.length < 2) return;
+      tourData.reverse();
+      syncActiveStopOrder();
+      renderManagerList();
+      updateCockpitUI();
     }
 
     function openEditModal(id) {
@@ -2016,6 +2376,7 @@ STRIKTE REGELN:
       document.getElementById('editTitleInput').value = stop.title;
       document.getElementById('editAddressInput').value = stop.address;
       document.getElementById('editNoteInput').value = stop.note || '';
+      document.getElementById('editBagNumberInput').value = stop.bagNumber || '';
       document.getElementById('editStopModal').classList.add('active');
     }
 
@@ -2031,6 +2392,8 @@ STRIKTE REGELN:
         stop.title = document.getElementById('editTitleInput').value;
         stop.address = document.getElementById('editAddressInput').value;
         stop.note = document.getElementById('editNoteInput').value;
+        const bagVal = parseInt(document.getElementById('editBagNumberInput').value, 10);
+        if (!isNaN(bagVal) && bagVal > 0) stop.bagNumber = bagVal;
       }
       closeEditModal();
       renderManagerList();
@@ -2048,14 +2411,17 @@ STRIKTE REGELN:
       const statusCard = document.getElementById('statusCardClean');
       const startBtn = document.getElementById('btnStartTour');
       const badge = document.getElementById('cleanStopCountBadge');
+      const managerToolbar = document.getElementById('managerToolbar');
 
       if (tourData.length > 0) {
         statusCard.style.display = 'flex';
         startBtn.style.display = 'block';
         badge.innerText = `${tourData.length} Stopps erfasst`;
+        if (managerToolbar) managerToolbar.style.display = 'flex';
       } else {
         statusCard.style.display = 'none';
         startBtn.style.display = 'none';
+        if (managerToolbar) managerToolbar.style.display = 'none';
       }
       renderManagerList();
       updateCockpitUI();
@@ -2116,15 +2482,19 @@ STRIKTE REGELN:
     function closeSuccessPopupAndReset() {
       document.getElementById('successPopupOverlay').classList.remove('active');
       tourData.length = 0;
+      packedStopIds.clear();
       hasShownSuccessPopup = false;
       refreshUIState();
       switchNavTab(1);
     }
 
     function updateCockpitUI() {
+      const bagBadge = document.getElementById('currentBagBadge');
+
       if (tourData.length === 0) {
         document.getElementById('cockpitStateLabel').innerText = "Fahrt im Gange";
         document.getElementById('currentTitle').innerText = "Keine Stopps vorhanden";
+        if (bagBadge) bagBadge.style.display = 'none';
         document.getElementById('currentAddressText').innerText = "Bitte erst im Tab 'Erstellen' erfassen";
         document.getElementById('currentNoteText').innerText = "Keine Notizen verfügbar";
         document.getElementById('tourProgressHeader').innerText = "Keine Tour aktiv";
@@ -2140,6 +2510,10 @@ STRIKTE REGELN:
       const currentStop = tourData[activeIdx] || tourData[tourData.length - 1];
 
       document.getElementById('currentTitle').innerText = currentStop.title;
+      if (bagBadge) {
+        bagBadge.style.display = 'inline-block';
+        bagBadge.innerText = `Tüte #${currentStop.bagNumber || (activeIdx + 1)}`;
+      }
       document.getElementById('currentAddressText').innerText = currentStop.address;
       document.getElementById('currentNoteText').innerText = currentStop.note ? `"${currentStop.note}"` : "Keine Notizen";
 
@@ -2181,21 +2555,24 @@ STRIKTE REGELN:
 
         const mediaCount = stop.proofs ? stop.proofs.length : 0;
         const metaTag = stop.status === 'completed'
-          ? ` • ${mediaCount > 0 ? mediaCount + ' Medien + Metadaten' : 'Metadaten erfasst'}`
+          ? ` • ${mediaCount > 0 ? mediaCount + ' Medien' : 'Erledigt'}`
           : '';
         
         card.innerHTML = `
+          <button class="pos-jump-badge" onclick="jumpStopToPosition(event, ${stop.id})" title="Position direkt ändern">${idx + 1}</button>
           <div class="manager-card-info">
-            <h4>${idx + 1}. ${stop.title}</h4>
+            <div class="manager-title-line">
+              <h4>${stop.title}</h4>
+              <span class="bag-tag-mini">Tüte #${stop.bagNumber || (idx + 1)}</span>
+            </div>
             <p>${stop.address}${metaTag}</p>
           </div>
           <div class="manager-card-meta">
-            <span style="font-size: 0.68rem; font-weight:700; color: ${stop.status === 'completed' ? 'var(--success)' : (stop.status === 'active' ? 'var(--text-main)' : 'var(--text-sub)')}">
-              ${stop.status === 'completed' ? 'Erledigt' : (stop.status === 'active' ? 'Aktiv' : 'Ausstehend')}
-            </span>
-            <div class="reorder-btns">
-              <button class="btn-reorder" onclick="moveStopUp(event, ${stop.id})">▲</button>
-              <button class="btn-reorder" onclick="moveStopDown(event, ${stop.id})">▼</button>
+            <div class="reorder-grid-2x2">
+              <button class="btn-reorder" onclick="moveStopUp(event, ${stop.id})" title="1 hoch">▲</button>
+              <button class="btn-reorder extreme" onclick="moveStopToTop(event, ${stop.id})" title="Ganz an den Anfang">⤒</button>
+              <button class="btn-reorder" onclick="moveStopDown(event, ${stop.id})" title="1 runter">▼</button>
+              <button class="btn-reorder extreme" onclick="moveStopToBottom(event, ${stop.id})" title="Ganz ans Ende">⤓</button>
             </div>
           </div>
         `;
@@ -2232,7 +2609,7 @@ STRIKTE REGELN:
 
       return {
         driverId: DRIVER_ID,
-        stopNumber: `${activeIdx + 1} von ${tourData.length}`,
+        stopNumber: `${activeIdx + 1} von ${tourData.length} (Tüte #${stop.bagNumber || (activeIdx + 1)})`,
         targetAddress: `${stop.title}, ${stop.address}`,
         gpsCoordinates: currentGPS,
         date: dateFormatted,
@@ -2284,7 +2661,7 @@ STRIKTE REGELN:
       const activeIdx = getCurrentActiveStopIndex();
       const stop = tourData[activeIdx];
       
-      document.getElementById('proofModalSubtitle').innerText = `Stopp ${activeIdx + 1}: ${stop.title}`;
+      document.getElementById('proofModalSubtitle').innerText = `Stopp ${activeIdx + 1} (Tüte #${stop.bagNumber || (activeIdx + 1)}): ${stop.title}`;
       activeProofHash = "";
       hasSigned = Boolean(stop.signatureData);
       
