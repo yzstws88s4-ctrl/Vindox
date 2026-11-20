@@ -1697,7 +1697,10 @@
       document.getElementById('manualModal').classList.remove('active');
     }
 
-    function compressImageToDataUrl(file, maxDim = 1100, quality = 0.78) {
+    // =========================================================================
+    // MAXIMALE BILDVORBEREITUNG & OCR/VISION-EXTRAKTION
+    // =========================================================================
+    function compressImageToDataUrl(file, maxDim = 1500, quality = 0.88) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = (ev) => {
@@ -1718,6 +1721,8 @@
             canvas.width = width;
             canvas.height = height;
             const ctx = canvas.getContext('2d');
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
             ctx.drawImage(img, 0, 0, width, height);
             resolve(canvas.toDataURL('image/jpeg', quality));
           };
@@ -1746,17 +1751,17 @@
       const statusText = document.getElementById('aiProgressStatus');
 
       progressCard.style.display = 'block';
-      statusText.innerText = "Optimiere Bildgröße...";
+      statusText.innerText = "Schärfe Beleg & bereite KI vor...";
       progressBar.style.width = "15%";
       percentText.innerText = "15%";
 
       let smoothTimer = null;
 
       try {
-        const base64Image = await compressImageToDataUrl(file, 1100, 0.78);
+        const base64Image = await compressImageToDataUrl(file, 1500, 0.88);
 
         let currentPct = 25;
-        statusText.innerText = "KI extrahiert Lieferadressen...";
+        statusText.innerText = "KI analysiert Beleg & Handschrift...";
         progressBar.style.width = currentPct + "%";
         percentText.innerText = currentPct + "%";
 
@@ -1768,9 +1773,17 @@
           }
         }, 350);
 
-        const systemPrompt = `Extrahiere ALLE echten Lieferadressen aus dem Bild in Reihenfolge als reines JSON-Array ohne Markdown:
-[{"street":"Straße Hausnr","city":"PLZ Ort","note":"Kundenname oder Hinweis"}]
-Ignoriere UI-Buttons, Statusleisten und Kopf-/Fußzeilen.`;
+        const systemPrompt = `Du bist ein präziser Logistik- & OCR-Assistent für Lieferscheine, Auftragslisten und Tourenbelege.
+Das Bild kann um 90° oder 180° gedreht sein, leichte Unschärfe oder Handschrift enthalten. Lies alle Texte in der natürlichen Leserichtung des Dokuments.
+
+Extrahiere echte Ziel-/Lieferadressen in der Reihenfolge ihres Auftretens als reines JSON-Array ohne Markdown-Blöcke:
+[{"street":"Straße und Hausnummer","city":"PLZ und Ort","note":"Kunde / Zusatz / Handschrift"}]
+
+STRIKTE REGELN:
+1. Suche gezielt nach der LIEFERANSCHRIFT / Zieladresse (gedruckt und/oder handschriftlich). Falls keine separate Lieferanschrift steht, nimm die klare Ziel-/Kundenadresse.
+2. Übernimm handschriftliche Zusätze (wie Ortsteile, Objekte, Namen oder Hinweise) in "note".
+3. Wenn auf dem Dokument KEINE echte Adresse steht (z. B. reine Equipment-/Checkliste oder Rückseite ohne Anschrift), gib zwingend [] zurück.
+4. Erfinde, rate oder ergänze NIEMALS Adressen, Straßen oder Orte, die nicht im Bild sichtbar sind.`;
 
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
           method: 'POST',
@@ -1779,16 +1792,16 @@ Ignoriere UI-Buttons, Statusleisten und Kopf-/Fußzeilen.`;
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            model: "gpt-4o-mini",
+            model: "gpt-4o",
             temperature: 0,
-            max_tokens: 2000,
+            max_tokens: 2500,
             messages: [
               { role: "system", content: systemPrompt },
               {
                 role: "user",
                 content: [
-                  { type: "text", text: "Alle Lieferadressen als JSON:" },
-                  { type: "image_url", image_url: { url: base64Image, detail: "auto" } }
+                  { type: "text", text: "Extrahiere alle echten Lieferadressen aus diesem Beleg als JSON." },
+                  { type: "image_url", image_url: { url: base64Image, detail: "high" } }
                 ]
               }
             ]
@@ -1809,16 +1822,17 @@ Ignoriere UI-Buttons, Statusleisten und Kopf-/Fußzeilen.`;
         const extractedStops = JSON.parse(cleanJson);
 
         if (!Array.isArray(extractedStops) || extractedStops.length === 0) {
-          throw new Error("Es konnten keine echten Lieferadressen erkannt werden.");
+          throw new Error("Es konnten keine echten Lieferadressen auf dem Beleg erkannt werden.");
         }
 
+        const addedStops = [];
         extractedStops.forEach((item, index) => {
           const streetVal = (item.street || "").trim();
           const cityVal = (item.city || "").trim();
           const noteVal = (item.note || "").trim();
           if (!streetVal && !cityVal) return;
 
-          tourData.push({
+          const newStop = {
             id: Date.now() + index,
             title: streetVal || cityVal,
             address: streetVal ? cityVal : "",
@@ -1828,12 +1842,20 @@ Ignoriere UI-Buttons, Statusleisten und Kopf-/Fußzeilen.`;
             proofs: [],
             signatureData: null,
             metadata: null
-          });
+          };
+          tourData.push(newStop);
+          addedStops.push(newStop);
         });
+
+        if (addedStops.length === 0) {
+          throw new Error("Es konnten keine echten Lieferadressen auf dem Beleg erkannt werden.");
+        }
+
+        prefetchStopCoordinates(addedStops);
 
         progressBar.style.width = "100%";
         percentText.innerText = "100%";
-        statusText.innerText = `✓ ${extractedStops.length} Stopps erkannt`;
+        statusText.innerText = `✓ ${addedStops.length} Stopps erkannt`;
 
         setTimeout(() => {
           progressCard.style.display = 'none';
@@ -1852,7 +1874,7 @@ Ignoriere UI-Buttons, Statusleisten und Kopf-/Fußzeilen.`;
     }
 
     // =========================================================================
-    // ECHTE STRASSEN-ROUTENOPTIMIERUNG (OSRM TRIP + GEO-CACHE + BATCHING)
+    // ECHTE STRASSEN-ROUTENOPTIMIERUNG (OSRM TRIP + GEO-CACHE + TIMEOUT + PREFETCH)
     // =========================================================================
     const geoCache = JSON.parse(localStorage.getItem('vindox_geo_cache') || '{}');
 
@@ -1862,35 +1884,52 @@ Ignoriere UI-Buttons, Statusleisten und Kopf-/Fußzeilen.`;
       } catch (e) {}
     }
 
+    async function fetchWithTimeout(url, options = {}, timeoutMs = 2500) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        return await fetch(url, { ...options, signal: controller.signal });
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
     function getLiveGPSCoordinates() {
       return new Promise((resolve) => {
-        if (!navigator.geolocation) {
+        const fallback = () => {
           const [lat, lon] = currentGPS.split(',').map(Number);
-          return resolve({ lat, lon });
-        }
+          resolve({ lat, lon });
+        };
+        if (!navigator.geolocation) return fallback();
+
+        const hardTimer = setTimeout(fallback, 1800);
         navigator.geolocation.getCurrentPosition(
           (pos) => {
+            clearTimeout(hardTimer);
             const lat = pos.coords.latitude;
             const lon = pos.coords.longitude;
             currentGPS = `${lat.toFixed(6)}, ${lon.toFixed(6)}`;
             resolve({ lat, lon });
           },
           () => {
-            const [lat, lon] = currentGPS.split(',').map(Number);
-            resolve({ lat, lon });
+            clearTimeout(hardTimer);
+            fallback();
           },
-          { enableHighAccuracy: true, timeout: 4000 }
+          { enableHighAccuracy: false, maximumAge: 60000, timeout: 1500 }
         );
       });
     }
 
     async function geocodeGermanAddress(fullAddress) {
-      const key = fullAddress.trim().toLowerCase();
+      const cleanAddr = (fullAddress || '').trim();
+      if (!cleanAddr) return null;
+
+      const key = cleanAddr.toLowerCase();
       if (geoCache[key]) return geoCache[key];
 
       try {
-        const photonUrl = `https://photon.komoot.io/api/?q=${encodeURIComponent(fullAddress)}&limit=1&lang=de`;
-        const res = await fetch(photonUrl);
+        const photonUrl = `https://photon.komoot.io/api/?q=${encodeURIComponent(cleanAddr)}&limit=1&lang=de`;
+        const res = await fetchWithTimeout(photonUrl, {}, 2200);
         if (res.ok) {
           const data = await res.json();
           if (data.features && data.features.length > 0) {
@@ -1904,8 +1943,8 @@ Ignoriere UI-Buttons, Statusleisten und Kopf-/Fußzeilen.`;
       } catch (e) {}
 
       try {
-        const nomUrl = `https://nominatim.openstreetmap.org/search?format=json&countrycodes=de&limit=1&q=${encodeURIComponent(fullAddress)}`;
-        const res = await fetch(nomUrl, { headers: { 'Accept-Language': 'de' } });
+        const nomUrl = `https://nominatim.openstreetmap.org/search?format=json&countrycodes=de&limit=1&q=${encodeURIComponent(cleanAddr)}`;
+        const res = await fetchWithTimeout(nomUrl, { headers: { 'Accept-Language': 'de' } }, 2500);
         if (res.ok) {
           const data = await res.json();
           if (Array.isArray(data) && data.length > 0) {
@@ -1918,6 +1957,20 @@ Ignoriere UI-Buttons, Statusleisten und Kopf-/Fußzeilen.`;
       } catch (e) {}
 
       return null;
+    }
+
+    async function prefetchStopCoordinates(stops) {
+      const BATCH_SIZE = 6;
+      for (let i = 0; i < stops.length; i += BATCH_SIZE) {
+        const batch = stops.slice(i, i + BATCH_SIZE);
+        await Promise.all(batch.map(async (stop) => {
+          const query = `${stop.title}, ${stop.address}`.trim();
+          const coords = await geocodeGermanAddress(query) || (stop.address ? await geocodeGermanAddress(stop.address) : null);
+          if (coords) {
+            stop.coords = `${coords.lat.toFixed(6)}, ${coords.lon.toFixed(6)}`;
+          }
+        }));
+      }
     }
 
     function syncActiveStopOrder(preferredActiveId = null) {
@@ -1987,12 +2040,12 @@ Ignoriere UI-Buttons, Statusleisten und Kopf-/Fußzeilen.`;
         }
 
         const stopCoordsList = new Array(tourData.length);
-        const BATCH_SIZE = 5;
+        const BATCH_SIZE = 8;
 
         for (let i = 0; i < tourData.length; i += BATCH_SIZE) {
           const batch = tourData.slice(i, i + BATCH_SIZE);
           const doneCount = Math.min(i + BATCH_SIZE, tourData.length);
-          const pct = 20 + Math.round((doneCount / tourData.length) * 60);
+          const pct = 20 + Math.round((doneCount / tourData.length) * 55);
 
           statusText.innerText = `Lokalisiere Adressen (${doneCount}/${tourData.length})...`;
           progressBar.style.width = `${pct}%`;
@@ -2000,7 +2053,7 @@ Ignoriere UI-Buttons, Statusleisten und Kopf-/Fußzeilen.`;
 
           await Promise.all(batch.map(async (stop, bIdx) => {
             const realIdx = i + bIdx;
-            const query = `${stop.title}, ${stop.address}`;
+            const query = `${stop.title}, ${stop.address}`.trim();
             let coords = await geocodeGermanAddress(query);
             if (!coords && stop.address) {
               coords = await geocodeGermanAddress(stop.address);
@@ -2014,14 +2067,14 @@ Ignoriere UI-Buttons, Statusleisten und Kopf-/Fußzeilen.`;
         }
 
         statusText.innerText = "Berechne schnellste Straßen-Route...";
-        progressBar.style.width = "88%";
-        percentText.innerText = "88%";
+        progressBar.style.width = "85%";
+        percentText.innerText = "85%";
 
         const allPoints = [startCoords, ...stopCoordsList, endCoords];
         const coordString = allPoints.map(p => `${p.lon},${p.lat}`).join(';');
-        const osrmUrl = `https://router.project-osrm.org/trip/v1/driving/${coordString}?source=first&destination=last&roundtrip=false`;
+        const osrmUrl = `https://router.project-osrm.org/trip/v1/driving/${coordString}?source=first&destination=last&roundtrip=false&overview=false`;
 
-        const osrmResponse = await fetch(osrmUrl);
+        const osrmResponse = await fetchWithTimeout(osrmUrl, {}, 8000);
         if (!osrmResponse.ok) {
           throw new Error("Routing-Server vorübergehend nicht erreichbar.");
         }
@@ -2055,10 +2108,13 @@ Ignoriere UI-Buttons, Statusleisten und Kopf-/Fußzeilen.`;
           progressCard.style.display = 'none';
           progressBar.style.width = '0%';
           refreshUIState();
-        }, 350);
+        }, 300);
 
       } catch (err) {
-        alert("Routen-Optimierung Hinweis:\n" + err.message);
+        const msg = err.name === 'AbortError'
+          ? "Zeitüberschreitung beim Karten-/Routing-Dienst. Bitte kurz erneut versuchen."
+          : err.message;
+        alert("Routen-Optimierung Hinweis:\n" + msg);
         progressCard.style.display = 'none';
       } finally {
         if (btn) btn.disabled = false;
@@ -2071,7 +2127,7 @@ Ignoriere UI-Buttons, Statusleisten und Kopf-/Fußzeilen.`;
       const note = document.getElementById('manualNoteInput').value;
 
       if (title && address) {
-        tourData.push({
+        const newStop = {
           id: Date.now(),
           title: title,
           address: address,
@@ -2081,7 +2137,9 @@ Ignoriere UI-Buttons, Statusleisten und Kopf-/Fußzeilen.`;
           proofs: [],
           signatureData: null,
           metadata: null
-        });
+        };
+        tourData.push(newStop);
+        prefetchStopCoordinates([newStop]);
 
         document.getElementById('manualTitleInput').value = '';
         document.getElementById('manualAddressInput').value = '';
@@ -2239,6 +2297,7 @@ Ignoriere UI-Buttons, Statusleisten und Kopf-/Fußzeilen.`;
         stop.title = document.getElementById('editTitleInput').value;
         stop.address = document.getElementById('editAddressInput').value;
         stop.note = document.getElementById('editNoteInput').value;
+        prefetchStopCoordinates([stop]);
       }
       closeEditModal();
       renderManagerList();
