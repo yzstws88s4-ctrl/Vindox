@@ -29,6 +29,8 @@
       --text-muted: #64748B;
       --success: #10B981;
       --success-bg: rgba(16, 185, 129, 0.12);
+      --warn: #F59E0B;
+      --danger: #EF4444;
     }
 
     * {
@@ -136,11 +138,24 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
+      position: relative;
     }
 
     .btn-settings-header.configured {
       border-color: rgba(59, 108, 231, 0.45);
       color: var(--accent-light);
+    }
+
+    .btn-settings-header.perm-warning::after {
+      content: '';
+      position: absolute;
+      top: -1px;
+      right: -1px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--warn);
+      box-shadow: 0 0 6px var(--warn);
     }
 
     .btn-settings-header svg {
@@ -162,12 +177,80 @@
       font-weight: 700;
     }
 
+    .network-badge.offline {
+      background: rgba(239, 68, 68, 0.14);
+      color: #FCA5A5;
+      border-color: rgba(239, 68, 68, 0.35);
+    }
+
     .status-dot {
       width: 6px;
       height: 6px;
       background-color: var(--success);
       border-radius: 50%;
       box-shadow: 0 0 8px var(--success);
+    }
+
+    .network-badge.offline .status-dot {
+      background-color: var(--danger);
+      box-shadow: 0 0 8px var(--danger);
+    }
+
+    /* CHEF-BEFEHL PWA UPDATE BANNER */
+    .pwa-update-banner {
+      display: none;
+      margin: 14px 22px 0;
+      background: linear-gradient(135deg, rgba(13, 36, 99, 0.85), rgba(37, 84, 199, 0.45));
+      border: 1px solid rgba(59, 108, 231, 0.75);
+      border-radius: 18px;
+      padding: 14px 16px;
+      flex-direction: column;
+      gap: 10px;
+      box-shadow: 0 10px 30px rgba(13, 36, 99, 0.55);
+    }
+
+    .pwa-update-banner.active {
+      display: flex;
+    }
+
+    .pwa-update-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pwa-update-top strong {
+      font-size: 0.86rem;
+      color: #FFFFFF;
+      font-weight: 800;
+    }
+
+    .pwa-update-version-tag {
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, 0.14);
+      color: #93C5FD;
+    }
+
+    .pwa-update-desc {
+      font-size: 0.76rem;
+      color: #E2E8F0;
+      line-height: 1.4;
+    }
+
+    .btn-pwa-reload {
+      width: 100%;
+      background: #FFFFFF;
+      color: #000000;
+      border: none;
+      border-radius: 12px;
+      padding: 11px 14px;
+      font-size: 0.84rem;
+      font-weight: 800;
+      cursor: pointer;
     }
 
     main {
@@ -214,7 +297,6 @@
       display: flex;
     }
 
-    /* REINWEISS LEUCHTENDE LIVE-UHRZEIT OHNE KASTEN */
     @keyframes pureWhiteGlow {
       0%, 100% {
         text-shadow: 0 0 8px rgba(255, 255, 255, 0.5), 0 0 18px rgba(255, 255, 255, 0.22);
@@ -881,10 +963,183 @@
       color: var(--text-main);
       font-size: 0.9rem;
       outline: none;
+      width: 100%;
     }
 
     .input-field:focus {
       border-color: var(--accent-light);
+    }
+
+    /* SYSTEM- & BERECHTIGUNGS-KARTEN IN EINSTELLUNGEN */
+    .settings-section-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .settings-section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .settings-section-head span {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #93C5FD;
+    }
+
+    .perm-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .perm-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .perm-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .perm-info strong {
+      font-size: 0.82rem;
+      color: var(--text-main);
+      font-weight: 700;
+    }
+
+    .perm-info small {
+      font-size: 0.7rem;
+      color: var(--text-sub);
+    }
+
+    .perm-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .perm-badge {
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 4px 9px;
+      border-radius: 99px;
+    }
+
+    .perm-badge.granted {
+      background: rgba(16, 185, 129, 0.14);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+    }
+
+    .perm-badge.denied {
+      background: rgba(239, 68, 68, 0.14);
+      color: #FCA5A5;
+      border: 1px solid rgba(239, 68, 68, 0.35);
+    }
+
+    .perm-badge.prompt {
+      background: rgba(245, 158, 11, 0.14);
+      color: #FCD34D;
+      border: 1px solid rgba(245, 158, 11, 0.35);
+    }
+
+    .btn-perm-fix {
+      background: rgba(59, 108, 231, 0.22);
+      border: 1px solid rgba(59, 108, 231, 0.5);
+      color: #93C5FD;
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 5px 10px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .os-help-box {
+      display: none;
+      background: rgba(13, 36, 99, 0.24);
+      border: 1px solid rgba(59, 108, 231, 0.4);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 0.73rem;
+      color: #E2E8F0;
+      line-height: 1.45;
+    }
+
+    .os-help-box.active {
+      display: block;
+    }
+
+    .storage-stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .storage-stat-item {
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 9px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .storage-stat-item span {
+      font-size: 0.66rem;
+      color: var(--text-sub);
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .storage-stat-item strong {
+      font-size: 0.85rem;
+      color: var(--text-main);
+      font-weight: 800;
+    }
+
+    .btn-cache-reset {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: #E2E8F0;
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* CHEF-PFLICHTEN IM NACHWEIS-MODAL */
+    .chef-mandate-banner {
+      display: none;
+      background: rgba(13, 36, 99, 0.28);
+      border: 1px solid rgba(59, 108, 231, 0.55);
+      border-radius: 14px;
+      padding: 10px 12px;
+      font-size: 0.75rem;
+      color: #DBEAFE;
+      line-height: 1.4;
+      font-weight: 600;
+    }
+
+    .chef-mandate-banner.active {
+      display: block;
     }
 
     .proof-actions-trio {
@@ -901,11 +1156,41 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       color: var(--text-main);
       font-size: 0.75rem;
       font-weight: 700;
       cursor: pointer;
+      position: relative;
+    }
+
+    /* VOM CHEF FESTGELEGTE PFLICHT-UMRANDUNG */
+    .btn-proof-trio.chef-required {
+      border: 2px solid #3B6CE7;
+      background: rgba(19, 49, 130, 0.24);
+      box-shadow: 0 0 18px rgba(59, 108, 231, 0.38);
+    }
+
+    .btn-proof-trio.chef-required.fulfilled {
+      border-color: var(--success);
+      background: rgba(16, 185, 129, 0.14);
+      box-shadow: 0 0 14px rgba(16, 185, 129, 0.28);
+    }
+
+    .mandate-pill {
+      font-size: 0.58rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 2px 6px;
+      border-radius: 99px;
+      background: #2554C7;
+      color: #FFFFFF;
+    }
+
+    .btn-proof-trio.chef-required.fulfilled .mandate-pill {
+      background: var(--success);
+      color: #000000;
     }
 
     .btn-proof-trio svg {
@@ -991,6 +1276,16 @@
 
     .signature-container.active {
       display: flex;
+    }
+
+    .signature-container.chef-required {
+      border: 2px solid #3B6CE7;
+      box-shadow: 0 0 18px rgba(59, 108, 231, 0.3);
+    }
+
+    .signature-container.chef-required.fulfilled {
+      border-color: var(--success);
+      box-shadow: 0 0 14px rgba(16, 185, 129, 0.25);
     }
 
     .signature-header {
@@ -1118,6 +1413,13 @@
       flex-shrink: 0;
     }
 
+    .btn-submit.blocked {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.12);
+      color: var(--text-muted);
+      box-shadow: none;
+    }
+
     .success-popup-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -1200,14 +1502,26 @@
         </div>
       </div>
       <div class="header-right-group">
-        <button class="btn-settings-header" id="settingsHeaderBtn" onclick="openSettingsModal()" title="Einstellungen & Zieladresse">
+        <button class="btn-settings-header" id="settingsHeaderBtn" onclick="openSettingsModal()" title="Einstellungen, Berechtigungen & Cache">
           <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
         </button>
-        <div class="network-badge">
-          <span class="status-dot"></span> Online
+        <div class="network-badge" id="networkStatusBadge">
+          <span class="status-dot"></span> <span id="networkStatusText">Online</span>
         </div>
       </div>
     </header>
+
+    <!-- CHEF-BEFEHL: PWA NEULADEN (NUR AUF DEINEN BEFEHL AKTIV) -->
+    <div class="pwa-update-banner" id="pwaUpdateBanner">
+      <div class="pwa-update-top">
+        <strong>App-Aktualisierung freigegeben</strong>
+        <span class="pwa-update-version-tag" id="pwaTargetVersionTag">v1.1.0</span>
+      </div>
+      <div class="pwa-update-desc" id="pwaUpdateMessageText">
+        Die Zentrale hat ein wichtiges Update bereitgestellt. Bitte lade die App jetzt neu (deine laufende Tour bleibt gespeichert).
+      </div>
+      <button class="btn-pwa-reload" onclick="executeChefOrderedPwaReload()">Jetzt App neu laden & aktualisieren</button>
+    </div>
 
     <main>
       <div class="section-title-container">
@@ -1290,7 +1604,7 @@
         </div>
       </div>
 
-      <!-- UNTERER INHALT TAB 1 (ERSTELLEN - CLEAN & KOMPAKT) -->
+      <!-- UNTERER INHALT TAB 1 -->
       <div class="sub-content active" id="subTab1">
         <div class="status-card-clean" id="statusCardClean" style="display: none;">
           <div class="status-card-top">
@@ -1387,9 +1701,9 @@
     </div>
   </div>
 
-  <!-- MODAL: EINSTELLUNGEN & ZIELADRESSE -->
+  <!-- MODAL: FAHRER-EINSTELLUNGEN, BERECHTIGUNGEN & OFFLINE-CACHE -->
   <div class="modal-overlay" id="settingsModal">
-    <div class="modal-sheet" style="height: auto; max-height: 85vh;">
+    <div class="modal-sheet">
       <div class="modal-header">
         <div class="modal-title-box">
           <h3>Fahrer-Einstellungen</h3>
@@ -1400,15 +1714,100 @@
         </button>
       </div>
 
-      <div class="input-group">
-        <div style="font-size:0.75rem; font-weight:700; color:var(--text-sub); text-transform:uppercase;">OpenAI API-Key (für Screenshot-Erkennung)</div>
-        <input type="password" id="settingsApiKeyInput" class="input-field" placeholder="sk-proj-...">
+      <div class="modal-body-scroll">
+        <div class="input-group">
+          <div style="font-size:0.75rem; font-weight:700; color:var(--text-sub); text-transform:uppercase;">OpenAI API-Key (für Screenshot-Erkennung)</div>
+          <input type="password" id="settingsApiKeyInput" class="input-field" placeholder="sk-proj-...">
 
-        <div style="font-size:0.75rem; font-weight:700; color:var(--text-sub); text-transform:uppercase; margin-top:6px;">Heimat- / Firmenadresse (Zwingendes Touren-Ziel)</div>
-        <input type="text" id="settingsHomeAddressInput" class="input-field" placeholder="z.B. Hauptstraße 1, 51766 Engelskirchen">
+          <div style="font-size:0.75rem; font-weight:700; color:var(--text-sub); text-transform:uppercase; margin-top:2px;">Heimat- / Firmenadresse (Zwingendes Touren-Ziel)</div>
+          <input type="text" id="settingsHomeAddressInput" class="input-field" placeholder="z.B. Hauptstraße 1, 51766 Engelskirchen">
+        </div>
 
-        <button class="btn-action-primary" style="margin-top: 8px;" onclick="saveSettingsFromModal()">Einstellungen speichern</button>
+        <!-- GERÄTE-BERECHTIGUNGSCHECK (iOS & ANDROID) -->
+        <div class="settings-section-box">
+          <div class="settings-section-head">
+            <span>Berechtigungs-Check (<span id="detectedOsLabel">Gerät</span>)</span>
+            <button class="btn-perm-fix" onclick="refreshAllPermissionsStatus()">Neu prüfen</button>
+          </div>
+
+          <div id="permissionsListContainer">
+            <!-- Standort -->
+            <div class="perm-row">
+              <div class="perm-info">
+                <strong>Standort (GPS)</strong>
+                <small>Für Zeitstempel & Routenstart</small>
+              </div>
+              <div class="perm-actions">
+                <span class="perm-badge prompt" id="permBadgeGeo">Prüfen</span>
+                <button class="btn-perm-fix" id="permBtnGeo" onclick="requestOrGuidePermission('geolocation')">Aktivieren</button>
+              </div>
+            </div>
+
+            <!-- Kamera -->
+            <div class="perm-row">
+              <div class="perm-info">
+                <strong>Kamera (Foto & Video)</strong>
+                <small>Für Nachweis-Aufnahmen</small>
+              </div>
+              <div class="perm-actions">
+                <span class="perm-badge prompt" id="permBadgeCam">Prüfen</span>
+                <button class="btn-perm-fix" id="permBtnCam" onclick="requestOrGuidePermission('camera')">Aktivieren</button>
+              </div>
+            </div>
+
+            <!-- Mikrofon -->
+            <div class="perm-row">
+              <div class="perm-info">
+                <strong>Mikrofon (Video-Ton)</strong>
+                <small>Für Video-Nachweise mit Ton</small>
+              </div>
+              <div class="perm-actions">
+                <span class="perm-badge prompt" id="permBadgeMic">Prüfen</span>
+                <button class="btn-perm-fix" id="permBtnMic" onclick="requestOrGuidePermission('microphone')">Aktivieren</button>
+              </div>
+            </div>
+
+            <!-- Dauerhafter Offline-Speicher -->
+            <div class="perm-row">
+              <div class="perm-info">
+                <strong>Dauerhafter Speicher</strong>
+                <small>Schützt Nachweise vor Löschung</small>
+              </div>
+              <div class="perm-actions">
+                <span class="perm-badge prompt" id="permBadgePersist">Prüfen</span>
+                <button class="btn-perm-fix" id="permBtnPersist" onclick="requestOrGuidePermission('persistent-storage')">Sichern</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="os-help-box" id="osPermissionGuideBox"></div>
+        </div>
+
+        <!-- OFFLINE-SPEICHER STATUS & CACHE-RESET -->
+        <div class="settings-section-box">
+          <div class="settings-section-head">
+            <span>Offline-Speicher & Cache</span>
+            <span style="color:var(--text-muted); font-size:0.68rem;" id="appVersionFooterLabel">v1.0.0</span>
+          </div>
+
+          <div class="storage-stats-grid">
+            <div class="storage-stat-item">
+              <span>Verbindung & Status</span>
+              <strong id="storageConnStateText" style="color:var(--success);">Online & Bereit</strong>
+            </div>
+            <div class="storage-stat-item">
+              <span>Adress-Cache & Daten</span>
+              <strong id="storageUsageText">0 Einträge • 0 KB</strong>
+            </div>
+          </div>
+
+          <button class="btn-cache-reset" id="btnResetGeoCache" onclick="resetOfflineGeoCache()">
+            Adress-Cache leeren (API-Key & Ziel bleiben)
+          </button>
+        </div>
       </div>
+
+      <button class="btn-submit" onclick="saveSettingsFromModal()">Einstellungen speichern</button>
     </div>
   </div>
 
@@ -1469,7 +1868,7 @@
     </div>
   </div>
 
-  <!-- NACHWEIS-MASKE -->
+  <!-- NACHWEIS-MASKE MIT CHEF-PFLICHTEN -->
   <div class="modal-overlay" id="proofModal">
     <div class="modal-sheet">
       <div class="modal-header">
@@ -1483,20 +1882,28 @@
       </div>
 
       <div class="modal-body-scroll">
+        <!-- HINWEIS AUF CHEF-PFLICHTEN -->
+        <div class="chef-mandate-banner" id="chefMandateBanner"></div>
+
         <div class="proof-actions-trio">
-          <button class="btn-proof-trio" onclick="document.getElementById('cameraPhotoInput').click()">
+          <button class="btn-proof-trio" id="btnProofPhoto" onclick="document.getElementById('cameraPhotoInput').click()">
+            <span class="mandate-pill" id="pillMandatePhoto" style="display:none;">Pflicht</span>
             <svg viewBox="0 0 24 24"><path d="M4 4h3l2-2h6l2 2h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2m8 3a5 5 0 0 0-5 5a5 5 0 0 0 5 5a5 5 0 0 0 5-5a5 5 0 0 0-5-5z"/></svg>
             Foto
           </button>
-          <button class="btn-proof-trio" onclick="document.getElementById('cameraVideoInput').click()">
+          <button class="btn-proof-trio" id="btnProofVideo" onclick="document.getElementById('cameraVideoInput').click()">
+            <span class="mandate-pill" id="pillMandateVideo" style="display:none;">Pflicht</span>
             <svg viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg>
             Video
           </button>
-          <button class="btn-proof-trio" onclick="toggleSignatureArea()">
+          <button class="btn-proof-trio" id="btnProofSignature" onclick="toggleSignatureArea()">
+            <span class="mandate-pill" id="pillMandateSignature" style="display:none;">Pflicht</span>
             <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
             Unterschrift
           </button>
         </div>
+
+        <div class="inapp-error-msg" id="proofMandateErrorMsg">Bitte zuerst alle blau umrandeten Pflicht-Nachweise der Zentrale erfassen.</div>
 
         <div class="media-section-label" id="mediaListLabel" style="display:none;">Erfasste Medien</div>
         <div class="captured-items-grid" id="capturedItemsGrid"></div>
@@ -1522,11 +1929,18 @@
         </div>
       </div>
 
-      <button class="btn-submit" onclick="submitProof()">Nachweis speichern & Stopp abschließen</button>
+      <button class="btn-submit" id="btnSubmitProof" onclick="submitProof()">Nachweis speichern & Stopp abschließen</button>
     </div>
   </div>
 
   <script>
+    // =========================================================================
+    // CHEF-STEUERUNG: PWA-VERSION (NUR BEI ÄNDERUNG DIESER VERSION KOMMT DIE MELDUNG)
+    // =========================================================================
+    const CURRENT_APP_VERSION = "1.0.0";
+    // Erhöhe REQUIRED_APP_VERSION (z. B. auf "1.1.0"), wenn alle Fahrer die PWA neu laden sollen:
+    const REQUIRED_APP_VERSION = "1.0.0";
+
     const DRIVER_ID = "F-8921";
     let tourData = [];
     let chefAppEvidenceArchive = [];
@@ -1541,6 +1955,358 @@
     let currentStopProofItems = [];
     let activeProofHash = "";
 
+    // =========================================================================
+    // 1. CHEF-PFLICHTEN PRO FAHRER (KEIN TOGGLE FÜR FAHRER)
+    // Kann von der Chef-App per localStorage('vindox_chef_required_proofs') gesetzt werden:
+    // z.B. JSON.stringify(['photo']) oder ['photo', 'signature'] oder ['video']
+    // =========================================================================
+    function getChefRequiredProofs() {
+      try {
+        const raw = localStorage.getItem('vindox_chef_required_proofs');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)) return parsed;
+        }
+      } catch (e) {}
+      // Standard-Vorgabe der Zentrale (kann vom Chef jederzeit geändert werden):
+      return ['photo'];
+    }
+
+    function getMissingChefMandates() {
+      const required = getChefRequiredProofs();
+      const missing = [];
+      if (required.includes('photo') && !currentStopProofItems.some(i => i.type === 'photo')) {
+        missing.push('Foto');
+      }
+      if (required.includes('video') && !currentStopProofItems.some(i => i.type === 'video')) {
+        missing.push('Video');
+      }
+      if (required.includes('signature') && !hasSigned) {
+        missing.push('Unterschrift');
+      }
+      return missing;
+    }
+
+    function updateChefMandateUI() {
+      const required = getChefRequiredProofs();
+      const hasPhoto = currentStopProofItems.some(i => i.type === 'photo');
+      const hasVideo = currentStopProofItems.some(i => i.type === 'video');
+
+      const map = [
+        { key: 'photo', btnId: 'btnProofPhoto', pillId: 'pillMandatePhoto', done: hasPhoto },
+        { key: 'video', btnId: 'btnProofVideo', pillId: 'pillMandateVideo', done: hasVideo },
+        { key: 'signature', btnId: 'btnProofSignature', pillId: 'pillMandateSignature', done: hasSigned }
+      ];
+
+      map.forEach(item => {
+        const btn = document.getElementById(item.btnId);
+        const pill = document.getElementById(item.pillId);
+        const isReq = required.includes(item.key);
+        if (btn && pill) {
+          btn.classList.toggle('chef-required', isReq);
+          btn.classList.toggle('fulfilled', isReq && item.done);
+          pill.style.display = isReq ? 'inline-block' : 'none';
+          pill.innerText = (isReq && item.done) ? '✓ Erledigt' : 'Pflicht';
+        }
+      });
+
+      const sigBox = document.getElementById('signatureBox');
+      if (sigBox) {
+        const sigReq = required.includes('signature');
+        sigBox.classList.toggle('chef-required', sigReq);
+        sigBox.classList.toggle('fulfilled', sigReq && hasSigned);
+        if (sigReq && !sigBox.classList.contains('active')) {
+          sigBox.classList.add('active');
+          setTimeout(initSignaturePad, 50);
+        }
+      }
+
+      const missing = getMissingChefMandates();
+      const banner = document.getElementById('chefMandateBanner');
+      const submitBtn = document.getElementById('btnSubmitProof');
+      const errMsg = document.getElementById('proofMandateErrorMsg');
+
+      if (required.length > 0) {
+        const labels = required.map(r => r === 'photo' ? 'Foto' : (r === 'video' ? 'Video' : 'Unterschrift'));
+        banner.classList.add('active');
+        banner.innerHTML = missing.length > 0
+          ? `Vorgabe der Zentrale für dich: <strong>${labels.join(' + ')}</strong> erforderlich. Ohne Erfassung ist kein nächster Stopp möglich.`
+          : `✓ Alle Pflicht-Nachweise (${labels.join(' + ')}) wurden vollständig erfasst.`;
+      } else {
+        banner.classList.remove('active');
+      }
+
+      if (missing.length > 0) {
+        submitBtn.classList.add('blocked');
+        submitBtn.innerText = `Pflicht fehlt: ${missing.join(' & ')}`;
+      } else {
+        submitBtn.classList.remove('blocked');
+        submitBtn.innerText = "Nachweis speichern & Stopp abschließen";
+        if (errMsg) errMsg.style.display = 'none';
+      }
+    }
+
+    // =========================================================================
+    // 2. CHEF-GESTEUERTE PWA UPDATE-MELDUNG (NUR AUF BEFEHL)
+    // =========================================================================
+    function checkChefOrderedPwaReload() {
+      const ackVersion = localStorage.getItem('vindox_ack_app_version') || CURRENT_APP_VERSION;
+      const remoteForcedVersion = localStorage.getItem('vindox_chef_force_reload') || "";
+      const targetVersion = remoteForcedVersion || REQUIRED_APP_VERSION;
+
+      const banner = document.getElementById('pwaUpdateBanner');
+      const tag = document.getElementById('pwaTargetVersionTag');
+      if (!banner) return;
+
+      if (targetVersion !== CURRENT_APP_VERSION && targetVersion !== ackVersion) {
+        if (tag) tag.innerText = `v${targetVersion}`;
+        banner.classList.add('active');
+      } else {
+        banner.classList.remove('active');
+      }
+    }
+
+    async function executeChefOrderedPwaReload() {
+      const remoteForcedVersion = localStorage.getItem('vindox_chef_force_reload') || "";
+      const targetVersion = remoteForcedVersion || REQUIRED_APP_VERSION;
+      localStorage.setItem('vindox_ack_app_version', targetVersion);
+
+      if ('caches' in window) {
+        try {
+          const names = await caches.keys();
+          await Promise.all(names.map(n => caches.delete(n)));
+        } catch (e) {}
+      }
+      if ('serviceWorker' in navigator) {
+        try {
+          const regs = await navigator.serviceWorker.getRegistrations();
+          await Promise.all(regs.map(r => r.update()));
+        } catch (e) {}
+      }
+      window.location.reload(true);
+    }
+
+    // =========================================================================
+    // 3. GERÄTE-BERECHTIGUNGSCHECK (iOS & ANDROID) + OFFLINE-CACHE STATUS
+    // =========================================================================
+    function detectMobileOS() {
+      const ua = navigator.userAgent || "";
+      if (/iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
+        return 'ios';
+      }
+      if (/Android/i.test(ua)) {
+        return 'android';
+      }
+      return 'other';
+    }
+
+    function setPermBadgeUI(badgeId, btnId, state) {
+      const badge = document.getElementById(badgeId);
+      const btn = document.getElementById(btnId);
+      if (!badge || !btn) return;
+
+      badge.classList.remove('granted', 'denied', 'prompt');
+      if (state === 'granted') {
+        badge.classList.add('granted');
+        badge.innerText = 'An';
+        btn.innerText = 'OK';
+      } else if (state === 'denied') {
+        badge.classList.add('denied');
+        badge.innerText = 'Blockiert';
+        btn.innerText = 'Anleitung';
+      } else {
+        badge.classList.add('prompt');
+        badge.innerText = 'Aus / Prüfen';
+        btn.innerText = 'Aktivieren';
+      }
+    }
+
+    async function querySinglePermissionState(name) {
+      if (!navigator.permissions || !navigator.permissions.query) return 'prompt';
+      try {
+        const status = await navigator.permissions.query({ name });
+        return status.state; // 'granted' | 'denied' | 'prompt'
+      } catch (e) {
+        return 'prompt';
+      }
+    }
+
+    async function refreshAllPermissionsStatus() {
+      const os = detectMobileOS();
+      const osLabel = document.getElementById('detectedOsLabel');
+      if (osLabel) {
+        osLabel.innerText = os === 'ios' ? 'iPhone / iOS' : (os === 'android' ? 'Android' : 'Gerät');
+      }
+
+      const geoState = await querySinglePermissionState('geolocation');
+      const camState = await querySinglePermissionState('camera');
+      const micState = await querySinglePermissionState('microphone');
+
+      let persistState = 'prompt';
+      if (navigator.storage && navigator.storage.persisted) {
+        try {
+          const isPersisted = await navigator.storage.persisted();
+          persistState = isPersisted ? 'granted' : 'prompt';
+        } catch (e) {}
+      }
+
+      setPermBadgeUI('permBadgeGeo', 'permBtnGeo', geoState);
+      setPermBadgeUI('permBadgeCam', 'permBtnCam', camState);
+      setPermBadgeUI('permBadgeMic', 'permBtnMic', micState);
+      setPermBadgeUI('permBadgePersist', 'permBtnPersist', persistState);
+
+      const headerBtn = document.getElementById('settingsHeaderBtn');
+      if (headerBtn) {
+        if (geoState === 'denied' || camState === 'denied') {
+          headerBtn.classList.add('perm-warning');
+        } else {
+          headerBtn.classList.remove('perm-warning');
+        }
+      }
+    }
+
+    function showOsPermissionInstructions(permType) {
+      const os = detectMobileOS();
+      const box = document.getElementById('osPermissionGuideBox');
+      if (!box) return;
+
+      const labelMap = {
+        'geolocation': 'Standort (GPS)',
+        'camera': 'Kamera',
+        'microphone': 'Mikrofon',
+        'persistent-storage': 'Dauerhafter Speicher'
+      };
+      const title = labelMap[permType] || 'Berechtigung';
+
+      if (os === 'ios') {
+        box.innerHTML = `<strong>iPhone / iOS Anleitung für ${title}:</strong><br>1. Öffne die iPhone-App <strong>Einstellungen</strong>.<br>2. Scrolle nach unten zu <strong>Apps → Safari</strong> (oder Chrome) bzw. tippe direkt oben auf den Home-Bildschirm-Eintrag.<br>3. Stelle unter <strong>${title}</strong> auf <strong>Erlauben / Beim Verwenden</strong> und lade Vindox neu.`;
+      } else if (os === 'android') {
+        box.innerHTML = `<strong>Android Anleitung für ${title}:</strong><br>1. Tippe oben in der Adressleiste auf das <strong>Schloss- / Einstellungs-Symbol</strong> neben der URL.<br>2. Wähle <strong>Berechtigungen</strong>.<br>3. Aktiviere <strong>${title}</strong> (oder setze die Berechtigungen zurück) und tippe erneut auf <em>Aktivieren</em>.`;
+      } else {
+        box.innerHTML = `<strong>Browser-Anleitung für ${title}:</strong><br>Klicke oben links in der Adressleiste auf das Website-Info-/Schloss-Symbol und setze <strong>${title}</strong> auf „Zulassen“.`;
+      }
+      box.classList.add('active');
+    }
+
+    async function requestOrGuidePermission(type) {
+      const guideBox = document.getElementById('osPermissionGuideBox');
+      if (guideBox) guideBox.classList.remove('active');
+
+      if (type === 'geolocation') {
+        if (!navigator.geolocation) {
+          showOsPermissionInstructions(type);
+          return;
+        }
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            currentGPS = `${pos.coords.latitude.toFixed(6)}, ${pos.coords.longitude.toFixed(6)}`;
+            setPermBadgeUI('permBadgeGeo', 'permBtnGeo', 'granted');
+            refreshAllPermissionsStatus();
+          },
+          () => {
+            setPermBadgeUI('permBadgeGeo', 'permBtnGeo', 'denied');
+            showOsPermissionInstructions('geolocation');
+          },
+          { enableHighAccuracy: true, timeout: 5000 }
+        );
+        return;
+      }
+
+      if (type === 'camera' || type === 'microphone') {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          showOsPermissionInstructions(type);
+          return;
+        }
+        try {
+          const constraints = type === 'camera' ? { video: { facingMode: 'environment' } } : { audio: true };
+          const stream = await navigator.mediaDevices.getUserMedia(constraints);
+          stream.getTracks().forEach(t => t.stop());
+          if (type === 'camera') setPermBadgeUI('permBadgeCam', 'permBtnCam', 'granted');
+          if (type === 'microphone') setPermBadgeUI('permBadgeMic', 'permBtnMic', 'granted');
+          refreshAllPermissionsStatus();
+        } catch (err) {
+          if (type === 'camera') setPermBadgeUI('permBadgeCam', 'permBtnCam', 'denied');
+          if (type === 'microphone') setPermBadgeUI('permBadgeMic', 'permBtnMic', 'denied');
+          showOsPermissionInstructions(type);
+        }
+        return;
+      }
+
+      if (type === 'persistent-storage') {
+        if (navigator.storage && navigator.storage.persist) {
+          try {
+            const granted = await navigator.storage.persist();
+            setPermBadgeUI('permBadgePersist', 'permBtnPersist', granted ? 'granted' : 'prompt');
+            if (!granted) {
+              showOsPermissionInstructions('persistent-storage');
+            }
+          } catch (e) {
+            showOsPermissionInstructions('persistent-storage');
+          }
+        } else {
+          showOsPermissionInstructions('persistent-storage');
+        }
+      }
+    }
+
+    function updateOfflineStorageStatusUI() {
+      const connEl = document.getElementById('storageConnStateText');
+      const usageEl = document.getElementById('storageUsageText');
+      const verEl = document.getElementById('appVersionFooterLabel');
+
+      if (verEl) verEl.innerText = `v${CURRENT_APP_VERSION}`;
+
+      const isOnline = navigator.onLine;
+      if (connEl) {
+        connEl.innerText = isOnline ? 'Online & Synchron' : 'Offline-Modus aktiv';
+        connEl.style.color = isOnline ? 'var(--success)' : 'var(--warn)';
+      }
+
+      const badge = document.getElementById('networkStatusBadge');
+      const badgeTxt = document.getElementById('networkStatusText');
+      if (badge && badgeTxt) {
+        badge.classList.toggle('offline', !isOnline);
+        badgeTxt.innerText = isOnline ? 'Online' : 'Offline';
+      }
+
+      const count = Object.keys(geoCache).length;
+      let totalBytes = 0;
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        const v = localStorage.getItem(k) || '';
+        totalBytes += (k.length + v.length) * 2;
+      }
+      const kb = (totalBytes / 1024).toFixed(1).replace('.', ',');
+      if (usageEl) {
+        usageEl.innerText = `${count} Adressen • ${kb} KB`;
+      }
+    }
+
+    function resetOfflineGeoCache() {
+      Object.keys(geoCache).forEach(k => delete geoCache[k]);
+      localStorage.removeItem('vindox_geo_cache');
+      updateOfflineStorageStatusUI();
+
+      const btn = document.getElementById('btnResetGeoCache');
+      if (btn) {
+        const orig = btn.innerText;
+        btn.innerText = '✓ Adress-Cache erfolgreich geleert';
+        btn.style.borderColor = 'rgba(16, 185, 129, 0.5)';
+        btn.style.color = 'var(--success)';
+        setTimeout(() => {
+          btn.innerText = orig;
+          btn.style.borderColor = '';
+          btn.style.color = '';
+        }, 2000);
+      }
+    }
+
+    window.addEventListener('online', updateOfflineStorageStatusUI);
+    window.addEventListener('offline', updateOfflineStorageStatusUI);
+
+    // =========================================================================
+    // STANDARD EINSTELLUNGEN
+    // =========================================================================
     function getOpenAiKey() {
       const stored = localStorage.getItem('vindox_openai_key');
       return (stored && stored.trim().length > 10) ? stored.trim() : "";
@@ -1561,6 +2327,11 @@
     function openSettingsModal() {
       document.getElementById('settingsApiKeyInput').value = getOpenAiKey();
       document.getElementById('settingsHomeAddressInput').value = localStorage.getItem('vindox_home_address') || "";
+      const guideBox = document.getElementById('osPermissionGuideBox');
+      if (guideBox) guideBox.classList.remove('active');
+
+      refreshAllPermissionsStatus();
+      updateOfflineStorageStatusUI();
       document.getElementById('settingsModal').classList.add('active');
     }
 
@@ -1580,6 +2351,7 @@
       }
       
       updateSettingsIconState();
+      updateOfflineStorageStatusUI();
       closeSettingsModal();
     }
 
@@ -1631,7 +2403,6 @@
       }
     }, { passive: true });
 
-    // REINWEISS LEUCHTENDE LIVE-UHRZEIT OHNE KASTEN
     function getTimeBasedGreeting() {
       const now = new Date();
       const hour = now.getHours();
@@ -1874,13 +2645,14 @@ STRIKTE REGELN:
     }
 
     // =========================================================================
-    // ECHTE STRASSEN-ROUTENOPTIMIERUNG (OSRM TRIP + GEO-CACHE + TIMEOUT + PREFETCH)
+    // ECHTE STRASSEN-ROUTENOPTIMIERUNG
     // =========================================================================
     const geoCache = JSON.parse(localStorage.getItem('vindox_geo_cache') || '{}');
 
     function saveGeoCache() {
       try {
         localStorage.setItem('vindox_geo_cache', JSON.stringify(geoCache));
+        updateOfflineStorageStatusUI();
       } catch (e) {}
     }
 
@@ -2160,7 +2932,6 @@ STRIKTE REGELN:
       }
     }
 
-    // SCHNELLE SORTIER-FUNKTIONEN IM MANAGER
     function moveStopUp(e, id) {
       e.stopPropagation();
       const idx = tourData.findIndex(s => s.id === id);
@@ -2207,7 +2978,6 @@ STRIKTE REGELN:
       }
     }
 
-    // IN-APP MODAL FÜR DIREKTEN POSITIONS- & AKTUELLEN-STOPP-SPRUNG
     function openPositionJumpModal(e, id) {
       e.stopPropagation();
       const currentIdx = tourData.findIndex(s => s.id === id);
@@ -2570,8 +3340,11 @@ STRIKTE REGELN:
 
       currentStopProofItems = stop.proofs ? [...stop.proofs] : [];
       document.getElementById('signatureBox').classList.remove('active');
+      document.getElementById('proofMandateErrorMsg').style.display = 'none';
+
       renderCapturedGrid();
       renderProofMetadataTable();
+      updateChefMandateUI();
 
       document.getElementById('proofModal').classList.add('active');
       initSignaturePad();
@@ -2595,6 +3368,7 @@ STRIKTE REGELN:
         });
         renderCapturedGrid();
         renderProofMetadataTable();
+        updateChefMandateUI();
       };
       reader.readAsDataURL(file);
       e.target.value = "";
@@ -2614,6 +3388,7 @@ STRIKTE REGELN:
         });
         renderCapturedGrid();
         renderProofMetadataTable();
+        updateChefMandateUI();
       };
       reader.readAsDataURL(file);
       e.target.value = "";
@@ -2631,6 +3406,7 @@ STRIKTE REGELN:
       currentStopProofItems = currentStopProofItems.filter(item => item.id !== id);
       renderCapturedGrid();
       renderProofMetadataTable();
+      updateChefMandateUI();
     }
 
     function renderCapturedGrid() {
@@ -2682,6 +3458,7 @@ STRIKTE REGELN:
         sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
         hasSigned = false;
         renderProofMetadataTable();
+        updateChefMandateUI();
       }
     }
 
@@ -2692,6 +3469,7 @@ STRIKTE REGELN:
       const pos = getPos(e);
       sigCtx.moveTo(pos.x, pos.y);
       renderProofMetadataTable();
+      updateChefMandateUI();
     }
 
     function draw(e) {
@@ -2713,6 +3491,18 @@ STRIKTE REGELN:
 
     function submitProof() {
       if (tourData.length === 0) return;
+
+      // BLOCKIEREN, WENN VOM CHEF FESTGELEGTE PFLICHT-NACHWEISE FEHLEN
+      const missing = getMissingChefMandates();
+      if (missing.length > 0) {
+        const errMsg = document.getElementById('proofMandateErrorMsg');
+        if (errMsg) {
+          errMsg.innerText = `Abschluss gesperrt: Bitte zuerst ${missing.join(' & ')} (blau umrandete Pflicht der Zentrale) erfassen.`;
+          errMsg.style.display = 'block';
+        }
+        return;
+      }
+
       const activeIdx = getCurrentActiveStopIndex();
       const stop = tourData[activeIdx];
 
@@ -2737,6 +3527,7 @@ STRIKTE REGELN:
       chefAppEvidenceArchive.push(chefAppTilePayload);
       try {
         localStorage.setItem('vindox_chef_evidence_tiles', JSON.stringify(chefAppEvidenceArchive));
+        updateOfflineStorageStatusUI();
       } catch (err) {}
       
       if (activeIdx + 1 < tourData.length) {
@@ -2767,6 +3558,10 @@ STRIKTE REGELN:
     }
 
     updateSettingsIconState();
+    refreshAllPermissionsStatus();
+    updateOfflineStorageStatusUI();
+    checkChefOrderedPwaReload();
+
     const initialSub = getSubtitles(1);
     document.getElementById('sectionTitleText').innerText = initialSub.top;
     document.getElementById('sectionSubtitleText').innerText = initialSub.main;
