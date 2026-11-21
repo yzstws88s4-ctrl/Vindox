@@ -891,16 +891,17 @@
       transform: translateY(0) scale(1);
     }
 
-    /* NACHWEIS-MODAL: OBERER RAND WEIT HOCHGEZOGEN, UNTERER BUTTON AUF EXAKTER HÖHE */
+    /* NACHWEIS-MODAL: OBERER RAND HOCH, BUTTON NAH AN DER INTEGRITÄTS-HASH-ZEILE */
     #proofModal.modal-overlay {
-      align-items: flex-end;
+      align-items: flex-start;
       padding: 12px 16px 26px;
     }
 
     #proofModal .modal-sheet {
       max-height: calc(100vh - 38px);
-      height: calc(100vh - 38px);
-      padding: 14px 18px 16px;
+      height: auto;
+      justify-content: flex-start;
+      padding: 14px 18px 18px;
       border-radius: 26px;
     }
 
@@ -910,6 +911,7 @@
     }
 
     #proofModal .modal-body-scroll {
+      flex: 0 1 auto;
       gap: 8px;
       overflow-y: visible;
     }
@@ -925,7 +927,7 @@
     }
 
     #proofModal .btn-submit {
-      margin-top: 8px;
+      margin-top: 10px;
       padding: 14px;
     }
 
