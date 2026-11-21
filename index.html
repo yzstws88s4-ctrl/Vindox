@@ -177,23 +177,12 @@
       font-weight: 700;
     }
 
-    .network-badge.offline {
-      background: rgba(239, 68, 68, 0.14);
-      color: #FCA5A5;
-      border-color: rgba(239, 68, 68, 0.35);
-    }
-
     .status-dot {
       width: 6px;
       height: 6px;
       background-color: var(--success);
       border-radius: 50%;
       box-shadow: 0 0 8px var(--success);
-    }
-
-    .network-badge.offline .status-dot {
-      background-color: var(--danger);
-      box-shadow: 0 0 8px var(--danger);
     }
 
     /* CHEF-BEFEHL PWA UPDATE BANNER */
@@ -696,7 +685,6 @@
       fill: var(--text-sub);
     }
 
-    /* MANAGER LISTE & SORTIERUNG */
     .manager-toolbar {
       display: flex;
       justify-content: flex-end;
@@ -803,7 +791,6 @@
       display: none;
     }
 
-    /* BOTTOM NAV */
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -864,7 +851,6 @@
       box-shadow: 0 0 14px rgba(37, 84, 199, 0.9);
     }
 
-    /* MODALS */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -891,7 +877,7 @@
       background: #05070C;
       border: 1px solid rgba(19, 49, 130, 0.5);
       border-radius: 28px;
-      padding: 18px 22px 28px;
+      padding: 18px 22px 26px;
       max-height: 85vh;
       display: flex;
       flex-direction: column;
@@ -945,184 +931,194 @@
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 14px;
       padding-right: 2px;
     }
 
     .input-group {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
+    }
+
+    .field-label-clean {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-sub);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
     }
 
     .input-field {
-      background: rgba(0, 0, 0, 0.65);
-      border: 1px solid var(--card-border);
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 14px;
-      padding: 14px 16px;
+      padding: 13px 15px;
       color: var(--text-main);
       font-size: 0.9rem;
       outline: none;
       width: 100%;
+      transition: border-color 0.2s ease, background-color 0.2s ease;
     }
 
     .input-field:focus {
       border-color: var(--accent-light);
+      background: rgba(13, 36, 99, 0.14);
     }
 
-    /* SYSTEM- & BERECHTIGUNGS-KARTEN IN EINSTELLUNGEN */
-    .settings-section-box {
+    /* SCHÖNE BERECHTIGUNGS-SEKTION UNTER API & ZIELADRESSE */
+    .permissions-card-clean {
       background: rgba(255, 255, 255, 0.02);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
       padding: 14px;
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
 
-    .settings-section-head {
+    .permissions-header-clean {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding-bottom: 6px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     }
 
-    .settings-section-head span {
-      font-size: 0.72rem;
+    .permissions-header-clean span {
+      font-size: 0.7rem;
       font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.07em;
       color: #93C5FD;
     }
 
-    .perm-row {
+    .btn-perm-refresh {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-sub);
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 99px;
+      cursor: pointer;
+    }
+
+    .perm-tile {
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 11px 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 8px;
-      padding: 8px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      gap: 10px;
     }
 
-    .perm-row:last-child {
-      border-bottom: none;
-      padding-bottom: 0;
+    .perm-tile-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
     }
 
-    .perm-info {
+    .perm-icon-box {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: rgba(13, 36, 99, 0.32);
+      border: 1px solid rgba(59, 108, 231, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .perm-icon-box svg {
+      width: 17px;
+      height: 17px;
+      fill: #93C5FD;
+    }
+
+    .perm-text-stack {
       display: flex;
       flex-direction: column;
       gap: 2px;
     }
 
-    .perm-info strong {
-      font-size: 0.82rem;
-      color: var(--text-main);
+    .perm-text-stack strong {
+      font-size: 0.84rem;
       font-weight: 700;
+      color: var(--text-main);
     }
 
-    .perm-info small {
+    .perm-text-stack small {
       font-size: 0.7rem;
       color: var(--text-sub);
     }
 
-    .perm-actions {
+    .perm-tile-right {
       display: flex;
       align-items: center;
       gap: 6px;
       flex-shrink: 0;
     }
 
-    .perm-badge {
+    .perm-status-chip {
       font-size: 0.68rem;
       font-weight: 800;
       padding: 4px 9px;
       border-radius: 99px;
     }
 
-    .perm-badge.granted {
+    .perm-status-chip.granted {
       background: rgba(16, 185, 129, 0.14);
       color: var(--success);
-      border: 1px solid rgba(16, 185, 129, 0.35);
+      border: 1px solid rgba(16, 185, 129, 0.32);
     }
 
-    .perm-badge.denied {
+    .perm-status-chip.denied {
       background: rgba(239, 68, 68, 0.14);
       color: #FCA5A5;
-      border: 1px solid rgba(239, 68, 68, 0.35);
+      border: 1px solid rgba(239, 68, 68, 0.32);
     }
 
-    .perm-badge.prompt {
+    .perm-status-chip.prompt {
       background: rgba(245, 158, 11, 0.14);
       color: #FCD34D;
-      border: 1px solid rgba(245, 158, 11, 0.35);
+      border: 1px solid rgba(245, 158, 11, 0.32);
     }
 
-    .btn-perm-fix {
-      background: rgba(59, 108, 231, 0.22);
+    .btn-perm-action {
+      background: linear-gradient(135deg, var(--accent-main), var(--accent-bright));
       border: 1px solid rgba(59, 108, 231, 0.5);
-      color: #93C5FD;
+      color: #FFFFFF;
       font-size: 0.7rem;
       font-weight: 800;
-      padding: 5px 10px;
+      padding: 6px 11px;
       border-radius: 10px;
       cursor: pointer;
     }
 
-    .os-help-box {
+    .btn-perm-action.is-ok {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.12);
+      color: var(--text-sub);
+    }
+
+    .os-guide-card {
       display: none;
-      background: rgba(13, 36, 99, 0.24);
-      border: 1px solid rgba(59, 108, 231, 0.4);
+      background: rgba(13, 36, 99, 0.25);
+      border: 1px solid rgba(59, 108, 231, 0.45);
       border-radius: 12px;
-      padding: 10px 12px;
-      font-size: 0.73rem;
+      padding: 11px 12px;
+      font-size: 0.74rem;
       color: #E2E8F0;
       line-height: 1.45;
     }
 
-    .os-help-box.active {
+    .os-guide-card.active {
       display: block;
-    }
-
-    .storage-stats-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-
-    .storage-stat-item {
-      background: rgba(0, 0, 0, 0.5);
-      border: 1px solid var(--card-border);
-      border-radius: 10px;
-      padding: 9px 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .storage-stat-item span {
-      font-size: 0.66rem;
-      color: var(--text-sub);
-      text-transform: uppercase;
-      font-weight: 700;
-    }
-
-    .storage-stat-item strong {
-      font-size: 0.85rem;
-      color: var(--text-main);
-      font-weight: 800;
-    }
-
-    .btn-cache-reset {
-      width: 100%;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      color: #E2E8F0;
-      padding: 10px 12px;
-      border-radius: 12px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      cursor: pointer;
     }
 
     /* CHEF-PFLICHTEN IM NACHWEIS-MODAL */
@@ -1164,7 +1160,6 @@
       position: relative;
     }
 
-    /* VOM CHEF FESTGELEGTE PFLICHT-UMRANDUNG */
     .btn-proof-trio.chef-required {
       border: 2px solid #3B6CE7;
       background: rgba(19, 49, 130, 0.24);
@@ -1409,7 +1404,7 @@
       font-weight: 800;
       cursor: pointer;
       box-shadow: 0 6px 25px var(--accent-glow);
-      margin-top: 10px;
+      margin-top: 12px;
       flex-shrink: 0;
     }
 
@@ -1502,11 +1497,11 @@
         </div>
       </div>
       <div class="header-right-group">
-        <button class="btn-settings-header" id="settingsHeaderBtn" onclick="openSettingsModal()" title="Einstellungen, Berechtigungen & Cache">
+        <button class="btn-settings-header" id="settingsHeaderBtn" onclick="openSettingsModal()" title="Einstellungen & Berechtigungen">
           <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
         </button>
-        <div class="network-badge" id="networkStatusBadge">
-          <span class="status-dot"></span> <span id="networkStatusText">Online</span>
+        <div class="network-badge">
+          <span class="status-dot"></span> Online
         </div>
       </div>
     </header>
@@ -1701,7 +1696,7 @@
     </div>
   </div>
 
-  <!-- MODAL: FAHRER-EINSTELLUNGEN, BERECHTIGUNGEN & OFFLINE-CACHE -->
+  <!-- MODAL: FAHRER-EINSTELLUNGEN (NUR API, ZIELADRESSE & BERECHTIGUNGEN) -->
   <div class="modal-overlay" id="settingsModal">
     <div class="modal-sheet">
       <div class="modal-header">
@@ -1716,94 +1711,54 @@
 
       <div class="modal-body-scroll">
         <div class="input-group">
-          <div style="font-size:0.75rem; font-weight:700; color:var(--text-sub); text-transform:uppercase;">OpenAI API-Key (für Screenshot-Erkennung)</div>
+          <div class="field-label-clean">OpenAI API-Key (für Screenshot-Erkennung)</div>
           <input type="password" id="settingsApiKeyInput" class="input-field" placeholder="sk-proj-...">
 
-          <div style="font-size:0.75rem; font-weight:700; color:var(--text-sub); text-transform:uppercase; margin-top:2px;">Heimat- / Firmenadresse (Zwingendes Touren-Ziel)</div>
+          <div class="field-label-clean" style="margin-top: 4px;">Heimat- / Firmenadresse (Zwingendes Touren-Ziel)</div>
           <input type="text" id="settingsHomeAddressInput" class="input-field" placeholder="z.B. Hauptstraße 1, 51766 Engelskirchen">
         </div>
 
-        <!-- GERÄTE-BERECHTIGUNGSCHECK (iOS & ANDROID) -->
-        <div class="settings-section-box">
-          <div class="settings-section-head">
-            <span>Berechtigungs-Check (<span id="detectedOsLabel">Gerät</span>)</span>
-            <button class="btn-perm-fix" onclick="refreshAllPermissionsStatus()">Neu prüfen</button>
+        <div class="permissions-card-clean">
+          <div class="permissions-header-clean">
+            <span>Berechtigungen (<span id="detectedOsLabel">Gerät</span>)</span>
+            <button class="btn-perm-refresh" onclick="refreshAllPermissionsStatus()">Aktualisieren</button>
           </div>
 
-          <div id="permissionsListContainer">
-            <!-- Standort -->
-            <div class="perm-row">
-              <div class="perm-info">
+          <!-- Standort -->
+          <div class="perm-tile">
+            <div class="perm-tile-left">
+              <div class="perm-icon-box">
+                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+              </div>
+              <div class="perm-text-stack">
                 <strong>Standort (GPS)</strong>
-                <small>Für Zeitstempel & Routenstart</small>
-              </div>
-              <div class="perm-actions">
-                <span class="perm-badge prompt" id="permBadgeGeo">Prüfen</span>
-                <button class="btn-perm-fix" id="permBtnGeo" onclick="requestOrGuidePermission('geolocation')">Aktivieren</button>
+                <small>Route & Zeitstempel</small>
               </div>
             </div>
-
-            <!-- Kamera -->
-            <div class="perm-row">
-              <div class="perm-info">
-                <strong>Kamera (Foto & Video)</strong>
-                <small>Für Nachweis-Aufnahmen</small>
-              </div>
-              <div class="perm-actions">
-                <span class="perm-badge prompt" id="permBadgeCam">Prüfen</span>
-                <button class="btn-perm-fix" id="permBtnCam" onclick="requestOrGuidePermission('camera')">Aktivieren</button>
-              </div>
-            </div>
-
-            <!-- Mikrofon -->
-            <div class="perm-row">
-              <div class="perm-info">
-                <strong>Mikrofon (Video-Ton)</strong>
-                <small>Für Video-Nachweise mit Ton</small>
-              </div>
-              <div class="perm-actions">
-                <span class="perm-badge prompt" id="permBadgeMic">Prüfen</span>
-                <button class="btn-perm-fix" id="permBtnMic" onclick="requestOrGuidePermission('microphone')">Aktivieren</button>
-              </div>
-            </div>
-
-            <!-- Dauerhafter Offline-Speicher -->
-            <div class="perm-row">
-              <div class="perm-info">
-                <strong>Dauerhafter Speicher</strong>
-                <small>Schützt Nachweise vor Löschung</small>
-              </div>
-              <div class="perm-actions">
-                <span class="perm-badge prompt" id="permBadgePersist">Prüfen</span>
-                <button class="btn-perm-fix" id="permBtnPersist" onclick="requestOrGuidePermission('persistent-storage')">Sichern</button>
-              </div>
+            <div class="perm-tile-right">
+              <span class="perm-status-chip prompt" id="permBadgeGeo">Prüfen</span>
+              <button class="btn-perm-action" id="permBtnGeo" onclick="requestOrGuidePermission('geolocation')">Anmachen</button>
             </div>
           </div>
 
-          <div class="os-help-box" id="osPermissionGuideBox"></div>
-        </div>
-
-        <!-- OFFLINE-SPEICHER STATUS & CACHE-RESET -->
-        <div class="settings-section-box">
-          <div class="settings-section-head">
-            <span>Offline-Speicher & Cache</span>
-            <span style="color:var(--text-muted); font-size:0.68rem;" id="appVersionFooterLabel">v1.0.0</span>
-          </div>
-
-          <div class="storage-stats-grid">
-            <div class="storage-stat-item">
-              <span>Verbindung & Status</span>
-              <strong id="storageConnStateText" style="color:var(--success);">Online & Bereit</strong>
+          <!-- Kamera -->
+          <div class="perm-tile">
+            <div class="perm-tile-left">
+              <div class="perm-icon-box">
+                <svg viewBox="0 0 24 24"><path d="M4 4h3l2-2h6l2 2h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2m8 3a5 5 0 0 0-5 5a5 5 0 0 0 5 5a5 5 0 0 0 5-5a5 5 0 0 0-5-5z"/></svg>
+              </div>
+              <div class="perm-text-stack">
+                <strong>Kamera</strong>
+                <small>Foto- & Video-Nachweise</small>
+              </div>
             </div>
-            <div class="storage-stat-item">
-              <span>Adress-Cache & Daten</span>
-              <strong id="storageUsageText">0 Einträge • 0 KB</strong>
+            <div class="perm-tile-right">
+              <span class="perm-status-chip prompt" id="permBadgeCam">Prüfen</span>
+              <button class="btn-perm-action" id="permBtnCam" onclick="requestOrGuidePermission('camera')">Anmachen</button>
             </div>
           </div>
 
-          <button class="btn-cache-reset" id="btnResetGeoCache" onclick="resetOfflineGeoCache()">
-            Adress-Cache leeren (API-Key & Ziel bleiben)
-          </button>
+          <div class="os-guide-card" id="osPermissionGuideBox"></div>
         </div>
       </div>
 
@@ -1882,7 +1837,6 @@
       </div>
 
       <div class="modal-body-scroll">
-        <!-- HINWEIS AUF CHEF-PFLICHTEN -->
         <div class="chef-mandate-banner" id="chefMandateBanner"></div>
 
         <div class="proof-actions-trio">
@@ -1938,7 +1892,6 @@
     // CHEF-STEUERUNG: PWA-VERSION (NUR BEI ÄNDERUNG DIESER VERSION KOMMT DIE MELDUNG)
     // =========================================================================
     const CURRENT_APP_VERSION = "1.0.0";
-    // Erhöhe REQUIRED_APP_VERSION (z. B. auf "1.1.0"), wenn alle Fahrer die PWA neu laden sollen:
     const REQUIRED_APP_VERSION = "1.0.0";
 
     const DRIVER_ID = "F-8921";
@@ -1956,9 +1909,7 @@
     let activeProofHash = "";
 
     // =========================================================================
-    // 1. CHEF-PFLICHTEN PRO FAHRER (KEIN TOGGLE FÜR FAHRER)
-    // Kann von der Chef-App per localStorage('vindox_chef_required_proofs') gesetzt werden:
-    // z.B. JSON.stringify(['photo']) oder ['photo', 'signature'] oder ['video']
+    // 1. CHEF-PFLICHTEN PRO FAHRER
     // =========================================================================
     function getChefRequiredProofs() {
       try {
@@ -1968,7 +1919,6 @@
           if (Array.isArray(parsed)) return parsed;
         }
       } catch (e) {}
-      // Standard-Vorgabe der Zentrale (kann vom Chef jederzeit geändert werden):
       return ['photo'];
     }
 
@@ -2087,7 +2037,7 @@
     }
 
     // =========================================================================
-    // 3. GERÄTE-BERECHTIGUNGSCHECK (iOS & ANDROID) + OFFLINE-CACHE STATUS
+    // 3. BERECHTIGUNGEN (STANDORT & KAMERA) FÜR IPHONE & ANDROID
     // =========================================================================
     function detectMobileOS() {
       const ua = navigator.userAgent || "";
@@ -2100,32 +2050,35 @@
       return 'other';
     }
 
-    function setPermBadgeUI(badgeId, btnId, state) {
+    function setPermChipUI(badgeId, btnId, state) {
       const badge = document.getElementById(badgeId);
       const btn = document.getElementById(btnId);
       if (!badge || !btn) return;
 
       badge.classList.remove('granted', 'denied', 'prompt');
+      btn.classList.remove('is-ok');
+
       if (state === 'granted') {
         badge.classList.add('granted');
         badge.innerText = 'An';
-        btn.innerText = 'OK';
+        btn.classList.add('is-ok');
+        btn.innerText = 'Aktiv';
       } else if (state === 'denied') {
         badge.classList.add('denied');
-        badge.innerText = 'Blockiert';
-        btn.innerText = 'Anleitung';
+        badge.innerText = 'Aus / Blockiert';
+        btn.innerText = 'Anmachen';
       } else {
         badge.classList.add('prompt');
-        badge.innerText = 'Aus / Prüfen';
-        btn.innerText = 'Aktivieren';
+        badge.innerText = 'Aus';
+        btn.innerText = 'Anmachen';
       }
     }
 
-    async function querySinglePermissionState(name) {
+    async function queryPermissionState(name) {
       if (!navigator.permissions || !navigator.permissions.query) return 'prompt';
       try {
-        const status = await navigator.permissions.query({ name });
-        return status.state; // 'granted' | 'denied' | 'prompt'
+        const res = await navigator.permissions.query({ name });
+        return res.state;
       } catch (e) {
         return 'prompt';
       }
@@ -2135,25 +2088,14 @@
       const os = detectMobileOS();
       const osLabel = document.getElementById('detectedOsLabel');
       if (osLabel) {
-        osLabel.innerText = os === 'ios' ? 'iPhone / iOS' : (os === 'android' ? 'Android' : 'Gerät');
+        osLabel.innerText = os === 'ios' ? 'iPhone / iOS' : (os === 'android' ? 'Android' : 'Browser');
       }
 
-      const geoState = await querySinglePermissionState('geolocation');
-      const camState = await querySinglePermissionState('camera');
-      const micState = await querySinglePermissionState('microphone');
+      const geoState = await queryPermissionState('geolocation');
+      const camState = await queryPermissionState('camera');
 
-      let persistState = 'prompt';
-      if (navigator.storage && navigator.storage.persisted) {
-        try {
-          const isPersisted = await navigator.storage.persisted();
-          persistState = isPersisted ? 'granted' : 'prompt';
-        } catch (e) {}
-      }
-
-      setPermBadgeUI('permBadgeGeo', 'permBtnGeo', geoState);
-      setPermBadgeUI('permBadgeCam', 'permBtnCam', camState);
-      setPermBadgeUI('permBadgeMic', 'permBtnMic', micState);
-      setPermBadgeUI('permBadgePersist', 'permBtnPersist', persistState);
+      setPermChipUI('permBadgeGeo', 'permBtnGeo', geoState);
+      setPermChipUI('permBadgeCam', 'permBtnCam', camState);
 
       const headerBtn = document.getElementById('settingsHeaderBtn');
       if (headerBtn) {
@@ -2165,144 +2107,62 @@
       }
     }
 
-    function showOsPermissionInstructions(permType) {
+    function showOsGuide(type) {
       const os = detectMobileOS();
       const box = document.getElementById('osPermissionGuideBox');
       if (!box) return;
 
-      const labelMap = {
-        'geolocation': 'Standort (GPS)',
-        'camera': 'Kamera',
-        'microphone': 'Mikrofon',
-        'persistent-storage': 'Dauerhafter Speicher'
-      };
-      const title = labelMap[permType] || 'Berechtigung';
-
+      const label = type === 'geolocation' ? 'Standort' : 'Kamera';
       if (os === 'ios') {
-        box.innerHTML = `<strong>iPhone / iOS Anleitung für ${title}:</strong><br>1. Öffne die iPhone-App <strong>Einstellungen</strong>.<br>2. Scrolle nach unten zu <strong>Apps → Safari</strong> (oder Chrome) bzw. tippe direkt oben auf den Home-Bildschirm-Eintrag.<br>3. Stelle unter <strong>${title}</strong> auf <strong>Erlauben / Beim Verwenden</strong> und lade Vindox neu.`;
+        box.innerHTML = `<strong>So schaltest du „${label}“ am iPhone ein:</strong><br>1. Öffne die iPhone-<strong>Einstellungen</strong>.<br>2. Gehe zu <strong>Apps → Safari</strong> (oder zum Vindox-Symbol auf dem Home-Bildschirm).<br>3. Setze <strong>${label}</strong> auf <strong>Erlauben</strong> und lade die Seite neu.`;
       } else if (os === 'android') {
-        box.innerHTML = `<strong>Android Anleitung für ${title}:</strong><br>1. Tippe oben in der Adressleiste auf das <strong>Schloss- / Einstellungs-Symbol</strong> neben der URL.<br>2. Wähle <strong>Berechtigungen</strong>.<br>3. Aktiviere <strong>${title}</strong> (oder setze die Berechtigungen zurück) und tippe erneut auf <em>Aktivieren</em>.`;
+        box.innerHTML = `<strong>So schaltest du „${label}“ auf Android ein:</strong><br>1. Tippe oben links in der Adressleiste auf das <strong>Schloss- / Einstellungs-Symbol</strong>.<br>2. Tippe auf <strong>Berechtigungen</strong>.<br>3. Schalte <strong>${label}</strong> auf <strong>Zulassen</strong>.`;
       } else {
-        box.innerHTML = `<strong>Browser-Anleitung für ${title}:</strong><br>Klicke oben links in der Adressleiste auf das Website-Info-/Schloss-Symbol und setze <strong>${title}</strong> auf „Zulassen“.`;
+        box.innerHTML = `<strong>So schaltest du „${label}“ frei:</strong><br>Klicke oben links in der Adressleiste auf das Symbol neben der Adresse und erlaube <strong>${label}</strong>.`;
       }
       box.classList.add('active');
     }
 
     async function requestOrGuidePermission(type) {
-      const guideBox = document.getElementById('osPermissionGuideBox');
-      if (guideBox) guideBox.classList.remove('active');
+      const box = document.getElementById('osPermissionGuideBox');
+      if (box) box.classList.remove('active');
 
       if (type === 'geolocation') {
         if (!navigator.geolocation) {
-          showOsPermissionInstructions(type);
+          showOsGuide(type);
           return;
         }
         navigator.geolocation.getCurrentPosition(
           (pos) => {
             currentGPS = `${pos.coords.latitude.toFixed(6)}, ${pos.coords.longitude.toFixed(6)}`;
-            setPermBadgeUI('permBadgeGeo', 'permBtnGeo', 'granted');
+            setPermChipUI('permBadgeGeo', 'permBtnGeo', 'granted');
             refreshAllPermissionsStatus();
           },
           () => {
-            setPermBadgeUI('permBadgeGeo', 'permBtnGeo', 'denied');
-            showOsPermissionInstructions('geolocation');
+            setPermChipUI('permBadgeGeo', 'permBtnGeo', 'denied');
+            showOsGuide('geolocation');
           },
           { enableHighAccuracy: true, timeout: 5000 }
         );
         return;
       }
 
-      if (type === 'camera' || type === 'microphone') {
+      if (type === 'camera') {
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-          showOsPermissionInstructions(type);
+          showOsGuide(type);
           return;
         }
         try {
-          const constraints = type === 'camera' ? { video: { facingMode: 'environment' } } : { audio: true };
-          const stream = await navigator.mediaDevices.getUserMedia(constraints);
+          const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
           stream.getTracks().forEach(t => t.stop());
-          if (type === 'camera') setPermBadgeUI('permBadgeCam', 'permBtnCam', 'granted');
-          if (type === 'microphone') setPermBadgeUI('permBadgeMic', 'permBtnMic', 'granted');
+          setPermChipUI('permBadgeCam', 'permBtnCam', 'granted');
           refreshAllPermissionsStatus();
         } catch (err) {
-          if (type === 'camera') setPermBadgeUI('permBadgeCam', 'permBtnCam', 'denied');
-          if (type === 'microphone') setPermBadgeUI('permBadgeMic', 'permBtnMic', 'denied');
-          showOsPermissionInstructions(type);
-        }
-        return;
-      }
-
-      if (type === 'persistent-storage') {
-        if (navigator.storage && navigator.storage.persist) {
-          try {
-            const granted = await navigator.storage.persist();
-            setPermBadgeUI('permBadgePersist', 'permBtnPersist', granted ? 'granted' : 'prompt');
-            if (!granted) {
-              showOsPermissionInstructions('persistent-storage');
-            }
-          } catch (e) {
-            showOsPermissionInstructions('persistent-storage');
-          }
-        } else {
-          showOsPermissionInstructions('persistent-storage');
+          setPermChipUI('permBadgeCam', 'permBtnCam', 'denied');
+          showOsGuide('camera');
         }
       }
     }
-
-    function updateOfflineStorageStatusUI() {
-      const connEl = document.getElementById('storageConnStateText');
-      const usageEl = document.getElementById('storageUsageText');
-      const verEl = document.getElementById('appVersionFooterLabel');
-
-      if (verEl) verEl.innerText = `v${CURRENT_APP_VERSION}`;
-
-      const isOnline = navigator.onLine;
-      if (connEl) {
-        connEl.innerText = isOnline ? 'Online & Synchron' : 'Offline-Modus aktiv';
-        connEl.style.color = isOnline ? 'var(--success)' : 'var(--warn)';
-      }
-
-      const badge = document.getElementById('networkStatusBadge');
-      const badgeTxt = document.getElementById('networkStatusText');
-      if (badge && badgeTxt) {
-        badge.classList.toggle('offline', !isOnline);
-        badgeTxt.innerText = isOnline ? 'Online' : 'Offline';
-      }
-
-      const count = Object.keys(geoCache).length;
-      let totalBytes = 0;
-      for (let i = 0; i < localStorage.length; i++) {
-        const k = localStorage.key(i);
-        const v = localStorage.getItem(k) || '';
-        totalBytes += (k.length + v.length) * 2;
-      }
-      const kb = (totalBytes / 1024).toFixed(1).replace('.', ',');
-      if (usageEl) {
-        usageEl.innerText = `${count} Adressen • ${kb} KB`;
-      }
-    }
-
-    function resetOfflineGeoCache() {
-      Object.keys(geoCache).forEach(k => delete geoCache[k]);
-      localStorage.removeItem('vindox_geo_cache');
-      updateOfflineStorageStatusUI();
-
-      const btn = document.getElementById('btnResetGeoCache');
-      if (btn) {
-        const orig = btn.innerText;
-        btn.innerText = '✓ Adress-Cache erfolgreich geleert';
-        btn.style.borderColor = 'rgba(16, 185, 129, 0.5)';
-        btn.style.color = 'var(--success)';
-        setTimeout(() => {
-          btn.innerText = orig;
-          btn.style.borderColor = '';
-          btn.style.color = '';
-        }, 2000);
-      }
-    }
-
-    window.addEventListener('online', updateOfflineStorageStatusUI);
-    window.addEventListener('offline', updateOfflineStorageStatusUI);
 
     // =========================================================================
     // STANDARD EINSTELLUNGEN
@@ -2327,11 +2187,10 @@
     function openSettingsModal() {
       document.getElementById('settingsApiKeyInput').value = getOpenAiKey();
       document.getElementById('settingsHomeAddressInput').value = localStorage.getItem('vindox_home_address') || "";
-      const guideBox = document.getElementById('osPermissionGuideBox');
-      if (guideBox) guideBox.classList.remove('active');
+      const box = document.getElementById('osPermissionGuideBox');
+      if (box) box.classList.remove('active');
 
       refreshAllPermissionsStatus();
-      updateOfflineStorageStatusUI();
       document.getElementById('settingsModal').classList.add('active');
     }
 
@@ -2351,7 +2210,6 @@
       }
       
       updateSettingsIconState();
-      updateOfflineStorageStatusUI();
       closeSettingsModal();
     }
 
@@ -2468,9 +2326,6 @@
       document.getElementById('manualModal').classList.remove('active');
     }
 
-    // =========================================================================
-    // MAXIMALE BILDVORBEREITUNG & OCR/VISION-EXTRAKTION
-    // =========================================================================
     function compressImageToDataUrl(file, maxDim = 1500, quality = 0.88) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -2644,15 +2499,11 @@ STRIKTE REGELN:
       }
     }
 
-    // =========================================================================
-    // ECHTE STRASSEN-ROUTENOPTIMIERUNG
-    // =========================================================================
     const geoCache = JSON.parse(localStorage.getItem('vindox_geo_cache') || '{}');
 
     function saveGeoCache() {
       try {
         localStorage.setItem('vindox_geo_cache', JSON.stringify(geoCache));
-        updateOfflineStorageStatusUI();
       } catch (e) {}
     }
 
@@ -3492,7 +3343,6 @@ STRIKTE REGELN:
     function submitProof() {
       if (tourData.length === 0) return;
 
-      // BLOCKIEREN, WENN VOM CHEF FESTGELEGTE PFLICHT-NACHWEISE FEHLEN
       const missing = getMissingChefMandates();
       if (missing.length > 0) {
         const errMsg = document.getElementById('proofMandateErrorMsg');
@@ -3527,7 +3377,6 @@ STRIKTE REGELN:
       chefAppEvidenceArchive.push(chefAppTilePayload);
       try {
         localStorage.setItem('vindox_chef_evidence_tiles', JSON.stringify(chefAppEvidenceArchive));
-        updateOfflineStorageStatusUI();
       } catch (err) {}
       
       if (activeIdx + 1 < tourData.length) {
@@ -3559,7 +3408,6 @@ STRIKTE REGELN:
 
     updateSettingsIconState();
     refreshAllPermissionsStatus();
-    updateOfflineStorageStatusUI();
     checkChefOrderedPwaReload();
 
     const initialSub = getSubtitles(1);
