@@ -2202,8 +2202,8 @@
     }
 
     async function verifyAndLoginDriver(driverIdInput, passwordInput) {
-      const cleanId = String(driverIdInput || '').trim();
-      const cleanPass = String(passwordInput || '');
+      const cleanId = String(driverIdInput || '').trim().toUpperCase();
+      const cleanPass = String(passwordInput || '').trim();
       if (!cleanId || !cleanPass) {
         throw new Error('Bitte Fahrer-ID und Passwort eingeben.');
       }
@@ -2212,34 +2212,7 @@
         throw new Error('Keine Verbindung zu VindoxAPI / Supabase.');
       }
 
-      const sb = window.VindoxAPI.client;
-      let driver = null;
-
-      if (typeof window.VindoxAPI.fetchDriverById === 'function') {
-        driver = await window.VindoxAPI.fetchDriverById(cleanId);
-      }
-
-      if (!driver) {
-        const { data, error } = await sb
-          .from('drivers')
-          .select('*')
-          .ilike('id', cleanId)
-          .limit(1);
-        if (error) {
-          throw new Error('Fahrer-Prüfung fehlgeschlagen: ' + error.message);
-        }
-        driver = Array.isArray(data) && data.length > 0 ? data[0] : null;
-      }
-
-      if (!driver) {
-        throw new Error('Fahrer-ID nicht gefunden. Bitte beim Chef prüfen.');
-      }
-
-      const expectedPass = driver.password ?? driver.pin ?? driver.access_password ?? '';
-      if (!expectedPass || String(expectedPass) !== cleanPass) {
-        throw new Error('Falsches Passwort für diese Fahrer-ID.');
-      }
-
+      const driver = await window.VindoxAPI.loginDriver(cleanId, cleanPass);
       const sessionObj = {
         driverId: driver.id,
         companyId: driver.company_id || driver.companyId || driver.owner_id || driver.ownerId || '',
@@ -2363,20 +2336,27 @@
     // =========================================================================
     async function syncRulesFromSupabase() {
       if (!window.VindoxAPI || !DRIVER_ID) return;
-      const driver = await VindoxAPI.fetchDriverById(DRIVER_ID);
-      if (driver && driver.rules) {
-        const reqList = VindoxAPI.rulesToArray(driver.rules);
-        localStorage.setItem('vindox_chef_required_proofs', JSON.stringify(reqList));
-        if (document.getElementById('proofModal')?.classList.contains('active')) {
-          updateChefMandateUI();
+      const driver = await VindoxAPI.fetchDriverById(DRIVER_ID, CHEF_COMPANY_ID || undefined);
+      if (driver) {
+        if (!CHEF_COMPANY_ID && (driver.companyId || driver.ownerId)) {
+          CHEF_COMPANY_ID = String(driver.companyId || driver.ownerId).trim();
+        }
+        if (driver.rules) {
+          const reqList = VindoxAPI.rulesToArray(driver.rules);
+          localStorage.setItem('vindox_chef_required_proofs', JSON.stringify(reqList));
+          if (document.getElementById('proofModal')?.classList.contains('active')) {
+            updateChefMandateUI();
+          }
         }
       }
     }
 
     async function syncTourFromSupabase() {
       if (!window.VindoxAPI || !DRIVER_ID) return;
-      const tours = await VindoxAPI.fetchTours();
-      const assignedTour = tours.find(t => t.driverId === DRIVER_ID && t.status === 'active');
+      const tours = await VindoxAPI.fetchTours(CHEF_COMPANY_ID || undefined);
+      const assignedTour = tours.find(
+        t => String(t.driverId || '').trim().toUpperCase() === DRIVER_ID.toUpperCase() && t.status === 'active'
+      );
       if (!assignedTour || !Array.isArray(assignedTour.stops) || assignedTour.stops.length === 0) return;
 
       if (!vindoxActiveTourId || (vindoxActiveTourId !== assignedTour.id && tourData.length === 0)) {
@@ -2405,10 +2385,12 @@
       await VindoxAPI.upsertTour({
         id: tourId,
         driverId: DRIVER_ID,
-        driverName: 'Fahrer ' + DRIVER_ID,
+        driverName: (activeDriverRecord && activeDriverRecord.name) ? activeDriverRecord.name : ('Fahrer ' + DRIVER_ID),
         title: 'Tour ' + DRIVER_ID,
         notes: '',
         status: tourData.every(s => s.status === 'completed') ? 'completed' : 'active',
+        companyId: CHEF_COMPANY_ID || undefined,
+        ownerId: CHEF_COMPANY_ID || undefined,
         stops: tourData.map((s, idx) => ({
           id: s.id,
           seq: idx + 1,
@@ -2436,6 +2418,8 @@
 
       await VindoxAPI.upsertDriverLive({
         driverId: DRIVER_ID,
+        companyId: CHEF_COMPANY_ID || undefined,
+        ownerId: CHEF_COMPANY_ID || undefined,
         lat: hasCoords ? parts[0] : null,
         lng: hasCoords ? parts[1] : null,
         gpsText: currentGPS,
@@ -2449,7 +2433,7 @@
 
     async function checkChefLiveMessageFromSupabase() {
       if (!window.VindoxAPI || !DRIVER_ID) return;
-      const live = await VindoxAPI.fetchDriverLiveById(DRIVER_ID);
+      const live = await VindoxAPI.fetchDriverLiveById(DRIVER_ID, CHEF_COMPANY_ID || undefined);
       const msg = (live && live.driver_message) ? String(live.driver_message).trim() : '';
       if (msg && msg !== lastSeenChefMessage) {
         lastSeenChefMessage = msg;
@@ -2466,7 +2450,9 @@
         id: 'PR-' + stop.id + '-' + Date.now(),
         tourId: vindoxActiveTourId,
         driverId: DRIVER_ID,
-        driverName: 'Fahrer ' + DRIVER_ID,
+        driverName: (activeDriverRecord && activeDriverRecord.name) ? activeDriverRecord.name : ('Fahrer ' + DRIVER_ID),
+        companyId: CHEF_COMPANY_ID || undefined,
+        ownerId: CHEF_COMPANY_ID || undefined,
         stopId: stop.id,
         stopSeq: activeIdx + 1,
         stopPositionLabel: `${activeIdx + 1} von ${tourData.length}`,
