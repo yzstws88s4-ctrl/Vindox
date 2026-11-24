@@ -14,11 +14,24 @@
     console.error('[VindoxAPI] Supabase JS SDK wurde nicht gefunden.');
   }
 
+  function formatErrorMessage(err, fallback = 'Unbekannter Datenbankfehler') {
+    if (!err) return fallback;
+    if (typeof err === 'string') return err;
+    const parts = [err.message, err.details, err.hint].filter(Boolean);
+    return parts.length > 0 ? parts.join(' — ') : fallback;
+  }
+
   async function resolveCompanyId(explicitId) {
-    if (explicitId) return explicitId;
+    if (explicitId) return String(explicitId).trim();
     if (!sb || !sb.auth) return null;
-    const { data } = await sb.auth.getUser();
-    return data?.user?.id || null;
+    try {
+      const { data, error } = await sb.auth.getUser();
+      if (!error && data?.user?.id) return data.user.id;
+      const { data: sessData } = await sb.auth.getSession();
+      return sessData?.session?.user?.id || null;
+    } catch (_e) {
+      return null;
+    }
   }
 
   function dataUrlToBlob(dataUrl) {
@@ -106,34 +119,127 @@
     return list;
   }
 
+  function mapDriverRow(row) {
+    if (!row) return null;
+    return {
+      id: row.id,
+      name: row.name || '',
+      vehicle: row.vehicle || '',
+      status: row.status || 'active',
+      username: row.username || '',
+      password_hash: row.password_hash || '',
+      passwordHash: row.password_hash || '',
+      active: row.active !== false,
+      rules: normalizeRules(row.rules),
+      requiredAppVersion: row.required_app_version || null,
+      companyId: row.company_id || null,
+      ownerId: row.owner_id || row.company_id || null
+    };
+  }
+
   window.VindoxAPI = {
     client: sb,
     bucket: STORAGE_BUCKET,
     normalizeRules,
     rulesToArray,
+    formatErrorMessage,
 
     // ------------------------------------------------------------------------
     // DRIVERS & PFLICHTREGELN
     // ------------------------------------------------------------------------
     async upsertDriver(driver) {
-      if (!sb || !driver?.id) throw new Error('Ungültige Fahrerdaten');
+      if (!sb) throw new Error('Supabase-Client nicht initialisiert');
+      const driverId = String(driver?.id || '').trim();
+      const driverName = String(driver?.name || '').trim();
+      if (!driverId || !driverName) {
+        throw new Error('Fahrer-ID und Name sind erforderlich');
+      }
+
       const cid = await resolveCompanyId(driver.companyId || driver.ownerId);
+      const statusVal = String(driver.status || 'active').trim();
+      const passwordVal = (driver.passwordHash !== undefined ? driver.passwordHash : driver.password_hash);
+      const cleanPassword = passwordVal === null || passwordVal === undefined
+        ? null
+        : String(passwordVal).trim() || null;
+
       const payload = {
-        id: String(driver.id).trim(),
-        name: String(driver.name || '').trim(),
+        id: driverId,
+        name: driverName,
         vehicle: String(driver.vehicle || '').trim(),
-        status: String(driver.status || 'active').trim(),
-        username: String(driver.username || '').trim(),
-        password_hash: driver.passwordHash || driver.password_hash || null,
-        active: driver.active !== false,
+        status: statusVal,
+        username: String(driver.username || driverId).trim(),
+        password_hash: cleanPassword,
+        active: driver.active !== false && statusVal !== 'offline',
         rules: normalizeRules(driver.rules),
-        required_app_version: driver.requiredAppVersion || driver.required_app_version || null,
-        company_id: cid,
-        owner_id: cid
+        required_app_version: driver.requiredAppVersion || driver.required_app_version || null
       };
-      const { data, error } = await sb.from('drivers').upsert(payload, { onConflict: 'id' }).select().single();
-      if (error) throw error;
-      return data;
+
+      if (cid) {
+        payload.company_id = cid;
+        payload.owner_id = cid;
+      }
+
+      const { data, error } = await sb
+        .from('drivers')
+        .upsert(payload, { onConflict: 'id' })
+        .select()
+        .single();
+
+      if (error) {
+        console.error('[VindoxAPI] upsertDriver error:', error);
+        throw new Error(formatErrorMessage(error, 'Fahrer konnte nicht in drivers gespeichert werden'));
+      }
+
+      // Initialen driver_live-Eintrag anlegen/aktualisieren, damit Fahrer sofort im Live-Status sichtbar ist
+      const livePayload = {
+        driver_id: driverId,
+        tour_status: statusVal === 'offline' ? 'offline' : 'ready',
+        updated_at: new Date().toISOString()
+      };
+      if (cid) {
+        livePayload.company_id = cid;
+        livePayload.owner_id = cid;
+      }
+
+      const { error: liveError } = await sb
+        .from('driver_live')
+        .upsert(livePayload, { onConflict: 'driver_id' });
+
+      if (liveError) {
+        console.warn('[VindoxAPI] driver_live Initial-Sync Warnung:', liveError.message);
+      }
+
+      return mapDriverRow(data);
+    },
+
+    async loginDriver(driverId, password) {
+      if (!sb) throw new Error('Supabase-Client nicht initialisiert');
+      const cleanId = String(driverId || '').trim();
+      const cleanPw = String(password || '').trim();
+      if (!cleanId || !cleanPw) {
+        throw new Error('Bitte Fahrer-ID und Passwort eingeben');
+      }
+
+      const { data, error } = await sb
+        .from('drivers')
+        .select('*')
+        .eq('id', cleanId)
+        .maybeSingle();
+
+      if (error) {
+        throw new Error(formatErrorMessage(error, 'Fahrer-Login fehlgeschlagen'));
+      }
+      if (!data) {
+        throw new Error('Fahrer-ID nicht gefunden');
+      }
+      if (data.active === false) {
+        throw new Error('Dieser Fahrerzugang ist deaktiviert');
+      }
+      if (!data.password_hash || String(data.password_hash).trim() !== cleanPw) {
+        throw new Error('Ungültiges Passwort');
+      }
+
+      return mapDriverRow(data);
     },
 
     async updateDriverRules(driverId, rules, explicitCompanyId) {
@@ -146,8 +252,10 @@
         .eq('id', String(driverId).trim());
       if (cid) query = query.eq('company_id', cid);
       const { data, error } = await query.select().single();
-      if (error) throw error;
-      return data;
+      if (error) {
+        throw new Error(formatErrorMessage(error, 'Pflichtnachweise konnten nicht gespeichert werden'));
+      }
+      return mapDriverRow(data);
     },
 
     async fetchDrivers(explicitCompanyId) {
@@ -158,19 +266,9 @@
       const { data, error } = await query;
       if (error) {
         console.error('[VindoxAPI] fetchDrivers error:', error);
-        throw error;
+        throw new Error(formatErrorMessage(error, 'Fahrer konnten nicht geladen werden'));
       }
-      return (data || []).map(row => ({
-        id: row.id,
-        name: row.name,
-        vehicle: row.vehicle || '',
-        status: row.status || 'active',
-        username: row.username || '',
-        active: row.active !== false,
-        rules: normalizeRules(row.rules),
-        requiredAppVersion: row.required_app_version || null,
-        companyId: row.company_id
-      }));
+      return (data || []).map(mapDriverRow);
     },
 
     async fetchDriverById(driverId) {
@@ -181,28 +279,24 @@
         .eq('id', String(driverId).trim())
         .maybeSingle();
       if (error || !data) return null;
-      return {
-        id: data.id,
-        name: data.name,
-        vehicle: data.vehicle || '',
-        status: data.status || 'active',
-        username: data.username || '',
-        active: data.active !== false,
-        rules: normalizeRules(data.rules),
-        requiredAppVersion: data.required_app_version || null,
-        companyId: data.company_id
-      };
+      return mapDriverRow(data);
     },
 
     async deleteDriver(driverId, explicitCompanyId) {
       if (!sb || !driverId) return;
       const cid = await resolveCompanyId(explicitCompanyId);
-      let query = sb.from('drivers').delete().eq('id', String(driverId).trim());
+      const cleanId = String(driverId).trim();
+
+      let liveQuery = sb.from('driver_live').delete().eq('driver_id', cleanId);
+      if (cid) liveQuery = liveQuery.eq('company_id', cid);
+      await liveQuery;
+
+      let query = sb.from('drivers').delete().eq('id', cleanId);
       if (cid) query = query.eq('company_id', cid);
       const { error } = await query;
       if (error) {
         console.error('[VindoxAPI] deleteDriver error:', error);
-        throw error;
+        throw new Error(formatErrorMessage(error, 'Fahrer konnte nicht gelöscht werden'));
       }
     },
 
@@ -221,12 +315,16 @@
         home_address: String(tour.homeAddress || tour.home_address || '').trim(),
         status: String(tour.status || 'active').trim(),
         stops: Array.isArray(tour.stops) ? tour.stops : [],
-        company_id: cid,
-        owner_id: cid,
         updated_at: new Date().toISOString()
       };
+      if (cid) {
+        payload.company_id = cid;
+        payload.owner_id = cid;
+      }
       const { data, error } = await sb.from('tours').upsert(payload, { onConflict: 'id' }).select().single();
-      if (error) throw error;
+      if (error) {
+        throw new Error(formatErrorMessage(error, 'Tour konnte nicht gespeichert werden'));
+      }
       return data;
     },
 
@@ -238,7 +336,7 @@
       const { data, error } = await query;
       if (error) {
         console.error('[VindoxAPI] fetchTours error:', error);
-        throw error;
+        throw new Error(formatErrorMessage(error, 'Touren konnten nicht geladen werden'));
       }
       return (data || []).map(row => ({
         id: row.id,
@@ -262,7 +360,7 @@
       const { error } = await query;
       if (error) {
         console.error('[VindoxAPI] deleteTour error:', error);
-        throw error;
+        throw new Error(formatErrorMessage(error, 'Tour konnte nicht gelöscht werden'));
       }
     },
 
@@ -285,10 +383,12 @@
         current_stop_title: String(liveData.currentStopTitle || '').trim(),
         current_stop_address: String(liveData.currentStopAddress || '').trim(),
         tour_status: String(liveData.tourStatus || 'driving').trim(),
-        company_id: cid,
-        owner_id: cid,
         updated_at: new Date().toISOString()
       };
+      if (cid) {
+        payload.company_id = cid;
+        payload.owner_id = cid;
+      }
       if (liveData.driverMessage !== undefined) {
         payload.driver_message = String(liveData.driverMessage || '').trim();
         payload.driver_message_at = new Date().toISOString();
@@ -300,17 +400,20 @@
     async sendDriverMessage(driverId, message, explicitCompanyId) {
       if (!sb || !driverId) throw new Error('Fahrer-ID fehlt');
       const cid = await resolveCompanyId(explicitCompanyId);
-      const { error } = await sb.from('driver_live').upsert({
+      const payload = {
         driver_id: String(driverId).trim(),
         driver_message: String(message || '').trim(),
         driver_message_at: new Date().toISOString(),
-        company_id: cid,
-        owner_id: cid,
         updated_at: new Date().toISOString()
-      }, { onConflict: 'driver_id' });
+      };
+      if (cid) {
+        payload.company_id = cid;
+        payload.owner_id = cid;
+      }
+      const { error } = await sb.from('driver_live').upsert(payload, { onConflict: 'driver_id' });
       if (error) {
         console.error('[VindoxAPI] sendDriverMessage error:', error);
-        throw error;
+        throw new Error(formatErrorMessage(error, 'Nachricht konnte nicht gesendet werden'));
       }
     },
 
@@ -326,7 +429,7 @@
       const { data, error } = await query;
       if (error) {
         console.error('[VindoxAPI] fetchDriverLive error:', error);
-        throw error;
+        throw new Error(formatErrorMessage(error, 'Live-Daten konnten nicht geladen werden'));
       }
       return data || [];
     },
@@ -397,10 +500,13 @@
         signature_status: String(proof.signatureStatus || (uploadedSignature ? 'Kundenunterschrift erfasst' : 'Nicht hinterlegt')).trim(),
         audit_hash: String(proof.auditHash || '').trim(),
         media: uploadedMedia,
-        signature: uploadedSignature,
-        company_id: cid,
-        owner_id: cid
+        signature: uploadedSignature
       };
+
+      if (cid) {
+        row.company_id = cid;
+        row.owner_id = cid;
+      }
 
       return await sb.from('proofs').upsert(row, { onConflict: 'id' }).select().single();
     },
@@ -413,7 +519,7 @@
       const { data, error } = await query;
       if (error) {
         console.error('[VindoxAPI] fetchProofs error:', error);
-        throw error;
+        throw new Error(formatErrorMessage(error, 'Nachweise konnten nicht geladen werden'));
       }
       return (data || []).map(row => ({
         id: row.id,
@@ -449,13 +555,18 @@
         customer: String(inv.customer || inv.customerName || inv.customer_name || 'Kunde').trim(),
         amount: amountVal,
         status: String(inv.status || 'open').trim(),
-        due_date: inv.dueDate || inv.due_date || '',
-        company_id: cid,
-        owner_id: cid
+        due_date: inv.dueDate || inv.due_date || ''
       };
 
+      if (cid) {
+        row.company_id = cid;
+        row.owner_id = cid;
+      }
+
       const { data, error } = await sb.from('invoices').upsert(row, { onConflict: 'id' }).select().single();
-      if (error) throw error;
+      if (error) {
+        throw new Error(formatErrorMessage(error, 'Rechnung konnte nicht gespeichert werden'));
+      }
       return data;
     },
 
@@ -467,7 +578,7 @@
       const { data, error } = await query;
       if (error) {
         console.error('[VindoxAPI] fetchInvoices error:', error);
-        throw error;
+        throw new Error(formatErrorMessage(error, 'Rechnungen konnten nicht geladen werden'));
       }
       return (data || []).map(row => ({
         id: row.id,
@@ -488,7 +599,7 @@
       const { error } = await query;
       if (error) {
         console.error('[VindoxAPI] deleteInvoice error:', error);
-        throw error;
+        throw new Error(formatErrorMessage(error, 'Rechnung konnte nicht gelöscht werden'));
       }
     },
 
@@ -506,7 +617,7 @@
         .maybeSingle();
       if (error) {
         console.error('[VindoxAPI] fetchCompanySettings error:', error);
-        throw error;
+        throw new Error(formatErrorMessage(error, 'Firmendaten konnten nicht geladen werden'));
       }
       if (!data) return null;
       return {
@@ -525,8 +636,6 @@
       if (!sb) throw new Error('Kein Supabase Client');
       const cid = await resolveCompanyId(settings.companyId || settings.ownerId);
       const row = {
-        company_id: cid,
-        owner_id: cid,
         name: String(settings.name ?? settings.companyName ?? 'Vindox Logistik').trim(),
         owner: String(settings.owner ?? '').trim(),
         street: String(settings.street ?? '').trim(),
@@ -536,12 +645,18 @@
         tax_id: String(settings.taxId ?? settings.tax_id ?? '').trim(),
         updated_at: new Date().toISOString()
       };
+      if (cid) {
+        row.company_id = cid;
+        row.owner_id = cid;
+      }
       const { data, error } = await sb
         .from('company_settings')
         .upsert(row, { onConflict: 'company_id' })
         .select()
         .single();
-      if (error) throw error;
+      if (error) {
+        throw new Error(formatErrorMessage(error, 'Firmendaten konnten nicht gespeichert werden'));
+      }
       return data;
     },
 
