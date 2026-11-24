@@ -2215,7 +2215,7 @@
         document.getElementById('btnCancelDriverModal').addEventListener('click', () => document.getElementById('addDriverModal').classList.remove('open'));
 
         document.getElementById('btnConfirmAddDriver').addEventListener('click', async () => {
-          const id = document.getElementById('newDriverIdInput').value.trim();
+          const id = document.getElementById('newDriverIdInput').value.trim().toUpperCase();
           const name = document.getElementById('newDriverNameInput').value.trim();
           const passwordHash = document.getElementById('newDriverPasswordInput').value.trim();
           const vehicle = document.getElementById('newDriverVehicleInput').value.trim();
@@ -2224,6 +2224,11 @@
 
           if (!id || !name) {
             showToast('Bitte Fahrer-ID und Name ausfüllen', 'warning');
+            return;
+          }
+
+          if (!state.editingDriverId && !passwordHash) {
+            showToast('Bitte ein Login-Passwort für den Fahrer festlegen', 'warning');
             return;
           }
 
@@ -2247,7 +2252,7 @@
             await loadAllData(true);
           } catch (err) {
             console.error(err);
-            showToast('Fahrer konnte nicht gespeichert werden', 'danger');
+            showToast(err?.message || 'Fahrer konnte nicht gespeichert werden', 'danger');
           }
         });
 
