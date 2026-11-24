@@ -2,8 +2,8 @@
 // VINDOX API LAYER (SUPABASE CLIENT, STORAGE, REALTIME & DATA MAPPING)
 // ============================================================================
 (function () {
-  const SUPABASE_URL = 'https://cvfbkxzhpxopbkaymvvf.supabase.co';
-  const SUPABASE_ANON_KEY = 'sb_publishable_EK07XF7umKLsdfbRK9p6gQ_0-5AkSjb';
+  const SUPABASE_URL = 'https://ejtfhdxoijgzxvkfvuas.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_18oqjMPQ1bmi6IHrLbYjEQ_f75bdVc2';
   const STORAGE_BUCKET = 'vindox-proofs';
 
   const sb = (window.supabase && typeof window.supabase.createClient === 'function')
