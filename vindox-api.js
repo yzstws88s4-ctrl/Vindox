@@ -21,6 +21,10 @@
     return parts.length > 0 ? parts.join(' — ') : fallback;
   }
 
+  function escapeFilterValue(val) {
+    return String(val || '').replace(/[%_,()]/g, '').trim();
+  }
+
   async function resolveCompanyId(explicitId) {
     if (explicitId) return String(explicitId).trim();
     if (!sb || !sb.auth) return null;
@@ -219,47 +223,51 @@
         throw new Error('Bitte Fahrer-ID und Passwort eingeben');
       }
 
-      let { data, error } = await sb
+      const safeFilterVal = escapeFilterValue(cleanLogin);
+      const needle = cleanLogin.toLowerCase();
+
+      // 1. Direkte Suche über id und username (case-insensitiv)
+      let { data: rows, error } = await sb
         .from('drivers')
         .select('*')
-        .eq('id', cleanLogin)
-        .maybeSingle();
+        .or(`id.ilike.${safeFilterVal},username.ilike.${safeFilterVal}`)
+        .limit(10);
 
-      if (!data && !error) {
-        const byUsername = await sb
+      // 2. Fallback: Alle sichtbaren Fahrer laden und clientseitig abgleichen
+      // (hilft, falls ein Feld Sonderzeichen enthält oder .or() eingeschränkt ist)
+      if ((!rows || rows.length === 0) && !error) {
+        const fallback = await sb
           .from('drivers')
           .select('*')
-          .ilike('username', cleanLogin)
-          .limit(1);
-        error = byUsername.error;
-        data = Array.isArray(byUsername.data) && byUsername.data.length > 0 ? byUsername.data[0] : null;
-      }
-
-      if (!data && !error) {
-        const byIdIlike = await sb
-          .from('drivers')
-          .select('*')
-          .ilike('id', cleanLogin)
-          .limit(1);
-        error = byIdIlike.error;
-        data = Array.isArray(byIdIlike.data) && byIdIlike.data.length > 0 ? byIdIlike.data[0] : null;
+          .limit(200);
+        error = fallback.error;
+        rows = Array.isArray(fallback.data) ? fallback.data : [];
       }
 
       if (error) {
+        console.error('[VindoxAPI] loginDriver query error:', error);
         throw new Error(formatErrorMessage(error, 'Fahrer-Login fehlgeschlagen'));
       }
-      if (!data) {
+
+      const list = Array.isArray(rows) ? rows : [];
+      const match =
+        list.find(r => String(r.id || '').trim().toLowerCase() === needle) ||
+        list.find(r => String(r.username || '').trim().toLowerCase() === needle) ||
+        null;
+
+      if (!match) {
         throw new Error('Fahrer-ID nicht gefunden');
       }
-      if (data.active === false) {
+      if (match.active === false) {
         throw new Error('Dieser Fahrerzugang ist deaktiviert');
       }
-      const storedPw = String(data.password_hash ?? '').trim();
+
+      const storedPw = String(match.password_hash ?? '').trim();
       if (!storedPw || storedPw !== cleanPw) {
         throw new Error('Ungültiges Passwort');
       }
 
-      return mapDriverRow(data);
+      return mapDriverRow(match);
     },
 
     async updateDriverRules(driverId, rules, explicitCompanyId) {
