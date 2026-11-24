@@ -38,6 +38,17 @@
     }
   }
 
+  function attachOwnerIds(payload, explicitId) {
+    if (!explicitId) return payload;
+    const cleanId = String(explicitId).trim();
+    if (!cleanId) return payload;
+    return {
+      ...payload,
+      company_id: cleanId,
+      owner_id: cleanId
+    };
+  }
+
   function dataUrlToBlob(dataUrl) {
     if (!dataUrl || typeof dataUrl !== 'string' || !dataUrl.startsWith('data:')) {
       return null;
@@ -136,7 +147,7 @@
       active: row.active !== false,
       rules: normalizeRules(row.rules),
       requiredAppVersion: row.required_app_version || null,
-      companyId: row.company_id || null,
+      companyId: row.company_id || row.owner_id || null,
       ownerId: row.owner_id || row.company_id || null
     };
   }
@@ -147,6 +158,7 @@
     normalizeRules,
     rulesToArray,
     formatErrorMessage,
+    resolveCompanyId,
 
     // ------------------------------------------------------------------------
     // DRIVERS & PFLICHTREGELN
@@ -166,7 +178,7 @@
         ? null
         : String(passwordVal).trim() || null;
 
-      const payload = {
+      let payload = {
         id: driverId,
         name: driverName,
         vehicle: String(driver.vehicle || '').trim(),
@@ -177,11 +189,7 @@
         rules: normalizeRules(driver.rules),
         required_app_version: driver.requiredAppVersion || driver.required_app_version || null
       };
-
-      if (cid) {
-        payload.company_id = cid;
-        payload.owner_id = cid;
-      }
+      payload = attachOwnerIds(payload, cid);
 
       const { data, error } = await sb
         .from('drivers')
@@ -194,15 +202,12 @@
         throw new Error(formatErrorMessage(error, 'Fahrer konnte nicht in drivers gespeichert werden'));
       }
 
-      const livePayload = {
+      let livePayload = {
         driver_id: driverId,
         tour_status: statusVal === 'offline' ? 'offline' : 'ready',
         updated_at: new Date().toISOString()
       };
-      if (cid) {
-        livePayload.company_id = cid;
-        livePayload.owner_id = cid;
-      }
+      livePayload = attachOwnerIds(livePayload, cid);
 
       const { error: liveError } = await sb
         .from('driver_live')
@@ -226,15 +231,12 @@
       const safeFilterVal = escapeFilterValue(cleanLogin);
       const needle = cleanLogin.toLowerCase();
 
-      // 1. Direkte Suche über id und username (case-insensitiv)
       let { data: rows, error } = await sb
         .from('drivers')
         .select('*')
         .or(`id.ilike.${safeFilterVal},username.ilike.${safeFilterVal}`)
         .limit(10);
 
-      // 2. Fallback: Alle sichtbaren Fahrer laden und clientseitig abgleichen
-      // (hilft, falls ein Feld Sonderzeichen enthält oder .or() eingeschränkt ist)
       if ((!rows || rows.length === 0) && !error) {
         const fallback = await sb
           .from('drivers')
@@ -335,8 +337,8 @@
     // ------------------------------------------------------------------------
     async upsertTour(tour) {
       if (!sb || !tour?.id) throw new Error('Ungültige Tourdaten');
-      const cid = await resolveCompanyId(tour.companyId || tour.ownerId);
-      const payload = {
+      const cid = await resolveCompanyId(tour.companyId || tour.ownerId || tour.company_id || tour.owner_id);
+      let payload = {
         id: String(tour.id).trim(),
         driver_id: String(tour.driverId || tour.driver_id || '').trim(),
         driver_name: String(tour.driverName || tour.driver_name || '').trim(),
@@ -347,12 +349,11 @@
         stops: Array.isArray(tour.stops) ? tour.stops : [],
         updated_at: new Date().toISOString()
       };
-      if (cid) {
-        payload.company_id = cid;
-        payload.owner_id = cid;
-      }
+      payload = attachOwnerIds(payload, cid);
+
       const { data, error } = await sb.from('tours').upsert(payload, { onConflict: 'id' }).select().single();
       if (error) {
+        console.error('[VindoxAPI] upsertTour error:', error);
         throw new Error(formatErrorMessage(error, 'Tour konnte nicht gespeichert werden'));
       }
       return data;
@@ -378,7 +379,7 @@
         status: row.status || 'active',
         stops: Array.isArray(row.stops) ? row.stops : [],
         updatedAt: row.updated_at,
-        companyId: row.company_id
+        companyId: row.company_id || row.owner_id || null
       }));
     },
 
@@ -399,8 +400,8 @@
     // ------------------------------------------------------------------------
     async upsertDriverLive(liveData) {
       if (!sb || !liveData?.driverId) return;
-      const cid = await resolveCompanyId(liveData.companyId || liveData.ownerId);
-      const payload = {
+      const cid = await resolveCompanyId(liveData.companyId || liveData.ownerId || liveData.company_id || liveData.owner_id);
+      let payload = {
         driver_id: String(liveData.driverId).trim(),
         lat: typeof liveData.lat === 'number' && !Number.isNaN(liveData.lat) ? liveData.lat : null,
         lng: typeof liveData.lng === 'number' && !Number.isNaN(liveData.lng) ? liveData.lng : null,
@@ -415,10 +416,8 @@
         tour_status: String(liveData.tourStatus || 'driving').trim(),
         updated_at: new Date().toISOString()
       };
-      if (cid) {
-        payload.company_id = cid;
-        payload.owner_id = cid;
-      }
+      payload = attachOwnerIds(payload, cid);
+
       if (liveData.driverMessage !== undefined) {
         payload.driver_message = String(liveData.driverMessage || '').trim();
         payload.driver_message_at = new Date().toISOString();
@@ -430,16 +429,14 @@
     async sendDriverMessage(driverId, message, explicitCompanyId) {
       if (!sb || !driverId) throw new Error('Fahrer-ID fehlt');
       const cid = await resolveCompanyId(explicitCompanyId);
-      const payload = {
+      let payload = {
         driver_id: String(driverId).trim(),
         driver_message: String(message || '').trim(),
         driver_message_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       };
-      if (cid) {
-        payload.company_id = cid;
-        payload.owner_id = cid;
-      }
+      payload = attachOwnerIds(payload, cid);
+
       const { error } = await sb.from('driver_live').upsert(payload, { onConflict: 'driver_id' });
       if (error) {
         console.error('[VindoxAPI] sendDriverMessage error:', error);
@@ -489,7 +486,7 @@
         return { data: null, error: new Error('Unvollständiger Nachweis') };
       }
 
-      const cid = await resolveCompanyId(proof.companyId || proof.ownerId);
+      const cid = await resolveCompanyId(proof.companyId || proof.ownerId || proof.company_id || proof.owner_id);
       const proofId = proof.id || ('PR-' + Date.now() + '-' + Math.floor(Math.random() * 1000));
       const folder = `${proof.driverId}/${proofId}`;
 
@@ -512,7 +509,7 @@
         ? await uploadAssetIfDataUrl(proof.signature, folder, 'signature')
         : null;
 
-      const row = {
+      let row = {
         id: proofId,
         tour_id: proof.tourId || null,
         driver_id: String(proof.driverId).trim(),
@@ -534,11 +531,7 @@
         media: uploadedMedia,
         signature: uploadedSignature
       };
-
-      if (cid) {
-        row.company_id = cid;
-        row.owner_id = cid;
-      }
+      row = attachOwnerIds(row, cid);
 
       return await sb.from('proofs').upsert(row, { onConflict: 'id' }).select().single();
     },
@@ -566,7 +559,7 @@
         media: Array.isArray(row.media) ? row.media : [],
         signature: row.signature || null,
         signatureStatus: row.signature_status || '',
-        companyId: row.company_id
+        companyId: row.company_id || row.owner_id || null
       }));
     },
 
@@ -581,7 +574,7 @@
       const invNumber = String(inv.invoiceNumber || inv.invoice_number || inv.id).trim();
       const amountVal = Number(inv.amount ?? inv.grossAmount ?? inv.gross_amount ?? inv.netAmount ?? 0);
 
-      const row = {
+      let row = {
         id: String(inv.id || invNumber).trim(),
         invoice_number: invNumber,
         customer: String(inv.customer || inv.customerName || inv.customer_name || 'Kunde').trim(),
@@ -589,11 +582,7 @@
         status: String(inv.status || 'open').trim(),
         due_date: inv.dueDate || inv.due_date || ''
       };
-
-      if (cid) {
-        row.company_id = cid;
-        row.owner_id = cid;
-      }
+      row = attachOwnerIds(row, cid);
 
       const { data, error } = await sb.from('invoices').upsert(row, { onConflict: 'id' }).select().single();
       if (error) {
@@ -619,7 +608,7 @@
         amount: Number(row.amount ?? row.gross_amount ?? 0),
         status: row.status || 'open',
         dueDate: row.due_date || '',
-        companyId: row.company_id
+        companyId: row.company_id || row.owner_id || null
       }));
     },
 
@@ -660,14 +649,14 @@
         phone: data.phone || '',
         email: data.email || '',
         taxId: data.tax_id || '',
-        companyId: data.company_id
+        companyId: data.company_id || data.owner_id || null
       };
     },
 
     async saveCompanySettings(settings) {
       if (!sb) throw new Error('Kein Supabase Client');
       const cid = await resolveCompanyId(settings.companyId || settings.ownerId);
-      const row = {
+      let row = {
         name: String(settings.name ?? settings.companyName ?? 'Vindox Logistik').trim(),
         owner: String(settings.owner ?? '').trim(),
         street: String(settings.street ?? '').trim(),
@@ -677,10 +666,8 @@
         tax_id: String(settings.taxId ?? settings.tax_id ?? '').trim(),
         updated_at: new Date().toISOString()
       };
-      if (cid) {
-        row.company_id = cid;
-        row.owner_id = cid;
-      }
+      row = attachOwnerIds(row, cid);
+
       const { data, error } = await sb
         .from('company_settings')
         .upsert(row, { onConflict: 'company_id' })
