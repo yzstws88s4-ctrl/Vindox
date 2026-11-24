@@ -54,10 +54,64 @@
       font-family: 'JetBrains Mono', monospace;
     }
 
-    .app-shell {
-      display: flex;
+    /* Login Gate */
+    .login-gate {
       min-height: 100vh;
       width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.14), transparent 45%),
+        radial-gradient(circle at 80% 75%, rgba(16, 185, 129, 0.08), transparent 45%),
+        var(--bg-canvas);
+    }
+
+    .login-gate.hidden {
+      display: none;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 410px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg);
+      padding: 26px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65);
+    }
+
+    .login-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .login-error {
+      display: none;
+      margin-bottom: 12px;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      background: var(--danger-soft);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      color: #fca5a5;
+      font-size: 12.5px;
+    }
+
+    .login-error.visible {
+      display: block;
+    }
+
+    .app-shell {
+      display: none;
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    .app-shell.authenticated {
+      display: flex;
     }
 
     /* Sidebar */
@@ -179,6 +233,16 @@
       gap: 10px;
     }
 
+    .chef-session-box {
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-canvas);
+      border: 1px solid var(--border);
+      font-size: 11.5px;
+      color: var(--text-secondary);
+      word-break: break-all;
+    }
+
     .sync-pill {
       display: flex;
       align-items: center;
@@ -294,9 +358,14 @@
       white-space: nowrap;
     }
 
-    .btn:hover {
+    .btn:hover:not(:disabled) {
       background: var(--bg-hover);
       border-color: rgba(255, 255, 255, 0.24);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
 
     .btn-primary {
@@ -306,15 +375,9 @@
       font-weight: 600;
     }
 
-    .btn-primary:hover {
+    .btn-primary:hover:not(:disabled) {
       background: var(--accent-hover);
       border-color: var(--accent-hover);
-    }
-
-    .btn-success {
-      background: var(--success-soft);
-      border-color: rgba(16, 185, 129, 0.35);
-      color: #6ee7b7;
     }
 
     .btn-danger {
@@ -750,7 +813,39 @@
   <script src="vindox-api.js"></script>
 </head>
 <body>
-  <div class="app-shell">
+  <!-- CHEF LOGIN MASKE -->
+  <div class="login-gate" id="loginGate">
+    <div class="login-card">
+      <div class="login-header">
+        <div class="brand-mark">V</div>
+        <div>
+          <div class="brand-title" style="font-size: 17px;">Vindox Chef-Login</div>
+          <div class="brand-sub">Zugang mit deinem Supabase-Chefkonto</div>
+        </div>
+      </div>
+
+      <div class="login-error" id="loginErrorBox"></div>
+
+      <form id="chefLoginForm">
+        <div class="form-group">
+          <label class="form-label" for="loginEmailInput">E-Mail (Benutzername)</label>
+          <input type="email" class="input" id="loginEmailInput" placeholder="chef@firma.de" autocomplete="email" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="loginPasswordInput">Passwort</label>
+          <input type="password" class="input" id="loginPasswordInput" placeholder="••••••••" autocomplete="current-password" required />
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="btnChefLoginSubmit" style="width: 100%; margin-top: 6px;">
+          Einloggen
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- COMMAND CENTER -->
+  <div class="app-shell" id="appShell">
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
       <div>
@@ -813,11 +908,15 @@
       </div>
 
       <div class="sidebar-footer">
+        <div class="chef-session-box" id="chefSessionInfo">Nicht eingeloggt</div>
         <div class="sync-pill" id="syncStatusPill">
           <span class="pulse-dot"></span>
           <span id="syncStatusText">Supabase Live-Sync aktiv</span>
         </div>
-        <button class="btn btn-sm" id="btnManualRefresh">Daten aktualisieren</button>
+        <div style="display:flex; gap:8px;">
+          <button class="btn btn-sm" id="btnManualRefresh" style="flex:1;">Aktualisieren</button>
+          <button class="btn btn-danger btn-sm" id="btnChefLogout">Logout</button>
+        </div>
       </div>
     </aside>
 
@@ -1228,6 +1327,8 @@
       ];
 
       const state = {
+        user: null,
+        companyId: null,
         activeTab: 'overview',
         drivers: [],
         tours: [],
@@ -1244,8 +1345,15 @@
           taxId: ''
         },
         selectedDriverId: 'F-8921',
-        editingTourId: null
+        editingTourId: null,
+        realtimeUnsubscribe: null
       };
+
+      function getSupabaseClient() {
+        if (window.VindoxAPI && window.VindoxAPI.client) return window.VindoxAPI.client;
+        if (window.supabaseClient) return window.supabaseClient;
+        return null;
+      }
 
       function showToast(message, type = 'info') {
         const container = document.getElementById('toastContainer');
@@ -1278,6 +1386,99 @@
         const label = document.getElementById('syncStatusText');
         pill.classList.toggle('offline', !ok);
         label.textContent = text;
+      }
+
+      function setLoginError(msg) {
+        const box = document.getElementById('loginErrorBox');
+        if (!msg) {
+          box.textContent = '';
+          box.classList.remove('visible');
+          return;
+        }
+        box.textContent = msg;
+        box.classList.add('visible');
+      }
+
+      function applyAuthView(user) {
+        const gate = document.getElementById('loginGate');
+        const shell = document.getElementById('appShell');
+        const sessionInfo = document.getElementById('chefSessionInfo');
+
+        if (user) {
+          state.user = user;
+          state.companyId = user.id;
+          gate.classList.add('hidden');
+          shell.classList.add('authenticated');
+          sessionInfo.innerHTML = `Chef: <strong>${escapeHtml(user.email || user.id)}</strong><br><span class="mono" style="font-size:10.5px; color:var(--text-muted);">ID: ${escapeHtml(user.id)}</span>`;
+        } else {
+          state.user = null;
+          state.companyId = null;
+          gate.classList.remove('hidden');
+          shell.classList.remove('authenticated');
+          sessionInfo.textContent = 'Nicht eingeloggt';
+        }
+      }
+
+      async function handleChefLogin(e) {
+        e.preventDefault();
+        setLoginError('');
+
+        const sb = getSupabaseClient();
+        if (!sb || !sb.auth) {
+          setLoginError('Supabase-Client nicht initialisiert. Prüfe vindox-api.js.');
+          return;
+        }
+
+        const email = document.getElementById('loginEmailInput').value.trim();
+        const password = document.getElementById('loginPasswordInput').value;
+        const submitBtn = document.getElementById('btnChefLoginSubmit');
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Logge ein...';
+
+        try {
+          const { data, error } = await sb.auth.signInWithPassword({ email, password });
+          if (error) {
+            setLoginError(error.message || 'Login fehlgeschlagen. Bitte E-Mail und Passwort prüfen.');
+            return;
+          }
+          if (data && data.user) {
+            applyAuthView(data.user);
+            await loadAllData(true);
+            setupRealtime();
+            showToast('Erfolgreich eingeloggt', 'success');
+          }
+        } catch (err) {
+          console.error(err);
+          setLoginError('Verbindungsfehler beim Login.');
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Einloggen';
+        }
+      }
+
+      async function handleChefLogout() {
+        const sb = getSupabaseClient();
+        if (sb && sb.auth) {
+          await sb.auth.signOut();
+        }
+        if (typeof state.realtimeUnsubscribe === 'function') {
+          state.realtimeUnsubscribe();
+          state.realtimeUnsubscribe = null;
+        }
+        applyAuthView(null);
+      }
+
+      function setupRealtime() {
+        if (typeof state.realtimeUnsubscribe === 'function') {
+          state.realtimeUnsubscribe();
+          state.realtimeUnsubscribe = null;
+        }
+        if (window.VindoxAPI && typeof window.VindoxAPI.subscribeAll === 'function') {
+          state.realtimeUnsubscribe = window.VindoxAPI.subscribeAll(() => {
+            if (state.user) loadAllData(true);
+          });
+        }
       }
 
       function getRulesArray(driver) {
@@ -1317,23 +1518,22 @@
         document.getElementById('sidebar').classList.remove('open');
       }
 
-      // =====================================================================
-      // SUPABASE LADEN & SYNCHRONISIEREN
-      // =====================================================================
       async function loadAllData(silent = false) {
+        if (!state.user) return;
         if (!window.VindoxAPI) {
           setSyncPill(false, 'VindoxAPI nicht geladen');
           return;
         }
 
         try {
+          const cid = state.companyId;
           const [drivers, tours, liveRows, proofs, invoices, company] = await Promise.all([
-            window.VindoxAPI.fetchDrivers(),
-            window.VindoxAPI.fetchTours(),
-            window.VindoxAPI.fetchDriverLive(),
-            window.VindoxAPI.fetchProofs(),
-            window.VindoxAPI.fetchInvoices(),
-            window.VindoxAPI.fetchCompanySettings()
+            window.VindoxAPI.fetchDrivers(cid),
+            window.VindoxAPI.fetchTours(cid),
+            window.VindoxAPI.fetchDriverLive(cid),
+            window.VindoxAPI.fetchProofs(cid),
+            window.VindoxAPI.fetchInvoices(cid),
+            window.VindoxAPI.fetchCompanySettings(cid)
           ]);
 
           state.drivers = Array.isArray(drivers) ? drivers : [];
@@ -1354,14 +1554,11 @@
           if (!silent) showToast('Daten mit Supabase synchronisiert', 'success');
         } catch (err) {
           console.error('Fehler beim Laden:', err);
-          setSyncPill(false, 'Sync-Fehler (erneuter Versuch)');
+          setSyncPill(false, 'Sync-Fehler');
           if (!silent) showToast('Fehler beim Laden der Daten', 'danger');
         }
       }
 
-      // =====================================================================
-      // RENDER FUNKTIONEN
-      // =====================================================================
       function renderAll() {
         renderCountsAndKpis();
         renderDriverSelectors();
@@ -1404,7 +1601,7 @@
 
         const optionsHtml = state.drivers.length > 0
           ? state.drivers.map((d) => `<option value="${escapeHtml(d.id)}">${escapeHtml(d.id)} – ${escapeHtml(d.name || 'Fahrer')}</option>`).join('')
-          : `<option value="F-8921">F-8921 – Fahrer</option>`;
+          : `<option value="">Kein Fahrer angelegt</option>`;
 
         selects.forEach((sel) => {
           if (!sel) return;
@@ -1426,7 +1623,7 @@
           const checked = activeRules.includes(r.key);
           return `
             <label class="rule-chip ${checked ? 'active' : ''}">
-              <input type="checkbox" data-rule-key="${r.key}" ${checked ? 'checked' : ''} />
+              <input type="checkbox" data-rule-key="${r.key}" ${checked ? 'checked' : ''} ${!driver ? 'disabled' : ''} />
               <span>${escapeHtml(r.label)}</span>
             </label>
           `;
@@ -1434,12 +1631,10 @@
 
         chipsContainer.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
           cb.addEventListener('change', async () => {
-            const targetId = document.getElementById('overviewDriverSelect').value;
-            const currentDriver = state.drivers.find((d) => d.id === targetId);
-            if (!currentDriver) return;
+            if (!driver) return;
             const nextRules = Array.from(chipsContainer.querySelectorAll('input[type="checkbox"]:checked'))
               .map((el) => el.dataset.ruleKey);
-            await saveDriverRules(currentDriver.id, nextRules);
+            await saveDriverRules(driver.id, nextRules);
           });
         });
 
@@ -1475,7 +1670,7 @@
         };
 
         try {
-          await window.VindoxAPI.updateDriverRules(driverId, rulesObj);
+          await window.VindoxAPI.updateDriverRules(driverId, rulesObj, state.companyId);
           const drv = state.drivers.find((d) => d.id === driverId);
           if (drv) drv.rules = rulesObj;
           renderOverviewSection();
@@ -1540,7 +1735,7 @@
             const dId = btn.dataset.driverId;
             if (!confirm(`Fahrer ${dId} wirklich löschen?`)) return;
             try {
-              await window.VindoxAPI.deleteDriver(dId);
+              await window.VindoxAPI.deleteDriver(dId, state.companyId);
               state.drivers = state.drivers.filter((d) => d.id !== dId);
               renderAll();
               showToast(`Fahrer ${dId} gelöscht`, 'success');
@@ -1552,9 +1747,6 @@
         });
       }
 
-      // =====================================================================
-      // TOUREN-BUILDER & TOUREN-LISTE
-      // =====================================================================
       function addStopBuilderRow(stop = {}) {
         const container = document.getElementById('tourStopsBuilderList');
         const index = container.children.length + 1;
@@ -1595,7 +1787,7 @@
         state.editingTourId = tour.id;
         document.getElementById('tourBuilderTitle').textContent = `Tour bearbeiten (${tour.id})`;
         document.getElementById('tourIdInput').value = tour.id;
-        document.getElementById('tourDriverSelect').value = tour.driverId || 'F-8921';
+        document.getElementById('tourDriverSelect').value = tour.driverId || '';
         document.getElementById('tourTitleInput').value = tour.title || '';
         document.getElementById('tourStatusSelect').value = tour.status || 'active';
         document.getElementById('tourNotesInput').value = tour.notes || '';
@@ -1610,13 +1802,17 @@
       async function saveTourFromForm() {
         if (!window.VindoxAPI) return;
         const tourId = (document.getElementById('tourIdInput').value || '').trim();
-        const driverId = document.getElementById('tourDriverSelect').value || 'F-8921';
+        const driverId = document.getElementById('tourDriverSelect').value;
         const title = (document.getElementById('tourTitleInput').value || '').trim() || `Tour ${tourId}`;
         const status = document.getElementById('tourStatusSelect').value || 'active';
         const notes = (document.getElementById('tourNotesInput').value || '').trim();
 
         if (!tourId) {
           showToast('Bitte eine Tour-ID angeben', 'warning');
+          return;
+        }
+        if (!driverId) {
+          showToast('Bitte zuerst einen Fahrer anlegen und zuweisen', 'warning');
           return;
         }
 
@@ -1654,7 +1850,9 @@
             title,
             status,
             notes,
-            stops
+            stops,
+            companyId: state.companyId,
+            ownerId: state.companyId
           });
           showToast(`Tour ${tourId} gespeichert`, 'success');
           resetTourForm();
@@ -1721,7 +1919,7 @@
             const tId = btn.dataset.tourId;
             if (!confirm(`Tour ${tId} wirklich löschen?`)) return;
             try {
-              await window.VindoxAPI.deleteTour(tId);
+              await window.VindoxAPI.deleteTour(tId, state.companyId);
               showToast(`Tour ${tId} gelöscht`, 'success');
               await loadAllData(true);
             } catch (err) {
@@ -1732,13 +1930,10 @@
         });
       }
 
-      // =====================================================================
-      // LIVE-KARTE & DIREKTNACHRICHT
-      // =====================================================================
       function renderLiveSection() {
         const stage = document.getElementById('liveMapStage');
         const msgSelect = document.getElementById('messageDriverSelect');
-        const targetDriverId = msgSelect.value || state.selectedDriverId || 'F-8921';
+        const targetDriverId = msgSelect.value || state.selectedDriverId || '';
 
         if (state.driverLive.length === 0) {
           stage.innerHTML = `<div style="position:absolute; inset:0; display:grid; place-items:center; color:var(--text-muted); padding:20px; text-align:center;">Noch keine Live-GPS-Daten empfangen.</div>`;
@@ -1766,7 +1961,7 @@
         const liveRow = state.driverLive.find((r) => r.driver_id === targetDriverId);
         const detailCard = document.getElementById('selectedDriverLiveCard');
         if (!liveRow) {
-          detailCard.innerHTML = `<div class="empty-state" style="padding:14px;">Keine Live-Daten für ${escapeHtml(targetDriverId)}.</div>`;
+          detailCard.innerHTML = `<div class="empty-state" style="padding:14px;">Keine Live-Daten für ${escapeHtml(targetDriverId || 'ausgewählten Fahrer')}.</div>`;
         } else {
           detailCard.innerHTML = `
             <div style="border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px; background:var(--bg-canvas); font-size:12.5px;">
@@ -1779,9 +1974,6 @@
         }
       }
 
-      // =====================================================================
-      // NACHWEISE ARCHIV
-      // =====================================================================
       function openMediaPreview(title, htmlContent) {
         document.getElementById('mediaPreviewTitle').textContent = title;
         document.getElementById('mediaPreviewBody').innerHTML = htmlContent;
@@ -1811,7 +2003,7 @@
           return `
             <div style="border:1px solid var(--border); border-radius:var(--radius-md); padding:14px; background:var(--bg-canvas);">
               <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
-                <span class="badge badge-info mono">${escapeHtml(p.driverId || 'F-8921')}</span>
+                <span class="badge badge-info mono">${escapeHtml(p.driverId || '-')}</span>
                 <span style="font-size:11px; color:var(--text-muted);">${escapeHtml(p.timestampLabel || '')}</span>
               </div>
               <div style="font-weight:700; font-size:14px; margin-top:8px;">${escapeHtml(p.title || 'Stopp')}</div>
@@ -1831,9 +2023,6 @@
         });
       }
 
-      // =====================================================================
-      // RECHNUNGEN & FIRMENDATEN
-      // =====================================================================
       function renderInvoicesSection() {
         const tbody = document.getElementById('invoicesTableBody');
         if (state.invoices.length === 0) {
@@ -1869,7 +2058,7 @@
             const inv = state.invoices.find((i) => i.id === btn.dataset.invId);
             if (!inv) return;
             try {
-              await window.VindoxAPI.upsertInvoice({ ...inv, status: btn.dataset.nextStatus });
+              await window.VindoxAPI.upsertInvoice({ ...inv, status: btn.dataset.nextStatus, companyId: state.companyId, ownerId: state.companyId });
               showToast('Rechnungsstatus aktualisiert', 'success');
               await loadAllData(true);
             } catch (err) {
@@ -1882,7 +2071,7 @@
         tbody.querySelectorAll('.btn-del-inv').forEach((btn) => {
           btn.addEventListener('click', async () => {
             try {
-              await window.VindoxAPI.deleteInvoice(btn.dataset.invId);
+              await window.VindoxAPI.deleteInvoice(btn.dataset.invId, state.companyId);
               showToast('Rechnung gelöscht', 'success');
               await loadAllData(true);
             } catch (err) {
@@ -1903,10 +2092,10 @@
         document.getElementById('companyTaxInput').value = state.company.taxId || '';
       }
 
-      // =====================================================================
-      // EVENT LISTENERS & INITIALISIERUNG
-      // =====================================================================
       function bindEvents() {
+        document.getElementById('chefLoginForm').addEventListener('submit', handleChefLogin);
+        document.getElementById('btnChefLogout').addEventListener('click', handleChefLogout);
+
         document.querySelectorAll('.nav-btn').forEach((btn) => {
           btn.addEventListener('click', () => switchTab(btn.dataset.tab));
         });
@@ -1931,14 +2120,18 @@
         });
 
         document.getElementById('btnSendDriverMessage').addEventListener('click', async () => {
-          const dId = document.getElementById('messageDriverSelect').value || 'F-8921';
+          const dId = document.getElementById('messageDriverSelect').value;
           const msg = document.getElementById('driverMessageInput').value.trim();
+          if (!dId) {
+            showToast('Bitte zuerst einen Fahrer auswählen', 'warning');
+            return;
+          }
           if (!msg) {
             showToast('Bitte eine Nachricht eingeben', 'warning');
             return;
           }
           try {
-            await window.VindoxAPI.sendDriverMessage(dId, msg);
+            await window.VindoxAPI.sendDriverMessage(dId, msg, state.companyId);
             document.getElementById('driverMessageInput').value = '';
             showToast(`Nachricht an ${dId} gesendet`, 'success');
             await loadAllData(true);
@@ -1948,7 +2141,6 @@
           }
         });
 
-        // Fahrer Modal
         const newRuleBox = document.getElementById('newDriverRuleChips');
         newRuleBox.innerHTML = RULE_DEFS.map((r) => `
           <label class="rule-chip">
@@ -1995,6 +2187,8 @@
               name,
               vehicle,
               status,
+              companyId: state.companyId,
+              ownerId: state.companyId,
               rules: {
                 photo: selectedRules.includes('photo'),
                 video: selectedRules.includes('video'),
@@ -2010,12 +2204,10 @@
           }
         });
 
-        // Touren Form
         document.getElementById('btnAddStopRow').addEventListener('click', () => addStopBuilderRow());
         document.getElementById('btnResetTourForm').addEventListener('click', resetTourForm);
         document.getElementById('btnSaveTour').addEventListener('click', saveTourFromForm);
 
-        // Rechnungen Form
         document.getElementById('btnCreateInvoice').addEventListener('click', async () => {
           const invoiceNumber = document.getElementById('invoiceNumberInput').value.trim();
           const customer = document.getElementById('invoiceCustomerInput').value.trim();
@@ -2035,7 +2227,9 @@
               customer,
               amount,
               status,
-              dueDate
+              dueDate,
+              companyId: state.companyId,
+              ownerId: state.companyId
             });
             document.getElementById('invoiceNumberInput').value = '';
             document.getElementById('invoiceCustomerInput').value = '';
@@ -2049,9 +2243,10 @@
           }
         });
 
-        // Firmendaten Form
         document.getElementById('btnSaveCompany').addEventListener('click', async () => {
           const payload = {
+            companyId: state.companyId,
+            ownerId: state.companyId,
             name: document.getElementById('companyNameInput').value.trim(),
             owner: document.getElementById('companyOwnerInput').value.trim(),
             street: document.getElementById('companyStreetInput').value.trim(),
@@ -2071,7 +2266,6 @@
           }
         });
 
-        // Medien Vorschau schließen
         document.getElementById('btnCloseMediaPreview').addEventListener('click', () => {
           document.getElementById('mediaPreviewModal').classList.remove('open');
         });
@@ -2080,12 +2274,28 @@
       document.addEventListener('DOMContentLoaded', async () => {
         bindEvents();
         resetTourForm();
-        await loadAllData(true);
 
-        if (window.VindoxAPI && typeof window.VindoxAPI.subscribeAll === 'function') {
-          window.VindoxAPI.subscribeAll(() => {
-            loadAllData(true);
+        const sb = getSupabaseClient();
+        if (sb && sb.auth) {
+          const { data } = await sb.auth.getSession();
+          const currentUser = data && data.session ? data.session.user : null;
+          applyAuthView(currentUser);
+          if (currentUser) {
+            await loadAllData(true);
+            setupRealtime();
+          }
+
+          sb.auth.onAuthStateChange(async (_event, session) => {
+            const u = session ? session.user : null;
+            applyAuthView(u);
+            if (u) {
+              await loadAllData(true);
+              setupRealtime();
+            }
           });
+        } else {
+          applyAuthView(null);
+          setLoginError('Supabase-Client nicht gefunden. Prüfe vindox-api.js.');
         }
       });
     })();
