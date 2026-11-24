@@ -914,7 +914,6 @@
       transform: translateY(0) scale(1);
     }
 
-    /* NACHWEIS-MODAL: OBERER RAND HOCH, BUTTON NAH AN DER INTEGRITÄTS-HASH-ZEILE */
     #proofModal.modal-overlay {
       align-items: flex-start;
       padding: 12px 16px 26px;
@@ -1029,7 +1028,6 @@
       background: rgba(13, 36, 99, 0.14);
     }
 
-    /* SCHÖNE BERECHTIGUNGS-SEKTION UNTER API & ZIELADRESSE */
     .permissions-card-clean {
       background: rgba(255, 255, 255, 0.02);
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -1543,6 +1541,8 @@
       line-height: 1.45;
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="vindox-api.js"></script>
 </head>
 <body>
 
@@ -1818,7 +1818,6 @@
             <button class="btn-perm-refresh" onclick="refreshAllPermissionsStatus()">Aktualisieren</button>
           </div>
 
-          <!-- Standort -->
           <div class="perm-tile">
             <div class="perm-tile-left">
               <div class="perm-icon-box">
@@ -1835,7 +1834,6 @@
             </div>
           </div>
 
-          <!-- Kamera -->
           <div class="perm-tile">
             <div class="perm-tile-left">
               <div class="perm-icon-box">
@@ -2002,8 +2000,11 @@
     let currentStopProofItems = [];
     let activeProofHash = "";
 
+    let vindoxActiveTourId = null;
+    let lastSeenChefMessage = "";
+
     // =========================================================================
-    // 1. CHEF-PFLICHTEN PRO FAHRER
+    // 1. CHEF-PFLICHTEN PRO FAHRER (LOCAL + SUPABASE LIVE-SYNC)
     // =========================================================================
     function getChefRequiredProofs() {
       try {
@@ -2074,7 +2075,7 @@
         const labels = required.map(r => r === 'photo' ? 'Foto' : (r === 'video' ? 'Video' : 'Unterschrift'));
         banner.classList.add('active');
         banner.innerHTML = missing.length > 0
-          ? `Vorgabe der Zentrale für dich: <strong>${labels.join(' + ')}</strong> erforderlich. Ohne Erfassung ist kein nächster Stopp möglich.`
+          ? `Vorgabe der Zentrale für dich: <strong>${labels.join(' + ')}</strong> erforderlich. Der „Weiter“-Button unten schaltet frei, sobald alle Pflicht-Nachweise erfasst sind.`
           : `✓ Alle Pflicht-Nachweise (${labels.join(' + ')}) wurden vollständig erfasst.`;
       } else {
         banner.classList.remove('active');
@@ -2088,6 +2089,134 @@
         submitBtn.innerText = "Nachweis speichern & Stopp abschließen";
         if (errMsg) errMsg.style.display = 'none';
       }
+    }
+
+    // =========================================================================
+    // SUPABASE SYNC-FUNKTIONEN (FAHRER-APP <-> COMMAND CENTER)
+    // =========================================================================
+    async function syncRulesFromSupabase() {
+      if (!window.VindoxAPI) return;
+      const driver = await VindoxAPI.fetchDriverById(DRIVER_ID);
+      if (driver && driver.rules) {
+        const reqList = VindoxAPI.rulesToArray(driver.rules);
+        localStorage.setItem('vindox_chef_required_proofs', JSON.stringify(reqList));
+        if (document.getElementById('proofModal')?.classList.contains('active')) {
+          updateChefMandateUI();
+        }
+      }
+    }
+
+    async function syncTourFromSupabase() {
+      if (!window.VindoxAPI) return;
+      const tours = await VindoxAPI.fetchTours();
+      const assignedTour = tours.find(t => t.driverId === DRIVER_ID && t.status === 'active');
+      if (!assignedTour || !Array.isArray(assignedTour.stops) || assignedTour.stops.length === 0) return;
+
+      if (!vindoxActiveTourId || (vindoxActiveTourId !== assignedTour.id && tourData.length === 0)) {
+        vindoxActiveTourId = assignedTour.id;
+        tourData = assignedTour.stops.map((s, idx) => ({
+          id: s.id || (Date.now() + idx),
+          title: s.street || s.title || '',
+          address: s.city || s.address || '',
+          note: s.note || assignedTour.notes || '',
+          coords: s.coords || '51.023400, 7.254100',
+          status: s.status === 'erledigt' ? 'completed' : (idx === 0 ? 'active' : 'pending'),
+          proofs: Array.isArray(s.proofs) ? s.proofs : [],
+          signatureData: s.signatureData || null,
+          metadata: s.metadata || null
+        }));
+        syncActiveStopOrder();
+        refreshUIState();
+      }
+    }
+
+    async function pushTourStateToSupabase() {
+      if (!window.VindoxAPI || tourData.length === 0) return;
+      const tourId = vindoxActiveTourId || ('T-' + DRIVER_ID);
+      vindoxActiveTourId = tourId;
+
+      await VindoxAPI.upsertTour({
+        id: tourId,
+        driverId: DRIVER_ID,
+        driverName: 'Fahrer ' + DRIVER_ID,
+        title: 'Tour ' + DRIVER_ID,
+        notes: '',
+        status: tourData.every(s => s.status === 'completed') ? 'completed' : 'active',
+        stops: tourData.map((s, idx) => ({
+          id: s.id,
+          seq: idx + 1,
+          street: s.title,
+          city: s.address,
+          note: s.note || '',
+          coords: s.coords,
+          status: s.status === 'completed' ? 'erledigt' : 'offen',
+          timestamp: s.metadata?.timestamp || null,
+          gps: s.metadata?.gpsCoordinates || s.coords,
+          hash: s.metadata?.auditHash || '',
+          proofs: s.proofs || [],
+          signatureData: s.signatureData || null,
+          metadata: s.metadata || null
+        }))
+      });
+    }
+
+    async function syncLiveTelemetryToSupabase() {
+      if (!window.VindoxAPI) return;
+      const activeIdx = getCurrentActiveStopIndex();
+      const stop = tourData[activeIdx] || null;
+      const parts = (currentGPS || '').split(',').map(n => parseFloat(n.trim()));
+      const hasCoords = parts.length === 2 && !Number.isNaN(parts[0]) && !Number.isNaN(parts[1]);
+
+      await VindoxAPI.upsertDriverLive({
+        driverId: DRIVER_ID,
+        lat: hasCoords ? parts[0] : null,
+        lng: hasCoords ? parts[1] : null,
+        gpsText: currentGPS,
+        currentStopIndex: tourData.length > 0 ? activeIdx + 1 : 0,
+        totalStops: tourData.length,
+        currentStopTitle: stop ? stop.title : 'Kein aktiver Stopp',
+        currentStopAddress: stop ? stop.address : '',
+        tourStatus: tourData.length === 0 ? 'idle' : (tourData.every(s => s.status === 'completed') ? 'completed' : 'driving')
+      });
+    }
+
+    async function checkChefLiveMessageFromSupabase() {
+      if (!window.VindoxAPI) return;
+      const live = await VindoxAPI.fetchDriverLiveById(DRIVER_ID);
+      const msg = (live && live.driver_message) ? String(live.driver_message).trim() : '';
+      if (msg && msg !== lastSeenChefMessage) {
+        lastSeenChefMessage = msg;
+        const noteEl = document.getElementById('currentNoteText');
+        if (noteEl && tourData.length > 0) {
+          noteEl.innerText = `Zentrale: "${msg}"`;
+        }
+      }
+    }
+
+    async function pushProofToSupabase(stop, activeIdx, capturedMetadata, signatureImage) {
+      if (!window.VindoxAPI || !stop) return;
+      await VindoxAPI.createProof({
+        id: 'PR-' + stop.id + '-' + Date.now(),
+        tourId: vindoxActiveTourId,
+        driverId: DRIVER_ID,
+        driverName: 'Fahrer ' + DRIVER_ID,
+        stopId: stop.id,
+        stopSeq: activeIdx + 1,
+        stopPositionLabel: `${activeIdx + 1} von ${tourData.length}`,
+        title: stop.title,
+        address: stop.address,
+        gps: capturedMetadata.gpsCoordinates,
+        dateLabel: capturedMetadata.date,
+        timeLabel: capturedMetadata.timestamp,
+        timestampLabel: `${capturedMetadata.date} • ${capturedMetadata.timestamp}`,
+        isoTimestamp: capturedMetadata.isoTimestamp,
+        mediaSummary: capturedMetadata.mediaSummary,
+        mediaCaptureTimes: capturedMetadata.mediaCaptureTimes,
+        signatureStatus: capturedMetadata.signatureStatus,
+        auditHash: capturedMetadata.auditHash,
+        media: [...currentStopProofItems],
+        signature: signatureImage
+      });
     }
 
     // =========================================================================
@@ -2231,6 +2360,7 @@
             currentGPS = `${pos.coords.latitude.toFixed(6)}, ${pos.coords.longitude.toFixed(6)}`;
             setPermChipUI('permBadgeGeo', 'permBtnGeo', 'granted');
             refreshAllPermissionsStatus();
+            syncLiveTelemetryToSupabase();
           },
           () => {
             setPermChipUI('permBadgeGeo', 'permBtnGeo', 'denied');
@@ -2594,6 +2724,8 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
           progressBar.style.width = '0%';
           hasShownSuccessPopup = false;
           refreshUIState();
+          pushTourStateToSupabase();
+          syncLiveTelemetryToSupabase();
         }, 350);
 
       } catch (err) {
@@ -2837,6 +2969,8 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
           progressCard.style.display = 'none';
           progressBar.style.width = '0%';
           refreshUIState();
+          pushTourStateToSupabase();
+          syncLiveTelemetryToSupabase();
         }, 300);
 
       } catch (err) {
@@ -2877,6 +3011,8 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
         closeManualModal();
         hasShownSuccessPopup = false;
         refreshUIState();
+        pushTourStateToSupabase();
+        syncLiveTelemetryToSupabase();
       }
     }
 
@@ -2886,6 +3022,8 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
         tourData.splice(idx, 1);
         syncActiveStopOrder();
         refreshUIState();
+        pushTourStateToSupabase();
+        syncLiveTelemetryToSupabase();
       }
     }
 
@@ -2910,6 +3048,11 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
       closeDeleteTourConfirmModal();
       refreshUIState();
       switchNavTab(1);
+      if (window.VindoxAPI && vindoxActiveTourId) {
+        VindoxAPI.deleteTour(vindoxActiveTourId);
+        vindoxActiveTourId = null;
+      }
+      syncLiveTelemetryToSupabase();
     }
 
     function moveStopUp(e, id) {
@@ -2920,6 +3063,8 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
         syncActiveStopOrder();
         renderManagerList();
         updateCockpitUI();
+        pushTourStateToSupabase();
+        syncLiveTelemetryToSupabase();
       }
     }
 
@@ -2931,6 +3076,8 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
         syncActiveStopOrder();
         renderManagerList();
         updateCockpitUI();
+        pushTourStateToSupabase();
+        syncLiveTelemetryToSupabase();
       }
     }
 
@@ -2943,6 +3090,8 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
         syncActiveStopOrder(item.id);
         renderManagerList();
         updateCockpitUI();
+        pushTourStateToSupabase();
+        syncLiveTelemetryToSupabase();
       }
     }
 
@@ -2955,6 +3104,8 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
         syncActiveStopOrder();
         renderManagerList();
         updateCockpitUI();
+        pushTourStateToSupabase();
+        syncLiveTelemetryToSupabase();
       }
     }
 
@@ -3014,6 +3165,8 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
       closePositionJumpModal();
       renderManagerList();
       updateCockpitUI();
+      pushTourStateToSupabase();
+      syncLiveTelemetryToSupabase();
     }
 
     function reverseEntireTour() {
@@ -3022,6 +3175,8 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
       syncActiveStopOrder();
       renderManagerList();
       updateCockpitUI();
+      pushTourStateToSupabase();
+      syncLiveTelemetryToSupabase();
     }
 
     function openEditModal(id) {
@@ -3052,6 +3207,8 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
       closeEditModal();
       renderManagerList();
       updateCockpitUI();
+      pushTourStateToSupabase();
+      syncLiveTelemetryToSupabase();
     }
 
     function deleteStopFromModal() {
@@ -3091,6 +3248,8 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
       }
       hasShownSuccessPopup = false;
       switchNavTab(2);
+      pushTourStateToSupabase();
+      syncLiveTelemetryToSupabase();
     }
 
     function switchNavTab(tabNum) {
@@ -3142,6 +3301,8 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
       hasShownSuccessPopup = false;
       refreshUIState();
       switchNavTab(1);
+      pushTourStateToSupabase();
+      syncLiveTelemetryToSupabase();
     }
 
     function updateCockpitUI() {
@@ -3305,11 +3466,13 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
       `).join('');
     }
 
-    function openProofModalForCurrent() {
+    async function openProofModalForCurrent() {
       if (tourData.length === 0) {
         alert("Bitte zuerst eine Tour starten!");
         return;
       }
+
+      await syncRulesFromSupabase();
 
       const activeIdx = getCurrentActiveStopIndex();
       const stop = tourData[activeIdx];
@@ -3517,6 +3680,8 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
       try {
         localStorage.setItem('vindox_chef_evidence_tiles', JSON.stringify(chefAppEvidenceArchive));
       } catch (err) {}
+
+      pushProofToSupabase(stop, activeIdx, capturedMetadata, signatureImage);
       
       if (activeIdx + 1 < tourData.length) {
         tourData[activeIdx + 1].status = 'active';
@@ -3524,6 +3689,8 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
 
       closeProofModal();
       updateCockpitUI();
+      pushTourStateToSupabase();
+      syncLiveTelemetryToSupabase();
     }
 
     function prevStop() {
@@ -3536,12 +3703,15 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
         }
         tourData[lastCompletedIdx].status = 'active';
         updateCockpitUI();
+        pushTourStateToSupabase();
+        syncLiveTelemetryToSupabase();
       }
     }
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((pos) => {
         currentGPS = `${pos.coords.latitude.toFixed(6)}, ${pos.coords.longitude.toFixed(6)}`;
+        syncLiveTelemetryToSupabase();
       }, () => {});
     }
 
@@ -3553,6 +3723,26 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
     document.getElementById('sectionTitleText').innerText = initialSub.top;
     document.getElementById('sectionSubtitleText').innerText = initialSub.main;
     refreshUIState();
+
+    (async function initVindoxDriverSupabase() {
+      await syncRulesFromSupabase();
+      await syncTourFromSupabase();
+      await syncLiveTelemetryToSupabase();
+      await checkChefLiveMessageFromSupabase();
+
+      setInterval(() => {
+        syncLiveTelemetryToSupabase();
+        checkChefLiveMessageFromSupabase();
+      }, 15000);
+
+      if (window.VindoxAPI) {
+        VindoxAPI.subscribeAll((table) => {
+          if (table === 'drivers') syncRulesFromSupabase();
+          if (table === 'tours') syncTourFromSupabase();
+          if (table === 'driver_live') checkChefLiveMessageFromSupabase();
+        });
+      }
+    })();
 
     if ('serviceWorker' in navigator) {
       const swCode = `
