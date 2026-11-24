@@ -190,7 +190,6 @@
         throw new Error(formatErrorMessage(error, 'Fahrer konnte nicht in drivers gespeichert werden'));
       }
 
-      // Initialen driver_live-Eintrag anlegen/aktualisieren, damit Fahrer sofort im Live-Status sichtbar ist
       const livePayload = {
         driver_id: driverId,
         tour_status: statusVal === 'offline' ? 'offline' : 'ready',
@@ -214,17 +213,37 @@
 
     async loginDriver(driverId, password) {
       if (!sb) throw new Error('Supabase-Client nicht initialisiert');
-      const cleanId = String(driverId || '').trim();
+      const cleanLogin = String(driverId || '').trim();
       const cleanPw = String(password || '').trim();
-      if (!cleanId || !cleanPw) {
+      if (!cleanLogin || !cleanPw) {
         throw new Error('Bitte Fahrer-ID und Passwort eingeben');
       }
 
-      const { data, error } = await sb
+      let { data, error } = await sb
         .from('drivers')
         .select('*')
-        .eq('id', cleanId)
+        .eq('id', cleanLogin)
         .maybeSingle();
+
+      if (!data && !error) {
+        const byUsername = await sb
+          .from('drivers')
+          .select('*')
+          .ilike('username', cleanLogin)
+          .limit(1);
+        error = byUsername.error;
+        data = Array.isArray(byUsername.data) && byUsername.data.length > 0 ? byUsername.data[0] : null;
+      }
+
+      if (!data && !error) {
+        const byIdIlike = await sb
+          .from('drivers')
+          .select('*')
+          .ilike('id', cleanLogin)
+          .limit(1);
+        error = byIdIlike.error;
+        data = Array.isArray(byIdIlike.data) && byIdIlike.data.length > 0 ? byIdIlike.data[0] : null;
+      }
 
       if (error) {
         throw new Error(formatErrorMessage(error, 'Fahrer-Login fehlgeschlagen'));
@@ -235,7 +254,8 @@
       if (data.active === false) {
         throw new Error('Dieser Fahrerzugang ist deaktiviert');
       }
-      if (!data.password_hash || String(data.password_hash).trim() !== cleanPw) {
+      const storedPw = String(data.password_hash ?? '').trim();
+      if (!storedPw || storedPw !== cleanPw) {
         throw new Error('Ungültiges Passwort');
       }
 
@@ -271,13 +291,15 @@
       return (data || []).map(mapDriverRow);
     },
 
-    async fetchDriverById(driverId) {
+    async fetchDriverById(driverId, explicitCompanyId) {
       if (!sb || !driverId) return null;
-      const { data, error } = await sb
+      const cid = await resolveCompanyId(explicitCompanyId);
+      let query = sb
         .from('drivers')
         .select('*')
-        .eq('id', String(driverId).trim())
-        .maybeSingle();
+        .eq('id', String(driverId).trim());
+      if (cid) query = query.eq('company_id', cid);
+      const { data, error } = await query.maybeSingle();
       if (error || !data) return null;
       return mapDriverRow(data);
     },
@@ -438,13 +460,15 @@
       return await this.fetchDriverLive(explicitCompanyId);
     },
 
-    async fetchDriverLiveById(driverId) {
+    async fetchDriverLiveById(driverId, explicitCompanyId) {
       if (!sb || !driverId) return null;
-      const { data, error } = await sb
+      const cid = await resolveCompanyId(explicitCompanyId);
+      let query = sb
         .from('driver_live')
         .select('*')
-        .eq('driver_id', String(driverId).trim())
-        .maybeSingle();
+        .eq('driver_id', String(driverId).trim());
+      if (cid) query = query.eq('company_id', cid);
+      const { data, error } = await query.maybeSingle();
       if (error) return null;
       return data;
     },
