@@ -33,7 +33,11 @@
       --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.35);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     html, body {
       height: 100%;
@@ -46,8 +50,11 @@
       overflow-x: hidden;
     }
 
-    .mono { font-family: 'JetBrains Mono', monospace; }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
 
+    /* Login Gate */
     .login-gate {
       min-height: 100vh;
       width: 100%;
@@ -61,7 +68,9 @@
         var(--bg-canvas);
     }
 
-    .login-gate.hidden { display: none; }
+    .login-gate.hidden {
+      display: none;
+    }
 
     .login-card {
       width: 100%;
@@ -91,11 +100,21 @@
       font-size: 12.5px;
     }
 
-    .login-error.visible { display: block; }
+    .login-error.visible {
+      display: block;
+    }
 
-    .app-shell { display: none; min-height: 100vh; width: 100%; }
-    .app-shell.authenticated { display: flex; }
+    .app-shell {
+      display: none;
+      min-height: 100vh;
+      width: 100%;
+    }
 
+    .app-shell.authenticated {
+      display: flex;
+    }
+
+    /* Sidebar */
     .sidebar {
       width: 248px;
       flex-shrink: 0;
@@ -133,10 +152,22 @@
       box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
     }
 
-    .brand-title { font-size: 15px; font-weight: 700; letter-spacing: -0.01em; }
-    .brand-sub { font-size: 11px; color: var(--text-muted); }
+    .brand-title {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
 
-    .nav-list { display: flex; flex-direction: column; gap: 4px; }
+    .brand-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .nav-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
 
     .nav-btn {
       width: 100%;
@@ -155,9 +186,23 @@
       text-align: left;
     }
 
-    .nav-btn-left { display: flex; align-items: center; gap: 10px; }
-    .nav-btn svg { width: 17px; height: 17px; flex-shrink: 0; opacity: 0.85; }
-    .nav-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+    .nav-btn-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-btn svg {
+      width: 17px;
+      height: 17px;
+      flex-shrink: 0;
+      opacity: 0.85;
+    }
+
+    .nav-btn:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
 
     .nav-btn.active {
       background: var(--accent-soft);
@@ -230,7 +275,13 @@
       box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2);
     }
 
-    .main-wrap { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    /* Main Content */
+    .main-wrap {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
 
     .topbar {
       height: 64px;
@@ -247,7 +298,11 @@
       z-index: 30;
     }
 
-    .topbar-left { display: flex; align-items: center; gap: 12px; }
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
     .mobile-menu-btn {
       display: none;
@@ -261,12 +316,31 @@
       cursor: pointer;
     }
 
-    .page-heading { font-size: 17px; font-weight: 700; letter-spacing: -0.01em; }
-    .page-sub { font-size: 12px; color: var(--text-muted); }
-    .topbar-actions { display: flex; align-items: center; gap: 10px; }
+    .page-heading {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
 
-    .content-container { padding: 22px 24px 48px; max-width: 1440px; width: 100%; margin: 0 auto; }
+    .page-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
 
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .content-container {
+      padding: 22px 24px 48px;
+      max-width: 1440px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* Buttons & Inputs */
     .btn {
       display: inline-flex;
       align-items: center;
@@ -284,12 +358,38 @@
       white-space: nowrap;
     }
 
-    .btn:hover:not(:disabled) { background: var(--bg-hover); border-color: rgba(255, 255, 255, 0.24); }
-    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
-    .btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
-    .btn-primary:hover:not(:disabled) { background: var(--accent-hover); border-color: var(--accent-hover); }
-    .btn-danger { background: var(--danger-soft); border-color: rgba(239, 68, 68, 0.35); color: #fca5a5; }
-    .btn-sm { padding: 6px 10px; font-size: 12px; }
+    .btn:hover:not(:disabled) {
+      background: var(--bg-hover);
+      border-color: rgba(255, 255, 255, 0.24);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--accent-hover);
+      border-color: var(--accent-hover);
+    }
+
+    .btn-danger {
+      background: var(--danger-soft);
+      border-color: rgba(239, 68, 68, 0.35);
+      color: #fca5a5;
+    }
+
+    .btn-sm {
+      padding: 6px 10px;
+      font-size: 12px;
+    }
 
     .input, .select, .textarea {
       width: 100%;
@@ -304,9 +404,21 @@
       transition: border-color 0.15s ease;
     }
 
-    .input:focus, .select:focus, .textarea:focus { border-color: var(--accent); }
-    .textarea { resize: vertical; min-height: 70px; }
+    .input:focus, .select:focus, .textarea:focus {
+      border-color: var(--accent);
+    }
 
+    .input[readonly] {
+      opacity: 0.7;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .textarea {
+      resize: vertical;
+      min-height: 70px;
+    }
+
+    /* Cards & Grids */
     .card {
       background: var(--bg-surface);
       border: 1px solid var(--border);
@@ -315,11 +427,30 @@
       box-shadow: var(--shadow-card);
     }
 
-    .card-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
-    .card-title { font-size: 14.5px; font-weight: 700; }
-    .card-sub { font-size: 12px; color: var(--text-muted); }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
 
-    .kpi-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 18px; }
+    .card-title {
+      font-size: 14.5px;
+      font-weight: 700;
+    }
+
+    .card-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
 
     .kpi-card {
       background: var(--bg-surface);
@@ -328,14 +459,43 @@
       padding: 15px 16px;
     }
 
-    .kpi-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; }
-    .kpi-value { font-size: 24px; font-weight: 800; letter-spacing: -0.02em; }
-    .kpi-foot { font-size: 11.5px; color: var(--text-muted); margin-top: 4px; }
+    .kpi-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
 
-    .split-grid { display: grid; grid-template-columns: 1.35fr 1fr; gap: 16px; }
-    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
-    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+    .kpi-value {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
 
+    .kpi-foot {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .split-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 16px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    /* Badges */
     .badge {
       display: inline-flex;
       align-items: center;
@@ -347,13 +507,42 @@
       border: 1px solid transparent;
     }
 
-    .badge-info { background: var(--accent-soft); color: #93c5fd; border-color: rgba(59, 130, 246, 0.28); }
-    .badge-success { background: var(--success-soft); color: #6ee7b7; border-color: rgba(16, 185, 129, 0.28); }
-    .badge-warning { background: var(--warning-soft); color: #fcd34d; border-color: rgba(245, 158, 11, 0.28); }
-    .badge-danger { background: var(--danger-soft); color: #fca5a5; border-color: rgba(239, 68, 68, 0.28); }
-    .badge-neutral { background: rgba(255, 255, 255, 0.06); color: var(--text-secondary); border-color: var(--border); }
+    .badge-info {
+      background: var(--accent-soft);
+      color: #93c5fd;
+      border-color: rgba(59, 130, 246, 0.28);
+    }
 
-    .rule-toggle-group { display: flex; flex-wrap: wrap; gap: 8px; }
+    .badge-success {
+      background: var(--success-soft);
+      color: #6ee7b7;
+      border-color: rgba(16, 185, 129, 0.28);
+    }
+
+    .badge-warning {
+      background: var(--warning-soft);
+      color: #fcd34d;
+      border-color: rgba(245, 158, 11, 0.28);
+    }
+
+    .badge-danger {
+      background: var(--danger-soft);
+      color: #fca5a5;
+      border-color: rgba(239, 68, 68, 0.28);
+    }
+
+    .badge-neutral {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-secondary);
+      border-color: var(--border);
+    }
+
+    /* Rule Toggles */
+    .rule-toggle-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
 
     .rule-chip {
       display: inline-flex;
@@ -369,16 +558,55 @@
       transition: all 0.14s ease;
     }
 
-    .rule-chip input { accent-color: var(--accent); cursor: pointer; }
-    .rule-chip.active { background: var(--accent-soft); border-color: rgba(59, 130, 246, 0.45); color: #dbeafe; }
+    .rule-chip input {
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
 
-    .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius-md); }
-    table { width: 100%; border-collapse: collapse; text-align: left; }
-    th, td { padding: 11px 13px; border-bottom: 1px solid var(--border); font-size: 13px; vertical-align: middle; }
-    th { background: var(--bg-surface-2); color: var(--text-secondary); font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; }
-    tr:last-child td { border-bottom: none; }
-    tr:hover td { background: rgba(255, 255, 255, 0.02); }
+    .rule-chip.active {
+      background: var(--accent-soft);
+      border-color: rgba(59, 130, 246, 0.45);
+      color: #dbeafe;
+    }
 
+    /* Tables */
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th, td {
+      padding: 11px 13px;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+      vertical-align: middle;
+    }
+
+    th {
+      background: var(--bg-surface-2);
+      color: var(--text-secondary);
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-weight: 600;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    /* Map Panel */
     .map-stage {
       position: relative;
       height: 360px;
@@ -429,10 +657,35 @@
       white-space: nowrap;
     }
 
-    .proof-media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; margin-top: 10px; }
-    .proof-thumb { width: 100%; height: 86px; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--border); background: #06080d; cursor: pointer; }
-    .sig-preview { height: 68px; width: 100%; object-fit: contain; background: #fff; border-radius: var(--radius-sm); padding: 4px; margin-top: 8px; }
+    /* Proof Cards */
+    .proof-media-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
 
+    .proof-thumb {
+      width: 100%;
+      height: 86px;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: #06080d;
+      cursor: pointer;
+    }
+
+    .sig-preview {
+      height: 68px;
+      width: 100%;
+      object-fit: contain;
+      background: #fff;
+      border-radius: var(--radius-sm);
+      padding: 4px;
+      margin-top: 8px;
+    }
+
+    /* Stop Builder Rows */
     .stop-row {
       display: grid;
       grid-template-columns: 34px 1.4fr 1.2fr 1fr auto;
@@ -458,8 +711,18 @@
       margin: 0 auto;
     }
 
-    .form-group { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
-    .form-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-bottom: 12px;
+    }
+
+    .form-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
 
     .empty-state {
       text-align: center;
@@ -469,14 +732,49 @@
       border-radius: var(--radius-md);
     }
 
-    .toast-container { position: fixed; right: 20px; bottom: 20px; z-index: 999; display: flex; flex-direction: column; gap: 8px; }
-    .toast { background: var(--bg-surface-2); border: 1px solid var(--border-strong); border-left: 4px solid var(--accent); color: var(--text-primary); padding: 11px 15px; border-radius: var(--radius-sm); box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45); font-size: 13px; min-width: 240px; }
+    /* Toast */
+    .toast-container {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .toast {
+      background: var(--bg-surface-2);
+      border: 1px solid var(--border-strong);
+      border-left: 4px solid var(--accent);
+      color: var(--text-primary);
+      padding: 11px 15px;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+      font-size: 13px;
+      min-width: 240px;
+    }
+
     .toast.success { border-left-color: var(--success); }
     .toast.warning { border-left-color: var(--warning); }
     .toast.danger { border-left-color: var(--danger); }
 
-    .modal-backdrop { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.72); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; padding: 18px; z-index: 500; }
-    .modal-backdrop.open { display: flex; }
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 500;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
 
     .modal-box {
       width: 100%;
@@ -490,8 +788,13 @@
       overflow-y: auto;
     }
 
-    .tab-panel { display: none; }
-    .tab-panel.active { display: block; }
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
 
     @media (max-width: 1024px) {
       .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -500,15 +803,22 @@
 
     @media (max-width: 820px) {
       .mobile-menu-btn { display: grid; place-items: center; }
-      .sidebar { position: fixed; left: -260px; transition: left 0.22s ease; }
+      .sidebar {
+        position: fixed;
+        left: -260px;
+        transition: left 0.22s ease;
+      }
       .sidebar.open { left: 0; }
-      .stop-row { grid-template-columns: 1fr; }
+      .stop-row {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="vindox-api.js"></script>
 </head>
 <body>
+  <!-- CHEF LOGIN MASKE -->
   <div class="login-gate" id="loginGate">
     <div class="login-card">
       <div class="login-header">
@@ -539,7 +849,9 @@
     </div>
   </div>
 
+  <!-- COMMAND CENTER -->
   <div class="app-shell" id="appShell">
+    <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
       <div>
         <div class="brand-box">
@@ -613,6 +925,7 @@
       </div>
     </aside>
 
+    <!-- Main Wrap -->
     <div class="main-wrap">
       <header class="topbar">
         <div class="topbar-left">
@@ -628,6 +941,7 @@
       </header>
 
       <main class="content-container">
+        <!-- TAB 1: ÜBERSICHT -->
         <section class="tab-panel active" id="tab-overview">
           <div class="kpi-grid">
             <div class="kpi-card">
@@ -676,12 +990,13 @@
           </div>
         </section>
 
+        <!-- TAB 2: FAHRER -->
         <section class="tab-panel" id="tab-drivers">
           <div class="card" style="margin-bottom: 16px;">
             <div class="card-header">
               <div>
-                <div class="card-title">Fahrer verwalten & Pflichtnachweise setzen</div>
-                <div class="card-sub">Fahrer-ID + Passwort festlegen und Regeln (<span class="mono">drivers.rules</span>) live setzen</div>
+                <div class="card-title">Fahrer verwalten, Login-Passwort & Pflichtnachweise setzen</div>
+                <div class="card-sub">Jeder Fahrer erhält Fahrer-ID + Passwort für die Tour-App; Änderungen an den Haken speichern direkt <span class="mono">drivers.rules</span> in Supabase</div>
               </div>
               <button class="btn btn-primary btn-sm" id="btnOpenAddDriver">+ Fahrer anlegen</button>
             </div>
@@ -705,6 +1020,7 @@
           </div>
         </section>
 
+        <!-- TAB 3: TOUREN -->
         <section class="tab-panel" id="tab-tours">
           <div class="split-grid">
             <div class="card">
@@ -770,6 +1086,7 @@
           </div>
         </section>
 
+        <!-- TAB 4: LIVE-KARTE -->
         <section class="tab-panel" id="tab-live">
           <div class="split-grid">
             <div class="card">
@@ -807,6 +1124,7 @@
           </div>
         </section>
 
+        <!-- TAB 5: NACHWEISE -->
         <section class="tab-panel" id="tab-proofs">
           <div class="card">
             <div class="card-header">
@@ -819,6 +1137,7 @@
           </div>
         </section>
 
+        <!-- TAB 6: RECHNUNGEN -->
         <section class="tab-panel" id="tab-invoices">
           <div class="split-grid">
             <div class="card">
@@ -887,6 +1206,7 @@
           </div>
         </section>
 
+        <!-- TAB 7: FIRMENDATEN -->
         <section class="tab-panel" id="tab-company">
           <div class="card" style="max-width: 740px;">
             <div class="card-header">
@@ -941,13 +1261,13 @@
     </div>
   </div>
 
-  <!-- Modal: Neuer Fahrer (inkl. Passwort) -->
+  <!-- Modal: Fahrer anlegen / bearbeiten (inkl. Passwort) -->
   <div class="modal-backdrop" id="addDriverModal">
     <div class="modal-box">
       <div class="card-header">
         <div>
-          <div class="card-title">Neuen Fahrer anlegen</div>
-          <div class="card-sub">Fahrer-ID + Passwort vergeben und in <span class="mono">drivers</span> speichern</div>
+          <div class="card-title" id="driverModalTitle">Neuen Fahrer anlegen</div>
+          <div class="card-sub">Fahrer-ID & Passwort festlegen und sofort in <span class="mono">drivers</span> & <span class="mono">driver_live</span> speichern</div>
         </div>
         <button class="btn btn-sm" id="btnCloseDriverModal">✕</button>
       </div>
@@ -955,7 +1275,7 @@
       <div class="grid-2">
         <div class="form-group">
           <label class="form-label">Fahrer-ID (Login-ID)</label>
-          <input type="text" class="input mono" id="newDriverIdInput" placeholder="z.B. F-8922 oder 1" />
+          <input type="text" class="input mono" id="newDriverIdInput" placeholder="z.B. F-8922" />
         </div>
         <div class="form-group">
           <label class="form-label">Name</label>
@@ -995,6 +1315,7 @@
     </div>
   </div>
 
+  <!-- Modal: Medien-Vorschau -->
   <div class="modal-backdrop" id="mediaPreviewModal">
     <div class="modal-box">
       <div class="card-header">
@@ -1005,6 +1326,7 @@
     </div>
   </div>
 
+  <!-- Toast Container -->
   <div class="toast-container" id="toastContainer"></div>
 
   <script>
@@ -1024,8 +1346,17 @@
         driverLive: [],
         proofs: [],
         invoices: [],
-        company: { name: '', owner: '', street: '', city: '', phone: '', email: '', taxId: '' },
-        selectedDriverId: '',
+        company: {
+          name: '',
+          owner: '',
+          street: '',
+          city: '',
+          phone: '',
+          email: '',
+          taxId: ''
+        },
+        selectedDriverId: 'F-8921',
+        editingDriverId: null,
         editingTourId: null,
         realtimeUnsubscribe: null
       };
@@ -1103,6 +1434,7 @@
       async function handleChefLogin(e) {
         e.preventDefault();
         setLoginError('');
+
         const sb = getSupabaseClient();
         if (!sb || !sb.auth) {
           setLoginError('Supabase-Client nicht initialisiert. Prüfe vindox-api.js.');
@@ -1112,13 +1444,14 @@
         const email = document.getElementById('loginEmailInput').value.trim();
         const password = document.getElementById('loginPasswordInput').value;
         const submitBtn = document.getElementById('btnChefLoginSubmit');
+
         submitBtn.disabled = true;
         submitBtn.textContent = 'Logge ein...';
 
         try {
           const { data, error } = await sb.auth.signInWithPassword({ email, password });
           if (error) {
-            setLoginError(error.message || 'Login fehlgeschlagen.');
+            setLoginError(error.message || 'Login fehlgeschlagen. Bitte E-Mail und Passwort prüfen.');
             return;
           }
           if (data && data.user) {
@@ -1138,7 +1471,9 @@
 
       async function handleChefLogout() {
         const sb = getSupabaseClient();
-        if (sb && sb.auth) await sb.auth.signOut();
+        if (sb && sb.auth) {
+          await sb.auth.signOut();
+        }
         if (typeof state.realtimeUnsubscribe === 'function') {
           state.realtimeUnsubscribe();
           state.realtimeUnsubscribe = null;
@@ -1172,8 +1507,12 @@
 
       function switchTab(tabName) {
         state.activeTab = tabName;
-        document.querySelectorAll('.nav-btn').forEach((btn) => btn.classList.toggle('active', btn.dataset.tab === tabName));
-        document.querySelectorAll('.tab-panel').forEach((panel) => panel.classList.toggle('active', panel.id === `tab-${tabName}`));
+        document.querySelectorAll('.nav-btn').forEach((btn) => {
+          btn.classList.toggle('active', btn.dataset.tab === tabName);
+        });
+        document.querySelectorAll('.tab-panel').forEach((panel) => {
+          panel.classList.toggle('active', panel.id === `tab-${tabName}`);
+        });
 
         const titles = {
           overview: ['Übersicht', 'Zentrale Steuerung für Fahrer, Touren & Nachweise'],
@@ -1187,11 +1526,17 @@
         const [t, s] = titles[tabName] || titles.overview;
         document.getElementById('pageTitle').textContent = t;
         document.getElementById('pageSub').textContent = s;
+
         document.getElementById('sidebar').classList.remove('open');
       }
 
       async function loadAllData(silent = false) {
-        if (!state.user || !window.VindoxAPI) return;
+        if (!state.user) return;
+        if (!window.VindoxAPI) {
+          setSyncPill(false, 'VindoxAPI nicht geladen');
+          return;
+        }
+
         try {
           const cid = state.companyId;
           const [drivers, tours, liveRows, proofs, invoices, company] = await Promise.all([
@@ -1344,7 +1689,7 @@
           renderDriversTable();
           showToast(`Pflichtnachweise für ${driverId} gespeichert`, 'success');
         } catch (err) {
-          console.error(err);
+          console.error('Fehler beim Speichern der Fahrer-Regeln:', err);
           showToast('Fehler beim Speichern der Pflichtnachweise', 'danger');
         }
       }
@@ -1352,7 +1697,7 @@
       function renderDriversTable() {
         const tbody = document.getElementById('driversTableBody');
         if (state.drivers.length === 0) {
-          tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:24px;">Keine Fahrer vorhanden. Lege über „+ Fahrer anlegen“ einen Fahrer mit ID & Passwort an.</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:24px;">Keine Fahrer vorhanden. Lege über „+ Fahrer anlegen“ einen Fahrer an.</td></tr>`;
           return;
         }
 
@@ -1374,7 +1719,7 @@
               ? `<span class="badge badge-warning">Pause</span>`
               : `<span class="badge badge-success">Aktiv</span>`;
 
-          const pwDisplay = drv.password_hash ? escapeHtml(drv.password_hash) : '—';
+          const pwText = drv.password_hash ? escapeHtml(drv.password_hash) : '—';
 
           return `
             <tr>
@@ -1382,9 +1727,10 @@
               <td style="font-weight:600;">${escapeHtml(drv.name || '-')}</td>
               <td>${escapeHtml(drv.vehicle || '-')}</td>
               <td>${statusBadge}</td>
-              <td class="mono" style="font-size:12px; color:#93c5fd;">${pwDisplay}</td>
+              <td class="mono" style="font-size:12px; color:#93c5fd;">${pwText}</td>
               <td><div class="rule-toggle-group">${ruleHtml}</div></td>
-              <td>
+              <td style="display:flex; gap:6px;">
+                <button class="btn btn-sm btn-edit-driver" data-driver-id="${escapeHtml(drv.id)}">Bearbeiten</button>
                 <button class="btn btn-danger btn-sm btn-delete-driver" data-driver-id="${escapeHtml(drv.id)}">Löschen</button>
               </td>
             </tr>
@@ -1397,6 +1743,13 @@
             const rowCbs = Array.from(tbody.querySelectorAll(`.drv-rule-cb[data-driver-id="${dId}"]:checked`));
             const nextRules = rowCbs.map((el) => el.dataset.ruleKey);
             await saveDriverRules(dId, nextRules);
+          });
+        });
+
+        tbody.querySelectorAll('.btn-edit-driver').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const drv = state.drivers.find((d) => d.id === btn.dataset.driverId);
+            if (drv) openDriverModal(drv);
           });
         });
 
@@ -1477,8 +1830,14 @@
         const status = document.getElementById('tourStatusSelect').value || 'active';
         const notes = (document.getElementById('tourNotesInput').value || '').trim();
 
-        if (!tourId) { showToast('Bitte eine Tour-ID angeben', 'warning'); return; }
-        if (!driverId) { showToast('Bitte zuerst einen Fahrer anlegen und zuweisen', 'warning'); return; }
+        if (!tourId) {
+          showToast('Bitte eine Tour-ID angeben', 'warning');
+          return;
+        }
+        if (!driverId) {
+          showToast('Bitte zuerst einen Fahrer anlegen und zuweisen', 'warning');
+          return;
+        }
 
         const stops = [];
         document.querySelectorAll('#tourStopsBuilderList .stop-row').forEach((row, idx) => {
@@ -1499,7 +1858,11 @@
           }
         });
 
-        if (stops.length === 0) { showToast('Bitte mindestens einen Stopp eintragen', 'warning'); return; }
+        if (stops.length === 0) {
+          showToast('Bitte mindestens einen Stopp eintragen', 'warning');
+          return;
+        }
+
         const drv = state.drivers.find((d) => d.id === driverId);
 
         try {
@@ -1756,23 +2119,40 @@
         document.getElementById('chefLoginForm').addEventListener('submit', handleChefLogin);
         document.getElementById('btnChefLogout').addEventListener('click', handleChefLogout);
 
-        document.querySelectorAll('.nav-btn').forEach((btn) => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
-        document.getElementById('mobileMenuBtn').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'));
+        document.querySelectorAll('.nav-btn').forEach((btn) => {
+          btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+        });
+
+        document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+          document.getElementById('sidebar').classList.toggle('open');
+        });
+
         document.getElementById('btnManualRefresh').addEventListener('click', () => loadAllData(false));
-        document.getElementById('btnQuickNewTour').addEventListener('click', () => { resetTourForm(); switchTab('tours'); });
+        document.getElementById('btnQuickNewTour').addEventListener('click', () => {
+          resetTourForm();
+          switchTab('tours');
+        });
 
         document.getElementById('overviewDriverSelect').addEventListener('change', (e) => {
           state.selectedDriverId = e.target.value;
           renderOverviewSection();
         });
 
-        document.getElementById('messageDriverSelect').addEventListener('change', () => renderLiveSection());
+        document.getElementById('messageDriverSelect').addEventListener('change', () => {
+          renderLiveSection();
+        });
 
         document.getElementById('btnSendDriverMessage').addEventListener('click', async () => {
           const dId = document.getElementById('messageDriverSelect').value;
           const msg = document.getElementById('driverMessageInput').value.trim();
-          if (!dId) { showToast('Bitte zuerst einen Fahrer auswählen', 'warning'); return; }
-          if (!msg) { showToast('Bitte eine Nachricht eingeben', 'warning'); return; }
+          if (!dId) {
+            showToast('Bitte zuerst einen Fahrer auswählen', 'warning');
+            return;
+          }
+          if (!msg) {
+            showToast('Bitte eine Nachricht eingeben', 'warning');
+            return;
+          }
           try {
             await window.VindoxAPI.sendDriverMessage(dId, msg, state.companyId);
             document.getElementById('driverMessageInput').value = '';
@@ -1792,16 +2172,37 @@
           </label>
         `).join('');
 
-        const openDriverModal = () => {
-          document.getElementById('newDriverIdInput').value = '';
-          document.getElementById('newDriverNameInput').value = '';
-          document.getElementById('newDriverPasswordInput').value = '';
-          document.getElementById('newDriverVehicleInput').value = '';
-          document.getElementById('newDriverStatusInput').value = 'active';
-          newRuleBox.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
-            cb.checked = false;
-            cb.parentElement.classList.remove('active');
-          });
+        window.openDriverModal = (existingDriver = null) => {
+          if (existingDriver) {
+            state.editingDriverId = existingDriver.id;
+            document.getElementById('driverModalTitle').textContent = `Fahrer bearbeiten (${existingDriver.id})`;
+            document.getElementById('newDriverIdInput').value = existingDriver.id || '';
+            document.getElementById('newDriverIdInput').readOnly = true;
+            document.getElementById('newDriverNameInput').value = existingDriver.name || '';
+            document.getElementById('newDriverPasswordInput').value = existingDriver.password_hash || '';
+            document.getElementById('newDriverVehicleInput').value = existingDriver.vehicle || '';
+            document.getElementById('newDriverStatusInput').value = existingDriver.status || 'active';
+
+            const activeRules = getRulesArray(existingDriver);
+            newRuleBox.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+              const isChecked = activeRules.includes(cb.value);
+              cb.checked = isChecked;
+              cb.parentElement.classList.toggle('active', isChecked);
+            });
+          } else {
+            state.editingDriverId = null;
+            document.getElementById('driverModalTitle').textContent = 'Neuen Fahrer anlegen';
+            document.getElementById('newDriverIdInput').value = '';
+            document.getElementById('newDriverIdInput').readOnly = false;
+            document.getElementById('newDriverNameInput').value = '';
+            document.getElementById('newDriverPasswordInput').value = '';
+            document.getElementById('newDriverVehicleInput').value = '';
+            document.getElementById('newDriverStatusInput').value = 'active';
+            newRuleBox.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+              cb.checked = false;
+              cb.parentElement.classList.remove('active');
+            });
+          }
           document.getElementById('addDriverModal').classList.add('open');
         };
 
@@ -1809,14 +2210,14 @@
           cb.addEventListener('change', () => cb.parentElement.classList.toggle('active', cb.checked));
         });
 
-        document.getElementById('btnOpenAddDriver').addEventListener('click', openDriverModal);
+        document.getElementById('btnOpenAddDriver').addEventListener('click', () => window.openDriverModal(null));
         document.getElementById('btnCloseDriverModal').addEventListener('click', () => document.getElementById('addDriverModal').classList.remove('open'));
         document.getElementById('btnCancelDriverModal').addEventListener('click', () => document.getElementById('addDriverModal').classList.remove('open'));
 
         document.getElementById('btnConfirmAddDriver').addEventListener('click', async () => {
           const id = document.getElementById('newDriverIdInput').value.trim();
           const name = document.getElementById('newDriverNameInput').value.trim();
-          const passwordVal = document.getElementById('newDriverPasswordInput').value.trim();
+          const passwordHash = document.getElementById('newDriverPasswordInput').value.trim();
           const vehicle = document.getElementById('newDriverVehicleInput').value.trim();
           const status = document.getElementById('newDriverStatusInput').value;
           const selectedRules = Array.from(newRuleBox.querySelectorAll('input[type="checkbox"]:checked')).map((c) => c.value);
@@ -1830,7 +2231,7 @@
             await window.VindoxAPI.upsertDriver({
               id,
               name,
-              password_hash: passwordVal || null,
+              password_hash: passwordHash || null,
               vehicle,
               status,
               companyId: state.companyId,
@@ -1846,7 +2247,7 @@
             await loadAllData(true);
           } catch (err) {
             console.error(err);
-            showToast('Fahrer konnte nicht angelegt werden', 'danger');
+            showToast('Fahrer konnte nicht gespeichert werden', 'danger');
           }
         });
 
@@ -1861,7 +2262,10 @@
           const status = document.getElementById('invoiceStatusInput').value;
           const dueDate = document.getElementById('invoiceDueDateInput').value;
 
-          if (!invoiceNumber || !customer) { showToast('Bitte Rechnungsnummer und Kunde angeben', 'warning'); return; }
+          if (!invoiceNumber || !customer) {
+            showToast('Bitte Rechnungsnummer und Kunde angeben', 'warning');
+            return;
+          }
 
           try {
             await window.VindoxAPI.upsertInvoice({
