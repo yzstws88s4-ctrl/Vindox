@@ -82,7 +82,6 @@
       font-variant-numeric: tabular-nums;
     }
 
-    /* Brand Logo Image + Fallback */
     .brand-logo-wrap {
       width: 38px;
       height: 38px;
@@ -616,7 +615,6 @@
       border-color: var(--border);
     }
 
-    /* Rule Toggles */
     .rule-toggle-group {
       display: flex;
       flex-wrap: wrap;
@@ -656,7 +654,6 @@
       font-weight: 600;
     }
 
-    /* Drivers B2B Upgrade */
     .drivers-toolbar-stats {
       display: flex;
       gap: 10px;
@@ -685,7 +682,6 @@
       gap: 6px;
     }
 
-    /* Tables */
     .table-wrap {
       overflow-x: auto;
       border: 1px solid var(--border);
@@ -724,12 +720,12 @@
       background: #f8faff;
     }
 
-    /* Compact KI-Beleg-Scanner (gleiche Logik wie TourApp) */
+    /* KI-Beleg- & Adress-Scanner (gleiche Logik wie TourApp, heller Stil) */
     .ocr-panel {
       background: var(--bg-surface-2);
       border: 1px solid var(--border);
       border-radius: var(--radius-md);
-      padding: 12px 13px;
+      padding: 13px 14px;
       margin-bottom: 14px;
     }
 
@@ -746,7 +742,7 @@
       border: 1.5px dashed var(--border-strong);
       border-radius: var(--radius-sm);
       background: var(--bg-surface);
-      padding: 11px 12px;
+      padding: 12px;
       text-align: center;
       cursor: pointer;
       transition: all 0.15s ease;
@@ -758,7 +754,7 @@
     }
 
     .ocr-preview-img {
-      max-height: 112px;
+      max-height: 116px;
       max-width: 100%;
       border-radius: 8px;
       border: 1px solid var(--border);
@@ -769,10 +765,10 @@
     .ocr-progress-wrap {
       display: none;
       margin-top: 9px;
-      padding: 8px 10px;
+      padding: 9px 11px;
       border-radius: var(--radius-sm);
       background: var(--accent-soft);
-      border: 1px solid rgba(29, 78, 216, 0.2);
+      border: 1px solid rgba(29, 78, 216, 0.22);
     }
 
     .ocr-progress-top {
@@ -785,7 +781,7 @@
     }
 
     .ocr-progress-track {
-      height: 5px;
+      height: 6px;
       background: rgba(29, 78, 216, 0.14);
       border-radius: 999px;
       overflow: hidden;
@@ -804,6 +800,18 @@
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
       padding: 9px 11px;
+    }
+
+    .route-opt-banner {
+      display: none;
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      background: var(--success-soft);
+      border: 1px solid rgba(5, 150, 105, 0.25);
+      color: #065f46;
+      font-size: 12px;
+      font-weight: 600;
     }
 
     .preview-stage-card {
@@ -1096,7 +1104,6 @@
       margin-bottom: 10px;
     }
 
-    /* Proof Cards */
     .proof-media-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
@@ -1125,7 +1132,6 @@
       margin-top: 8px;
     }
 
-    /* Stop Builder Rows */
     .stop-row {
       display: grid;
       grid-template-columns: 28px 1.25fr 1fr 0.9fr auto;
@@ -1178,7 +1184,6 @@
       font-size: 13px;
     }
 
-    /* Toast */
     .toast-container {
       position: fixed;
       right: 20px;
@@ -1206,7 +1211,6 @@
     .toast.warning { border-left-color: var(--warning); }
     .toast.danger { border-left-color: var(--danger); }
 
-    /* Modal */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -1511,37 +1515,36 @@
           </div>
         </section>
 
-        <!-- TAB 3: TOUREN (SCHLANK + EXAKTE TOURAPP-KI-ERKENNUNG + ZUWEISUNG) -->
+        <!-- TAB 3: TOUREN (SCAN + SCHNELLSTE ROUTE + ZUWEISUNG) -->
         <section class="tab-panel" id="tab-tours">
           <div class="split-grid">
-            <!-- Links: Tour erfassen + exakte gpt-4o Beleg-/Adress-Erkennung -->
             <div class="card">
               <div class="card-header">
                 <div>
-                  <div class="card-title" id="tourBuilderTitle">Tour erfassen &amp; zuweisen</div>
-                  <div class="card-sub">Beleg/Screenshot per KI auslesen oder Stopps direkt erfassen &amp; zuweisen</div>
+                  <div class="card-title" id="tourBuilderTitle">Tour erfassen, optimieren &amp; zuweisen</div>
+                  <div class="card-sub">Beleg/Screenshot auslesen, schnellste Route berechnen und an den Fahrer senden</div>
                 </div>
-                <button class="btn btn-sm" id="btnResetTourForm">Zurücksetzen</button>
+                <button type="button" class="btn btn-sm" id="btnResetTourForm">Zurücksetzen</button>
               </div>
 
-              <!-- KI-Beleg- & Adress-Scanner (identisch zur TourApp gpt-4o Logik) -->
+              <!-- KI-Beleg- & Adress-Scanner (identisch zu index.html) -->
               <div class="ocr-panel">
                 <div class="ocr-panel-head">
                   <div style="display:flex; align-items:center; gap:7px;">
-                    <span class="badge badge-info mono">GPT-4O VISION</span>
-                    <span style="font-size:12.5px; font-weight:700;">Lieferschein / Screenshot / Foto</span>
+                    <span class="badge badge-info mono">GPT-4O SCAN</span>
+                    <span style="font-size:12.5px; font-weight:700;">Screenshot / Beleg / Foto</span>
                   </div>
                   <button type="button" class="btn btn-sm" id="btnToggleOpenAiKeyBox" style="padding:5px 9px;">API Key</button>
                 </div>
 
                 <div id="openAiKeyBox" style="display:none; margin-bottom:9px; padding:9px; border-radius:var(--radius-sm); background:var(--bg-surface); border:1px solid var(--border);">
-                  <input type="password" class="input mono" id="openAiApiKeyInput" placeholder="OpenAI API Key (sk-proj-...)" style="padding:6px 9px; font-size:12px;" />
+                  <input type="password" class="input mono" id="openAiApiKeyInput" placeholder="OpenAI API Key (vindox_openai_key / sk-proj-...)" style="padding:6px 9px; font-size:12px;" />
                 </div>
 
                 <div class="ocr-dropzone" id="ocrDropzone">
                   <input type="file" id="ocrFileInput" accept="image/*" style="display:none;" />
                   <div style="font-size:12.5px; font-weight:600; color:var(--text-primary);">
-                    Beleg oder Screenshot ablegen, klicken oder <span class="mono">Strg+V</span> drücken
+                    Beleg oder Screenshot hochladen, ablegen oder <span class="mono">Strg+V</span> drücken
                   </div>
                   <img id="ocrImagePreview" class="ocr-preview-img" alt="Beleg Vorschau" style="display:none;" />
                 </div>
@@ -1558,14 +1561,14 @@
 
                 <div style="display:flex; gap:7px; margin-top:8px; flex-wrap:wrap;">
                   <button type="button" class="btn btn-primary btn-sm" id="btnRunOcrScan">Adressen auslesen</button>
-                  <button type="button" class="btn btn-sm" id="btnApplyOcrToStops" disabled>In Tour übernehmen</button>
+                  <button type="button" class="btn btn-sm" id="btnApplyOcrToStops" disabled>In Stopps übernehmen</button>
                   <button type="button" class="btn btn-sm" id="btnClearOcr">Leeren</button>
                 </div>
 
                 <div id="ocrExtractedOutput" class="ocr-hits-box" style="display:none;"></div>
               </div>
 
-              <!-- Tour-Stammdaten & Fahrer-Zuweisung -->
+              <!-- Tour-Stammdaten, Zieladresse & Fahrer-Zuweisung -->
               <div class="grid-2">
                 <div class="form-group">
                   <label class="form-label">Tour-ID</label>
@@ -1585,35 +1588,47 @@
                 <div class="form-group">
                   <label class="form-label">Status</label>
                   <select class="select" id="tourStatusSelect">
-                    <option value="active">Aktiv (an Fahrer übergeben)</option>
+                    <option value="active">Aktiv (an Fahrer senden)</option>
                     <option value="completed">Abgeschlossen</option>
                   </select>
                 </div>
               </div>
 
-              <div class="form-group">
-                <label class="form-label">Notiz / Anweisung</label>
-                <input type="text" class="input" id="tourNotesInput" placeholder="Optional..." />
+              <div class="grid-2">
+                <div class="form-group">
+                  <label class="form-label">Ziel- / Firmenadresse (für Routen-Optimierung)</label>
+                  <input type="text" class="input" id="tourEndAddressInput" placeholder="z.B. Hauptstraße 1, 51766 Engelskirchen" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Notiz / Anweisung an Fahrer</label>
+                  <input type="text" class="input" id="tourNotesInput" placeholder="Optional..." />
+                </div>
               </div>
 
               <div class="card-header" style="margin-top: 6px; margin-bottom: 8px;">
                 <div class="card-title" style="font-size: 13.5px;">Stopps</div>
-                <button type="button" class="btn btn-sm" id="btnAddStopRow">+ Stopp</button>
+                <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                  <button type="button" class="btn btn-sm" id="btnReverseStops">↕ Umkehren</button>
+                  <button type="button" class="btn btn-sm" id="btnAddStopRow">+ Stopp</button>
+                </div>
               </div>
 
               <div id="tourStopsBuilderList"></div>
 
-              <div style="margin-top: 12px;">
-                <button type="button" class="btn btn-primary" id="btnSaveTour" style="width:100%;">Tour zuweisen &amp; senden</button>
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-top: 12px;">
+                <button type="button" class="btn" id="btnOptimizeRouteChef">Schnellste Route berechnen</button>
+                <button type="button" class="btn btn-primary" id="btnSaveTour">An Fahrer senden</button>
               </div>
+
+              <div class="route-opt-banner" id="routeOptimizationBanner"></div>
             </div>
 
-            <!-- Rechts: Klare Vorschau der aktuellen Tour -->
+            <!-- Rechts: Klare Tour-Vorschau & Zuweisung -->
             <div class="preview-stage-card">
               <div class="card-header" style="margin-bottom: 12px;">
                 <div>
-                  <div class="card-title">Aktuelle Tour-Vorschau</div>
-                  <div class="card-sub">Direkte Zuweisung an den Fahrer</div>
+                  <div class="card-title">Tour-Vorschau für Fahrer</div>
+                  <div class="card-sub">Reihenfolge, Zieladresse &amp; Zuweisung</div>
                 </div>
                 <span class="badge badge-info mono" id="previewStopCountBadge">0 Stopps</span>
               </div>
@@ -1816,7 +1831,7 @@
     </div>
   </div>
 
-  <!-- Modal: Fahrer anlegen / bearbeiten (inkl. Passwort) -->
+  <!-- Modal: Fahrer anlegen / bearbeiten -->
   <div class="modal-backdrop" id="addDriverModal">
     <div class="modal-box">
       <div class="card-header">
@@ -1892,7 +1907,7 @@
         { key: 'signature', label: 'Unterschrift-Pflicht' }
       ];
 
-      // Identischer System-Prompt wie in der Vindox Tour-App
+      // Identischer System-Prompt wie in der Vindox Tour-App (index.html)
       const TOUR_APP_VISION_SYSTEM_PROMPT = `Du bist ein extrem sorgfältiges deutsches Logistik- & OCR-System für Tourenlisten, Lieferscheine, Screenshots und handschriftliche Zettel.
 
 AUFGABE:
@@ -1928,6 +1943,7 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
         ocrFile: null,
         ocrPreviewUrl: '',
         ocrExtractedStops: [],
+        geoCache: {},
         company: {
           name: '',
           owner: '',
@@ -1975,7 +1991,7 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
         return num.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
       }
 
-      // Nutzt denselben localStorage-Schlüssel wie die Tour-App ('vindox_openai_key') als Fallback
+      // OpenAI Key aus index.html ('vindox_openai_key') + firmenspezifisch synchron halten
       function getOpenAiKeyStorageKey() {
         return `vindox_openai_key_${state.companyId || 'default'}`;
       }
@@ -1984,9 +2000,9 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
         const keyInp = document.getElementById('openAiApiKeyInput');
         if (!keyInp) return;
         try {
-          const savedCompanyKey = localStorage.getItem(getOpenAiKeyStorageKey()) || '';
-          const sharedAppKey = localStorage.getItem('vindox_openai_key') || '';
-          keyInp.value = savedCompanyKey || sharedAppKey;
+          const sharedKey = localStorage.getItem('vindox_openai_key') || '';
+          const companyKey = localStorage.getItem(getOpenAiKeyStorageKey()) || '';
+          keyInp.value = sharedKey || companyKey;
         } catch (_e) {}
       }
 
@@ -1995,12 +2011,31 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
         if (!keyInp) return;
         const val = keyInp.value.trim();
         try {
+          localStorage.setItem('vindox_openai_key', val);
           localStorage.setItem(getOpenAiKeyStorageKey(), val);
-          if (val) localStorage.setItem('vindox_openai_key', val);
         } catch (_e) {}
       }
 
-      // Identische Bild-Komprimierung wie in der Vindox Tour-App
+      function loadSavedHomeAddress() {
+        const homeInp = document.getElementById('tourEndAddressInput');
+        if (!homeInp) return;
+        try {
+          const savedHome = localStorage.getItem('vindox_home_address') || '';
+          if (savedHome && !homeInp.value) homeInp.value = savedHome;
+        } catch (_e) {}
+      }
+
+      function saveHomeAddress() {
+        const homeInp = document.getElementById('tourEndAddressInput');
+        if (!homeInp) return;
+        const val = homeInp.value.trim();
+        try {
+          if (val) localStorage.setItem('vindox_home_address', val);
+          else localStorage.removeItem('vindox_home_address');
+        } catch (_e) {}
+      }
+
+      // Bild-Komprimierung wie in index.html
       function compressImageToDataUrl(file, maxDim = 1800, quality = 0.92) {
         return new Promise((resolve, reject) => {
           const reader = new FileReader();
@@ -2081,9 +2116,9 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
         `;
       }
 
-      // Exakt dieselbe OpenAI Vision (gpt-4o) Erkennungs-Logik wie in der Tour-App
+      // OpenAI Vision Scan (identisch zu index.html)
       async function runTourAppVisionScan() {
-        const apiKey = (document.getElementById('openAiApiKeyInput')?.value || '').trim();
+        const apiKey = (document.getElementById('openAiApiKeyInput')?.value || localStorage.getItem('vindox_openai_key') || '').trim();
         if (!apiKey) {
           showToast('Bitte zuerst deinen OpenAI API Key hinterlegen', 'warning');
           document.getElementById('openAiKeyBox').style.display = 'block';
@@ -2183,7 +2218,8 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
           statusText.innerText = `✓ ${state.ocrExtractedStops.length} Stopps erkannt`;
 
           renderOcrExtractedOutput();
-          showToast(`${state.ocrExtractedStops.length} Stopps erkannt`, 'success');
+          applyOcrStopsToBuilder();
+          showToast(`${state.ocrExtractedStops.length} Stopps erkannt & übernommen`, 'success');
 
           setTimeout(() => {
             progressWrap.style.display = 'none';
@@ -2204,11 +2240,152 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
         if (stops.length === 0) return;
 
         const list = document.getElementById('tourStopsBuilderList');
-        list.innerHTML = '';
+        const existingRows = Array.from(list.querySelectorAll('.stop-row'));
+        const hasOnlyEmptyRow = existingRows.length === 1 &&
+          !existingRows[0].querySelector('.stop-street').value.trim() &&
+          !existingRows[0].querySelector('.stop-city').value.trim() &&
+          !existingRows[0].querySelector('.stop-note').value.trim();
+
+        if (hasOnlyEmptyRow) list.innerHTML = '';
         stops.forEach((s) => addStopBuilderRow(s));
         renumberStopRows();
         renderCurrentTourPreview();
-        showToast('Stopps in Tour übernommen', 'success');
+      }
+
+      // Geocoding + OSRM "Schnellste Route berechnen" (gleiche Logik wie index.html)
+      async function fetchWithTimeout(url, options = {}, timeoutMs = 2500) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), timeoutMs);
+        try {
+          return await fetch(url, { ...options, signal: controller.signal });
+        } finally {
+          clearTimeout(timer);
+        }
+      }
+
+      async function geocodeGermanAddress(fullAddress) {
+        const cleanAddr = (fullAddress || '').trim();
+        if (!cleanAddr) return null;
+        const key = cleanAddr.toLowerCase();
+        if (state.geoCache[key]) return state.geoCache[key];
+
+        try {
+          const photonUrl = `https://photon.komoot.io/api/?q=${encodeURIComponent(cleanAddr)}&limit=1&lang=de`;
+          const res = await fetchWithTimeout(photonUrl, {}, 2200);
+          if (res.ok) {
+            const data = await res.json();
+            if (data.features && data.features.length > 0) {
+              const [lon, lat] = data.features[0].geometry.coordinates;
+              const result = { lat, lon };
+              state.geoCache[key] = result;
+              return result;
+            }
+          }
+        } catch (_e) {}
+
+        try {
+          const nomUrl = `https://nominatim.openstreetmap.org/search?format=json&countrycodes=de&limit=1&q=${encodeURIComponent(cleanAddr)}`;
+          const res = await fetchWithTimeout(nomUrl, { headers: { 'Accept-Language': 'de' } }, 2500);
+          if (res.ok) {
+            const data = await res.json();
+            if (Array.isArray(data) && data.length > 0) {
+              const result = { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
+              state.geoCache[key] = result;
+              return result;
+            }
+          }
+        } catch (_e) {}
+
+        return null;
+      }
+
+      function getStartPointForDriver(driverId) {
+        const live = state.driverLive.find((r) => r.driver_id === driverId);
+        const lat = Number(live && live.lat);
+        const lng = Number(live && live.lng);
+        if (Number.isFinite(lat) && Number.isFinite(lng) && (lat !== 0 || lng !== 0)) {
+          return { lat, lon: lng };
+        }
+        return { lat: 51.0234, lon: 7.2541 };
+      }
+
+      async function optimizeFastestRouteInCommandCenter() {
+        const rows = Array.from(document.querySelectorAll('#tourStopsBuilderList .stop-row')).map((row) => ({
+          street: row.querySelector('.stop-street').value.trim(),
+          city: row.querySelector('.stop-city').value.trim(),
+          note: row.querySelector('.stop-note').value.trim()
+        })).filter((s) => s.street || s.city);
+
+        if (rows.length < 2) {
+          showToast('Bitte mindestens 2 Stopps eintragen, um die Route zu berechnen', 'warning');
+          return;
+        }
+
+        const homeAddress = (document.getElementById('tourEndAddressInput').value || '').trim();
+        if (!homeAddress) {
+          showToast('Bitte eine Ziel- / Firmenadresse für die Route angeben', 'warning');
+          return;
+        }
+
+        const btn = document.getElementById('btnOptimizeRouteChef');
+        const banner = document.getElementById('routeOptimizationBanner');
+        btn.disabled = true;
+        btn.textContent = 'Berechne Route...';
+
+        try {
+          const driverId = document.getElementById('tourDriverSelect').value;
+          const startCoords = getStartPointForDriver(driverId);
+          const endCoords = await geocodeGermanAddress(homeAddress);
+          if (!endCoords) {
+            throw new Error(`Zieladresse "${homeAddress}" nicht gefunden.`);
+          }
+
+          const stopCoordsList = new Array(rows.length);
+          for (let i = 0; i < rows.length; i++) {
+            const query = [rows[i].street, rows[i].city].filter(Boolean).join(', ');
+            const coords = await geocodeGermanAddress(query) || (rows[i].city ? await geocodeGermanAddress(rows[i].city) : null);
+            if (!coords) {
+              throw new Error(`Adresse nicht gefunden: "${query}"`);
+            }
+            stopCoordsList[i] = coords;
+          }
+
+          const allPoints = [startCoords, ...stopCoordsList, endCoords];
+          const coordString = allPoints.map((p) => `${p.lon},${p.lat}`).join(';');
+          const osrmUrl = `https://router.project-osrm.org/trip/v1/driving/${coordString}?source=first&destination=last&roundtrip=false&overview=false`;
+
+          const osrmResponse = await fetchWithTimeout(osrmUrl, {}, 8000);
+          if (!osrmResponse.ok) throw new Error('Routing-Server nicht erreichbar.');
+          const osrmData = await osrmResponse.json();
+          if (osrmData.code !== 'Ok' || !osrmData.waypoints || !osrmData.trips || osrmData.trips.length === 0) {
+            throw new Error('Keine Straßenroute berechenbar.');
+          }
+
+          const ranked = rows.map((stop, idx) => ({
+            stop,
+            orderPos: osrmData.waypoints[idx + 1].waypoint_index
+          })).sort((a, b) => a.orderPos - b.orderPos).map((x) => x.stop);
+
+          const list = document.getElementById('tourStopsBuilderList');
+          list.innerHTML = '';
+          ranked.forEach((s) => addStopBuilderRow(s));
+          renumberStopRows();
+          renderCurrentTourPreview();
+
+          const trip = osrmData.trips[0];
+          const totalMinutes = Math.round(trip.duration / 60);
+          const totalKm = (trip.distance / 1000).toFixed(1).replace('.', ',');
+
+          banner.style.display = 'block';
+          banner.innerHTML = `✓ Schnellste Route sortiert: <strong>ca. ${totalMinutes} Min.</strong> (${totalKm} km inkl. Ziel <em>${escapeHtml(homeAddress)}</em>)`;
+          showToast('Schnellste Route berechnet & Stopps sortiert', 'success');
+        } catch (err) {
+          console.error(err);
+          showToast(err?.message || 'Routenberechnung fehlgeschlagen', 'danger');
+        } finally {
+          btn.disabled = false;
+          btn.textContent = 'Schnellste Route berechnen';
+        }
       }
 
       function setSyncPill(ok, text) {
@@ -2241,6 +2418,7 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
           shell.classList.add('authenticated');
           sessionInfo.innerHTML = `Chef: <strong>${escapeHtml(user.email || user.id)}</strong><br><span class="mono" style="font-size:10.5px; color:var(--text-muted);">ID: ${escapeHtml(user.id)}</span>`;
           loadOpenAiKey();
+          loadSavedHomeAddress();
         } else {
           state.user = null;
           state.companyId = null;
@@ -2336,7 +2514,7 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
         const titles = {
           overview: ['Übersicht', 'Zentrale Steuerung für Fahrer, Touren & Nachweise'],
           drivers: ['Fahrer & Pflichtnachweise', 'Fahrer-ID, Passwort & Regeln pro Fahrer festlegen'],
-          tours: ['Touren', 'Beleg per KI auslesen & Tour einem Fahrer zuweisen'],
+          tours: ['Touren', 'Beleg auslesen, schnellste Route berechnen & an Fahrer senden'],
           live: ['Live-Karte & Funk', 'GPS-Telemetrie, aktueller Stopp & Direktnachrichten'],
           proofs: ['Nachweis-Archiv', 'Dokumentierte Stopps mit Medien, GPS & Hash'],
           invoices: ['Rechnungen', 'Belege erfassen, Status pflegen & abrechnen'],
@@ -2642,11 +2820,27 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
         });
       }
 
+      function reverseBuilderStops() {
+        const list = document.getElementById('tourStopsBuilderList');
+        const rows = Array.from(list.querySelectorAll('.stop-row'));
+        if (rows.length < 2) return;
+        const values = rows.reverse().map((row) => ({
+          street: row.querySelector('.stop-street').value,
+          city: row.querySelector('.stop-city').value,
+          note: row.querySelector('.stop-note').value
+        }));
+        list.innerHTML = '';
+        values.forEach((v) => addStopBuilderRow(v));
+        renumberStopRows();
+        renderCurrentTourPreview();
+      }
+
       function collectCurrentTourDraft() {
         const tourId = (document.getElementById('tourIdInput').value || '').trim() || 'T-NEU';
         const driverId = document.getElementById('tourDriverSelect').value || '';
         const title = (document.getElementById('tourTitleInput').value || '').trim();
         const status = document.getElementById('tourStatusSelect').value || 'active';
+        const endAddress = (document.getElementById('tourEndAddressInput').value || '').trim();
         const notes = (document.getElementById('tourNotesInput').value || '').trim();
 
         const stops = [];
@@ -2673,6 +2867,7 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
           driverRules: drv ? getRulesArray(drv) : [],
           title,
           status,
+          endAddress,
           notes,
           stops
         };
@@ -2721,6 +2916,7 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
             <div style="font-size:12.5px; color:var(--text-secondary);">
               Fahrer: ${driverLabel}
             </div>
+            ${draft.endAddress ? `<div style="font-size:12px; color:var(--text-secondary); margin-top:4px;">Zieladresse: <strong>${escapeHtml(draft.endAddress)}</strong></div>` : ''}
             ${rulesBadges ? `<div style="display:flex; gap:5px; flex-wrap:wrap; margin-top:8px;">${rulesBadges}</div>` : ''}
             ${draft.notes ? `<div style="margin-top:8px; padding-top:8px; border-top:1px solid var(--border); font-size:12px; color:var(--text-secondary);">${escapeHtml(draft.notes)}</div>` : ''}
           </div>
@@ -2730,11 +2926,16 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
 
       function resetTourForm() {
         state.editingTourId = null;
-        document.getElementById('tourBuilderTitle').textContent = 'Tour erfassen & zuweisen';
+        document.getElementById('tourBuilderTitle').textContent = 'Tour erfassen, optimieren & zuweisen';
         document.getElementById('tourIdInput').value = 'T-' + Math.floor(1000 + Math.random() * 9000);
         document.getElementById('tourTitleInput').value = '';
         document.getElementById('tourStatusSelect').value = 'active';
         document.getElementById('tourNotesInput').value = '';
+        const banner = document.getElementById('routeOptimizationBanner');
+        if (banner) {
+          banner.style.display = 'none';
+          banner.innerHTML = '';
+        }
         document.getElementById('tourStopsBuilderList').innerHTML = '';
         addStopBuilderRow();
         renderCurrentTourPreview();
@@ -2746,6 +2947,7 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
         const driverId = document.getElementById('tourDriverSelect').value;
         const title = (document.getElementById('tourTitleInput').value || '').trim() || `Tour ${tourId}`;
         const status = document.getElementById('tourStatusSelect').value || 'active';
+        const endAddress = (document.getElementById('tourEndAddressInput').value || '').trim();
         const notes = (document.getElementById('tourNotesInput').value || '').trim();
 
         if (!tourId) {
@@ -2781,6 +2983,7 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
           return;
         }
 
+        saveHomeAddress();
         const drv = state.drivers.find((d) => d.id === driverId);
 
         try {
@@ -2790,17 +2993,18 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
             driverName: drv ? drv.name : `Fahrer ${driverId}`,
             title,
             status,
+            endAddress,
             notes,
             stops,
             companyId: state.companyId,
             ownerId: state.companyId
           });
-          showToast(`Tour ${tourId} an ${driverId} zugewiesen`, 'success');
+          showToast(`Tour ${tourId} an ${driverId} gesendet`, 'success');
           resetTourForm();
           await loadAllData(true);
         } catch (err) {
           console.error(err);
-          showToast('Tour konnte nicht gespeichert werden', 'danger');
+          showToast('Tour konnte nicht gesendet werden', 'danger');
         }
       }
 
@@ -3297,8 +3501,10 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
         });
 
         document.getElementById('openAiApiKeyInput').addEventListener('input', saveOpenAiKey);
+        document.getElementById('tourEndAddressInput').addEventListener('input', saveHomeAddress);
 
         document.getElementById('btnRunOcrScan').addEventListener('click', runTourAppVisionScan);
+        document.getElementById('btnApplyOcrToStops').addEventListener('click', applyOcrStopsToBuilder);
         document.getElementById('btnClearOcr').addEventListener('click', () => {
           state.ocrFile = null;
           state.ocrPreviewUrl = '';
@@ -3311,10 +3517,8 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
           }
           renderOcrExtractedOutput();
         });
-        document.getElementById('btnApplyOcrToStops').addEventListener('click', applyOcrStopsToBuilder);
 
-        // Tour Draft Live Preview Listeners
-        ['tourIdInput', 'tourDriverSelect', 'tourTitleInput', 'tourStatusSelect', 'tourNotesInput'].forEach((elId) => {
+        ['tourIdInput', 'tourDriverSelect', 'tourTitleInput', 'tourStatusSelect', 'tourEndAddressInput', 'tourNotesInput'].forEach((elId) => {
           const el = document.getElementById(elId);
           if (el) {
             el.addEventListener('input', renderCurrentTourPreview);
@@ -3322,8 +3526,10 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
           }
         });
 
+        document.getElementById('btnReverseStops').addEventListener('click', reverseBuilderStops);
         document.getElementById('btnAddStopRow').addEventListener('click', () => addStopBuilderRow());
         document.getElementById('btnResetTourForm').addEventListener('click', resetTourForm);
+        document.getElementById('btnOptimizeRouteChef').addEventListener('click', optimizeFastestRouteInCommandCenter);
         document.getElementById('btnSaveTour').addEventListener('click', saveTourFromForm);
 
         document.getElementById('btnCreateInvoice').addEventListener('click', async () => {
@@ -3392,6 +3598,7 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
       document.addEventListener('DOMContentLoaded', async () => {
         bindEvents();
         loadOpenAiKey();
+        loadSavedHomeAddress();
         resetTourForm();
 
         const sb = getSupabaseClient();
