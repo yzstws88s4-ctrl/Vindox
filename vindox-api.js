@@ -5,6 +5,8 @@
   const SUPABASE_URL = 'https://ejtfhdxoijgzxvkfvuas.supabase.co';
   const SUPABASE_ANON_KEY = 'sb_publishable_18oqjMPQ1bmi6IHrLbYjEQ_f75bdVc2';
   const STORAGE_BUCKET = 'vindox-proofs';
+  const SHARED_KEY_STORAGE = 'vindox_chef_shared_openai_key';
+  const DRIVER_KEY_STORAGE = 'vindox_openai_key';
 
   const sb = (window.supabase && typeof window.supabase.createClient === 'function')
     ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
@@ -13,6 +15,8 @@
   if (!sb) {
     console.error('[VindoxAPI] Supabase JS SDK wurde nicht gefunden.');
   }
+
+  let runtimeSharedOpenAiKey = '';
 
   function formatErrorMessage(err, fallback = 'Unbekannter Datenbankfehler') {
     if (!err) return fallback;
@@ -23,6 +27,55 @@
 
   function escapeFilterValue(val) {
     return String(val || '').replace(/[%_,()]/g, '').trim();
+  }
+
+  function normalizeApiKey(rawKey) {
+    const clean = String(rawKey || '').trim();
+    return clean || '';
+  }
+
+  function getStoredSharedOpenAiKey() {
+    if (runtimeSharedOpenAiKey) return runtimeSharedOpenAiKey;
+    try {
+      const fromChef = localStorage.getItem(SHARED_KEY_STORAGE);
+      if (fromChef && fromChef.trim()) {
+        runtimeSharedOpenAiKey = fromChef.trim();
+        return runtimeSharedOpenAiKey;
+      }
+      const fromDriverCache = localStorage.getItem(DRIVER_KEY_STORAGE);
+      if (fromDriverCache && fromDriverCache.trim()) {
+        runtimeSharedOpenAiKey = fromDriverCache.trim();
+        return runtimeSharedOpenAiKey;
+      }
+    } catch (_e) {}
+    return '';
+  }
+
+  function setSharedOpenAiKey(rawKey, options = {}) {
+    const clean = normalizeApiKey(rawKey);
+    runtimeSharedOpenAiKey = clean;
+    try {
+      if (clean) {
+        localStorage.setItem(SHARED_KEY_STORAGE, clean);
+        if (options.applyToCurrentDriver !== false) {
+          localStorage.setItem(DRIVER_KEY_STORAGE, clean);
+        }
+      } else if (options.clear === true) {
+        localStorage.removeItem(SHARED_KEY_STORAGE);
+      }
+    } catch (_e) {}
+    return clean;
+  }
+
+  function applyOpenAiKeyToDriverEnvironment(apiKey) {
+    const clean = normalizeApiKey(apiKey) || getStoredSharedOpenAiKey();
+    if (!clean) return '';
+    runtimeSharedOpenAiKey = clean;
+    try {
+      localStorage.setItem(DRIVER_KEY_STORAGE, clean);
+      localStorage.setItem(SHARED_KEY_STORAGE, clean);
+    } catch (_e) {}
+    return clean;
   }
 
   async function resolveCompanyId(explicitId) {
@@ -134,8 +187,20 @@
     return list;
   }
 
+  function extractKeyFromRowRules(row) {
+    if (!row) return '';
+    if (row.openai_api_key) return normalizeApiKey(row.openai_api_key);
+    if (row.rules && typeof row.rules === 'object' && !Array.isArray(row.rules)) {
+      if (row.rules.openaiApiKey) return normalizeApiKey(row.rules.openaiApiKey);
+      if (row.rules.openai_api_key) return normalizeApiKey(row.rules.openai_api_key);
+    }
+    return '';
+  }
+
   function mapDriverRow(row) {
     if (!row) return null;
+    const rowKey = extractKeyFromRowRules(row);
+    const effectiveKey = rowKey || getStoredSharedOpenAiKey();
     return {
       id: row.id,
       name: row.name || '',
@@ -146,10 +211,35 @@
       passwordHash: row.password_hash || '',
       active: row.active !== false,
       rules: normalizeRules(row.rules),
+      openaiApiKey: effectiveKey,
       requiredAppVersion: row.required_app_version || null,
       companyId: row.company_id || row.owner_id || null,
       ownerId: row.owner_id || row.company_id || null
     };
+  }
+
+  async function broadcastOpenAiKeyToDriver(driverId, apiKey, explicitCompanyId) {
+    const cleanKey = normalizeApiKey(apiKey) || getStoredSharedOpenAiKey();
+    if (!sb || !driverId || !cleanKey) return false;
+    const cid = await resolveCompanyId(explicitCompanyId);
+    const cleanDriverId = String(driverId).trim();
+
+    let payload = {
+      driver_id: cleanDriverId,
+      openai_api_key: cleanKey,
+      updated_at: new Date().toISOString()
+    };
+    payload = attachOwnerIds(payload, cid);
+
+    const { error } = await sb
+      .from('driver_live')
+      .upsert(payload, { onConflict: 'driver_id' });
+
+    if (error) {
+      console.warn('[VindoxAPI] Konnte API-Key nicht in driver_live hinterlegen:', error.message);
+      return false;
+    }
+    return true;
   }
 
   window.VindoxAPI = {
@@ -159,9 +249,13 @@
     rulesToArray,
     formatErrorMessage,
     resolveCompanyId,
+    setSharedOpenAiKey,
+    getSharedOpenAiKey: getStoredSharedOpenAiKey,
+    applyOpenAiKeyToDriverEnvironment,
+    broadcastOpenAiKeyToDriver,
 
     // ------------------------------------------------------------------------
-    // DRIVERS & PFLICHTREGELN
+    // DRIVERS & PFLICHTREGELN (+ AUTOMATISCHER API-KEY-TRANSFER)
     // ------------------------------------------------------------------------
     async upsertDriver(driver) {
       if (!sb) throw new Error('Supabase-Client nicht initialisiert');
@@ -178,6 +272,18 @@
         ? null
         : String(passwordVal).trim() || null;
 
+      const sharedKey = normalizeApiKey(
+        driver.openaiApiKey || driver.openai_api_key || getStoredSharedOpenAiKey()
+      );
+      if (sharedKey) {
+        setSharedOpenAiKey(sharedKey, { applyToCurrentDriver: false });
+      }
+
+      const baseRules = normalizeRules(driver.rules);
+      const rulesPayload = sharedKey
+        ? { ...baseRules, openai_api_key: sharedKey }
+        : baseRules;
+
       let payload = {
         id: driverId,
         name: driverName,
@@ -186,7 +292,7 @@
         username: String(driver.username || driverId).trim(),
         password_hash: cleanPassword,
         active: driver.active !== false && statusVal !== 'offline',
-        rules: normalizeRules(driver.rules),
+        rules: rulesPayload,
         required_app_version: driver.requiredAppVersion || driver.required_app_version || null
       };
       payload = attachOwnerIds(payload, cid);
@@ -207,6 +313,9 @@
         tour_status: statusVal === 'offline' ? 'offline' : 'ready',
         updated_at: new Date().toISOString()
       };
+      if (sharedKey) {
+        livePayload.openai_api_key = sharedKey;
+      }
       livePayload = attachOwnerIds(livePayload, cid);
 
       const { error: liveError } = await sb
@@ -269,21 +378,54 @@
         throw new Error('Ungültiges Passwort');
       }
 
-      return mapDriverRow(match);
+      const mapped = mapDriverRow(match);
+      let keyToApply = extractKeyFromRowRules(match);
+
+      if (!keyToApply && match.id) {
+        try {
+          const { data: liveRow } = await sb
+            .from('driver_live')
+            .select('openai_api_key')
+            .eq('driver_id', match.id)
+            .maybeSingle();
+          if (liveRow && liveRow.openai_api_key) {
+            keyToApply = normalizeApiKey(liveRow.openai_api_key);
+          }
+        } catch (_e) {}
+      }
+
+      if (!keyToApply) {
+        keyToApply = getStoredSharedOpenAiKey();
+      }
+
+      if (keyToApply) {
+        applyOpenAiKeyToDriverEnvironment(keyToApply);
+        mapped.openaiApiKey = keyToApply;
+      }
+
+      return mapped;
     },
 
     async updateDriverRules(driverId, rules, explicitCompanyId) {
       if (!sb || !driverId) throw new Error('Fahrer-ID fehlt');
       const cid = await resolveCompanyId(explicitCompanyId);
       const normRules = normalizeRules(rules);
+      const sharedKey = getStoredSharedOpenAiKey();
+      const rulesToSave = sharedKey
+        ? { ...normRules, openai_api_key: sharedKey }
+        : normRules;
+
       let query = sb
         .from('drivers')
-        .update({ rules: normRules })
+        .update({ rules: rulesToSave })
         .eq('id', String(driverId).trim());
       if (cid) query = query.eq('company_id', cid);
       const { data, error } = await query.select().single();
       if (error) {
         throw new Error(formatErrorMessage(error, 'Pflichtnachweise konnten nicht gespeichert werden'));
+      }
+      if (sharedKey) {
+        await broadcastOpenAiKeyToDriver(driverId, sharedKey, cid);
       }
       return mapDriverRow(data);
     },
@@ -311,7 +453,11 @@
       if (cid) query = query.eq('company_id', cid);
       const { data, error } = await query.maybeSingle();
       if (error || !data) return null;
-      return mapDriverRow(data);
+      const mapped = mapDriverRow(data);
+      if (mapped.openaiApiKey) {
+        applyOpenAiKeyToDriverEnvironment(mapped.openaiApiKey);
+      }
+      return mapped;
     },
 
     async deleteDriver(driverId, explicitCompanyId) {
@@ -333,14 +479,22 @@
     },
 
     // ------------------------------------------------------------------------
-    // TOURS & STOPS
+    // TOURS & STOPS (+ AUTOMATISCHE KEY-ÜBERMITTLUNG AN FAHRER)
     // ------------------------------------------------------------------------
     async upsertTour(tour) {
       if (!sb || !tour?.id) throw new Error('Ungültige Tourdaten');
       const cid = await resolveCompanyId(tour.companyId || tour.ownerId || tour.company_id || tour.owner_id);
+      const driverId = String(tour.driverId || tour.driver_id || '').trim();
+      const sharedKey = normalizeApiKey(
+        tour.openaiApiKey || tour.openai_api_key || getStoredSharedOpenAiKey()
+      );
+      if (sharedKey) {
+        setSharedOpenAiKey(sharedKey, { applyToCurrentDriver: false });
+      }
+
       let payload = {
         id: String(tour.id).trim(),
-        driver_id: String(tour.driverId || tour.driver_id || '').trim(),
+        driver_id: driverId,
         driver_name: String(tour.driverName || tour.driver_name || '').trim(),
         title: String(tour.title || 'Tour').trim(),
         notes: String(tour.notes || '').trim(),
@@ -356,6 +510,11 @@
         console.error('[VindoxAPI] upsertTour error:', error);
         throw new Error(formatErrorMessage(error, 'Tour konnte nicht gespeichert werden'));
       }
+
+      if (driverId && sharedKey) {
+        await broadcastOpenAiKeyToDriver(driverId, sharedKey, cid);
+      }
+
       return data;
     },
 
@@ -369,6 +528,10 @@
         console.error('[VindoxAPI] fetchTours error:', error);
         throw new Error(formatErrorMessage(error, 'Touren konnten nicht geladen werden'));
       }
+      const sharedKey = getStoredSharedOpenAiKey();
+      if (sharedKey) {
+        applyOpenAiKeyToDriverEnvironment(sharedKey);
+      }
       return (data || []).map(row => ({
         id: row.id,
         driverId: row.driver_id,
@@ -378,6 +541,7 @@
         homeAddress: row.home_address || '',
         status: row.status || 'active',
         stops: Array.isArray(row.stops) ? row.stops : [],
+        openaiApiKey: sharedKey || '',
         updatedAt: row.updated_at,
         companyId: row.company_id || row.owner_id || null
       }));
@@ -401,6 +565,7 @@
     async upsertDriverLive(liveData) {
       if (!sb || !liveData?.driverId) return;
       const cid = await resolveCompanyId(liveData.companyId || liveData.ownerId || liveData.company_id || liveData.owner_id);
+      const sharedKey = getStoredSharedOpenAiKey();
       let payload = {
         driver_id: String(liveData.driverId).trim(),
         lat: typeof liveData.lat === 'number' && !Number.isNaN(liveData.lat) ? liveData.lat : null,
@@ -416,6 +581,9 @@
         tour_status: String(liveData.tourStatus || 'driving').trim(),
         updated_at: new Date().toISOString()
       };
+      if (sharedKey) {
+        payload.openai_api_key = sharedKey;
+      }
       payload = attachOwnerIds(payload, cid);
 
       if (liveData.driverMessage !== undefined) {
@@ -429,12 +597,16 @@
     async sendDriverMessage(driverId, message, explicitCompanyId) {
       if (!sb || !driverId) throw new Error('Fahrer-ID fehlt');
       const cid = await resolveCompanyId(explicitCompanyId);
+      const sharedKey = getStoredSharedOpenAiKey();
       let payload = {
         driver_id: String(driverId).trim(),
         driver_message: String(message || '').trim(),
         driver_message_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       };
+      if (sharedKey) {
+        payload.openai_api_key = sharedKey;
+      }
       payload = attachOwnerIds(payload, cid);
 
       const { error } = await sb.from('driver_live').upsert(payload, { onConflict: 'driver_id' });
@@ -458,7 +630,13 @@
         console.error('[VindoxAPI] fetchDriverLive error:', error);
         throw new Error(formatErrorMessage(error, 'Live-Daten konnten nicht geladen werden'));
       }
-      return data || [];
+      const list = data || [];
+      list.forEach((row) => {
+        if (row && row.openai_api_key) {
+          applyOpenAiKeyToDriverEnvironment(row.openai_api_key);
+        }
+      });
+      return list;
     },
 
     async fetchDriverLiveList(explicitCompanyId) {
@@ -475,6 +653,9 @@
       if (cid) query = query.eq('company_id', cid);
       const { data, error } = await query.maybeSingle();
       if (error) return null;
+      if (data && data.openai_api_key) {
+        applyOpenAiKeyToDriverEnvironment(data.openai_api_key);
+      }
       return data;
     },
 
