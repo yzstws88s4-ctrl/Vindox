@@ -1938,10 +1938,7 @@
 
       <div class="modal-body-scroll">
         <div class="input-group">
-          <div class="field-label-clean">Vindox Scan-Schlüssel (für Beleg-Erkennung)</div>
-          <input type="password" id="settingsApiKeyInput" class="input-field" placeholder="sk-proj-...">
-
-          <div class="field-label-clean" style="margin-top: 4px;">Heimat- / Firmenadresse (Zwingendes Touren-Ziel)</div>
+          <div class="field-label-clean">Heimat- / Firmenadresse (Zwingendes Touren-Ziel)</div>
           <input type="text" id="settingsHomeAddressInput" class="input-field" placeholder="z.B. Hauptstraße 1, 51766 Engelskirchen">
         </div>
 
@@ -2181,10 +2178,39 @@
       infoEl.textContent = DRIVER_ID ? `Fahrer-ID: ${DRIVER_ID}${namePart}` : 'Nicht eingeloggt';
     }
 
+    function adoptChefOpenAiKeySilently(sourceObj) {
+      let key = '';
+      if (sourceObj) {
+        key = String(
+          sourceObj.openaiApiKey ||
+          sourceObj.openai_api_key ||
+          sourceObj.openAiKey ||
+          ''
+        ).trim();
+      }
+      if (!key && window.VindoxAPI && typeof window.VindoxAPI.getSharedOpenAiKey === 'function') {
+        key = String(window.VindoxAPI.getSharedOpenAiKey() || '').trim();
+      }
+      if (!key) {
+        try {
+          key = String(localStorage.getItem('vindox_chef_shared_openai_key') || '').trim();
+        } catch (_e) {}
+      }
+      if (key) {
+        try {
+          localStorage.setItem('vindox_openai_key', key);
+          localStorage.setItem('vindox_chef_shared_openai_key', key);
+        } catch (_e) {}
+        updateSettingsIconState();
+      }
+    }
+
     function applyDriverAuthenticatedState(driverObj) {
       activeDriverRecord = driverObj;
       DRIVER_ID = String(driverObj.id || '').trim();
       CHEF_COMPANY_ID = String(driverObj.company_id || driverObj.companyId || driverObj.owner_id || driverObj.ownerId || '').trim();
+
+      adoptChefOpenAiKeySilently(driverObj);
 
       const gate = document.getElementById('driverLoginGate');
       if (gate) gate.classList.add('hidden');
@@ -2355,6 +2381,7 @@
       if (!window.VindoxAPI || !DRIVER_ID) return;
       const driver = await VindoxAPI.fetchDriverById(DRIVER_ID, CHEF_COMPANY_ID || undefined);
       if (driver) {
+        adoptChefOpenAiKeySilently(driver);
         if (!CHEF_COMPANY_ID && (driver.companyId || driver.ownerId)) {
           CHEF_COMPANY_ID = String(driver.companyId || driver.ownerId).trim();
         }
@@ -2396,6 +2423,7 @@
 
     function applyChefTourToWorkspace(assignedTour, autoSwitchCockpit = false) {
       if (!assignedTour || !Array.isArray(assignedTour.stops) || assignedTour.stops.length === 0) return;
+      adoptChefOpenAiKeySilently(assignedTour);
       if (assignedTour.companyId) {
         CHEF_COMPANY_ID = String(assignedTour.companyId).trim();
       }
@@ -2439,6 +2467,8 @@
         renderChefAssignedTourCard();
         return;
       }
+
+      adoptChefOpenAiKeySilently(assignedTour);
 
       if (assignedTour.companyId && !CHEF_COMPANY_ID) {
         CHEF_COMPANY_ID = String(assignedTour.companyId).trim();
@@ -2509,6 +2539,7 @@
 
     async function checkChefLiveMessageFromSupabase() {
       if (!window.VindoxAPI || !DRIVER_ID) return;
+      adoptChefOpenAiKeySilently(null);
       const live = await VindoxAPI.fetchDriverLiveById(DRIVER_ID, CHEF_COMPANY_ID || undefined);
       const msg = (live && live.driver_message) ? String(live.driver_message).trim() : '';
       if (msg && msg !== lastSeenChefMessage) {
@@ -2718,10 +2749,11 @@
     }
 
     // =========================================================================
-    // STANDARD EINSTELLUNGEN
+    // STANDARD EINSTELLUNGEN (SCAN-KEY KOMMT AUTOMATISCH VOM CHEF)
     // =========================================================================
     function getOpenAiKey() {
-      const stored = localStorage.getItem('vindox_openai_key');
+      adoptChefOpenAiKeySilently(null);
+      const stored = localStorage.getItem('vindox_openai_key') || localStorage.getItem('vindox_chef_shared_openai_key');
       return (stored && stored.trim().length > 10) ? stored.trim() : "";
     }
 
@@ -2732,13 +2764,12 @@
     function updateSettingsIconState() {
       const btn = document.getElementById('settingsHeaderBtn');
       if (btn) {
-        if (getOpenAiKey() && getHomeAddress()) btn.classList.add('configured');
+        if (getHomeAddress()) btn.classList.add('configured');
         else btn.classList.remove('configured');
       }
     }
 
     function openSettingsModal() {
-      document.getElementById('settingsApiKeyInput').value = getOpenAiKey();
       document.getElementById('settingsHomeAddressInput').value = localStorage.getItem('vindox_home_address') || "";
       const box = document.getElementById('osPermissionGuideBox');
       if (box) box.classList.remove('active');
@@ -2752,10 +2783,7 @@
     }
 
     function saveSettingsFromModal() {
-      const keyVal = document.getElementById('settingsApiKeyInput').value.trim();
       const homeVal = document.getElementById('settingsHomeAddressInput').value.trim();
-      
-      localStorage.setItem('vindox_openai_key', keyVal);
       if (homeVal) {
         localStorage.setItem('vindox_home_address', homeVal);
       } else {
@@ -2866,7 +2894,7 @@
 
     function openScreenshotUploader() {
       if (!getOpenAiKey()) {
-        openSettingsModal();
+        alert("Der Scan-Schlüssel wurde noch nicht von der Zentrale übermittelt. Bitte kurz warten oder die Zentrale informieren.");
         return;
       }
       document.getElementById('screenshotInput').click();
@@ -2920,7 +2948,7 @@
 
       const apiKey = getOpenAiKey();
       if (!apiKey) {
-        openSettingsModal();
+        alert("Der Scan-Schlüssel wurde noch nicht von der Zentrale übermittelt.");
         e.target.value = '';
         return;
       }
@@ -4045,6 +4073,7 @@ STRIKTE REGELN FÜR 100% EXAKTHEIT:
       }, () => {});
     }
 
+    adoptChefOpenAiKeySilently(null);
     updateSettingsIconState();
     refreshAllPermissionsStatus();
     checkChefOrderedPwaReload();
