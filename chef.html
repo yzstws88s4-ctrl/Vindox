@@ -606,55 +606,244 @@
       background: rgba(255, 255, 255, 0.02);
     }
 
-    /* Map Panel */
-    .map-stage {
-      position: relative;
-      height: 360px;
-      border-radius: var(--radius-md);
+    /* Live Module Styles */
+    .live-layout {
+      display: grid;
+      grid-template-columns: 1.45fr 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .live-driver-strip {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      margin-bottom: 12px;
+    }
+
+    .live-driver-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border-radius: 999px;
       border: 1px solid var(--border);
+      background: var(--bg-canvas);
+      color: var(--text-secondary);
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+
+    .live-driver-pill:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .live-driver-pill.active {
+      background: var(--accent-soft);
+      border-color: rgba(59, 130, 246, 0.5);
+      color: #eff6ff;
+    }
+
+    .live-status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.18);
+    }
+
+    .live-status-dot.done {
+      background: var(--accent);
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.18);
+    }
+
+    .radar-map {
+      position: relative;
+      height: 390px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-strong);
       background:
-        radial-gradient(circle at 30% 35%, rgba(59, 130, 246, 0.12), transparent 45%),
-        radial-gradient(circle at 72% 62%, rgba(16, 185, 129, 0.09), transparent 42%),
-        linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-        #090d16;
-      background-size: 100% 100%, 100% 100%, 36px 36px, 36px 36px, 100% 100%;
+        radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.08), transparent 65%),
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        #070b14;
+      background-size: 100% 100%, 40px 40px, 40px 40px, 100% 100%;
       overflow: hidden;
     }
 
-    .map-pin {
+    .radar-hud-top {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      z-index: 8;
+      pointer-events: none;
+    }
+
+    .radar-hud-chip {
+      pointer-events: auto;
+      background: rgba(14, 18, 29, 0.88);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-strong);
+      border-radius: 999px;
+      padding: 5px 11px;
+      font-size: 11.5px;
+      color: var(--text-secondary);
+    }
+
+    .driver-node {
       position: absolute;
       transform: translate(-50%, -50%);
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
       cursor: pointer;
-      z-index: 5;
+      z-index: 6;
+      transition: transform 0.16s ease;
     }
 
-    .map-pin-dot {
-      width: 16px;
-      height: 16px;
+    .driver-node:hover {
+      transform: translate(-50%, -54%);
+    }
+
+    .driver-node-ring {
+      width: 22px;
+      height: 22px;
       border-radius: 50%;
-      background: var(--accent);
-      border: 3px solid #fff;
-      box-shadow: 0 0 0 6px rgba(59, 130, 246, 0.28), 0 6px 14px rgba(0, 0, 0, 0.5);
+      background: rgba(59, 130, 246, 0.22);
+      border: 2px solid var(--accent);
+      display: grid;
+      place-items: center;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.55);
     }
 
-    .map-pin.active .map-pin-dot {
-      background: var(--success);
-      box-shadow: 0 0 0 7px rgba(16, 185, 129, 0.3), 0 6px 14px rgba(0, 0, 0, 0.5);
+    .driver-node-ring::after {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #fff;
     }
 
-    .map-pin-label {
-      background: rgba(14, 18, 29, 0.92);
+    .driver-node.done .driver-node-ring {
+      background: rgba(16, 185, 129, 0.24);
+      border-color: var(--success);
+    }
+
+    .driver-node.selected .driver-node-ring {
+      transform: scale(1.18);
+      border-color: #93c5fd;
+      box-shadow: 0 0 0 7px rgba(59, 130, 246, 0.25), 0 10px 24px rgba(0, 0, 0, 0.65);
+    }
+
+    .driver-node-tag {
+      background: rgba(14, 18, 29, 0.94);
       border: 1px solid var(--border-strong);
-      padding: 2px 8px;
-      border-radius: 999px;
+      border-radius: 10px;
+      padding: 4px 9px;
       font-size: 11px;
-      font-weight: 600;
+      line-height: 1.25;
+      text-align: center;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
       white-space: nowrap;
+    }
+
+    .driver-node-tag strong {
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+
+    .driver-node-tag span {
+      display: block;
+      color: var(--text-secondary);
+      font-size: 10.5px;
+    }
+
+    .telemetry-hero {
+      background: var(--bg-canvas);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .telemetry-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.07);
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--success));
+      transition: width 0.25s ease;
+    }
+
+    .telemetry-tiles {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .telemetry-tile {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 9px 11px;
+    }
+
+    .telemetry-tile-label {
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      margin-bottom: 3px;
+    }
+
+    .telemetry-tile-val {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-primary);
+      word-break: break-word;
+    }
+
+    .dispatch-box {
+      background: var(--bg-canvas);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px;
+    }
+
+    .last-msg-banner {
+      background: rgba(59, 130, 246, 0.09);
+      border: 1px solid rgba(59, 130, 246, 0.24);
+      border-radius: var(--radius-sm);
+      padding: 8px 10px;
+      font-size: 12px;
+      color: #bfdbfe;
+      margin-bottom: 10px;
     }
 
     /* Proof Cards */
@@ -794,6 +983,15 @@
 
     .tab-panel.active {
       display: block;
+    }
+
+    @media (max-width: 1100px) {
+      .live-layout {
+        grid-template-columns: 1fr;
+      }
+      .radar-map {
+        height: 310px;
+      }
     }
 
     @media (max-width: 1024px) {
@@ -1088,38 +1286,56 @@
 
         <!-- TAB 4: LIVE-KARTE -->
         <section class="tab-panel" id="tab-live">
-          <div class="split-grid">
+          <div class="live-layout">
             <div class="card">
-              <div class="card-header">
+              <div class="card-header" style="margin-bottom: 10px;">
                 <div>
-                  <div class="card-title">Fahrer-Telemetrie & Standort (<span class="mono">driver_live</span>)</div>
-                  <div class="card-sub">Klicke auf einen Pin oder wähle einen Fahrer für Details & Nachricht</div>
+                  <div class="card-title">Live-Flottenradar (<span class="mono">driver_live</span>)</div>
+                  <div class="card-sub">Positionen relativ zu deinen aktiven Fahrer-GPS-Koordinaten • Klick auf Punkt oder Fahrer</div>
+                </div>
+                <span class="badge badge-info" id="liveOnlineBadge">0 Fahrer</span>
+              </div>
+
+              <div class="live-driver-strip" id="liveDriverStrip"></div>
+
+              <div class="radar-map" id="liveMapStage">
+                <div class="radar-hud-top">
+                  <span class="radar-hud-chip mono" id="radarBoundsLabel">GPS-Ansicht</span>
+                  <span class="radar-hud-chip" id="radarSelectedHint">Kein Fahrer gewählt</span>
                 </div>
               </div>
-              <div class="map-stage" id="liveMapStage"></div>
             </div>
 
             <div class="card">
-              <div class="card-header">
+              <div class="card-header" style="margin-bottom: 10px;">
                 <div>
-                  <div class="card-title">Fahrer-Funk / Direktnachricht</div>
-                  <div class="card-sub">Sendet <span class="mono">driver_message</span> direkt an die Fahrer-App</div>
+                  <div class="card-title">Fahrer-Telemetrie & Funk</div>
+                  <div class="card-sub">Direkter Kanal in die Fahrer-App (<span class="mono">driver_message</span>)</div>
+                </div>
+                <select class="select" id="messageDriverSelect" style="width: 185px;"></select>
+              </div>
+
+              <div id="selectedDriverLiveCard"></div>
+
+              <div class="dispatch-box">
+                <div class="last-msg-banner" id="lastDriverMessageBox">
+                  <strong>Letzte Funk-Nachricht:</strong> Keine
+                </div>
+
+                <div class="form-group" style="margin-bottom: 8px;">
+                  <label class="form-label" for="driverMessageInput">Nachricht an Fahrer senden</label>
+                  <textarea
+                    class="textarea"
+                    id="driverMessageInput"
+                    style="min-height: 64px;"
+                    placeholder="z. B. Bei Stopp 3 bitte unbedingt Kundenunterschrift einholen..."
+                  ></textarea>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end;">
+                  <button class="btn btn-primary btn-sm" id="btnSendDriverMessage">Funk-Nachricht senden</button>
                 </div>
               </div>
-
-              <div class="form-group">
-                <label class="form-label">Fahrer auswählen</label>
-                <select class="select" id="messageDriverSelect"></select>
-              </div>
-
-              <div id="selectedDriverLiveCard" style="margin-bottom: 14px;"></div>
-
-              <div class="form-group">
-                <label class="form-label">Nachricht an Fahrer</label>
-                <textarea class="textarea" id="driverMessageInput" placeholder="z. B. Bei Stopp 3 bitte unbedingt Kundenunterschrift einholen..."></textarea>
-              </div>
-
-              <button class="btn btn-primary" id="btnSendDriverMessage">Nachricht an Fahrer senden</button>
             </div>
           </div>
         </section>
@@ -1955,45 +2171,189 @@
 
       function renderLiveSection() {
         const stage = document.getElementById('liveMapStage');
+        const strip = document.getElementById('liveDriverStrip');
         const msgSelect = document.getElementById('messageDriverSelect');
-        const targetDriverId = msgSelect.value || state.selectedDriverId || '';
+        const badge = document.getElementById('liveOnlineBadge');
+        const boundsLabel = document.getElementById('radarBoundsLabel');
+        const hintLabel = document.getElementById('radarSelectedHint');
+        const detailCard = document.getElementById('selectedDriverLiveCard');
+        const lastMsgBox = document.getElementById('lastDriverMessageBox');
 
-        if (state.driverLive.length === 0) {
-          stage.innerHTML = `<div style="position:absolute; inset:0; display:grid; place-items:center; color:var(--text-muted); padding:20px; text-align:center;">Noch keine Live-GPS-Daten empfangen.</div>`;
+        if (!stage || !msgSelect || !detailCard) return;
+
+        const rows = Array.isArray(state.driverLive) ? state.driverLive : [];
+        if (badge) badge.textContent = `${rows.length} Fahrer`;
+
+        const activeId = msgSelect.value || state.selectedDriverId || (rows[0] && rows[0].driver_id) || '';
+        if (activeId) {
+          state.selectedDriverId = activeId;
+          if (msgSelect.value !== activeId) msgSelect.value = activeId;
+        }
+
+        if (strip) {
+          if (rows.length === 0) {
+            strip.innerHTML = `<span style="font-size:12px; color:var(--text-muted);">Keine aktiven Live-Fahrer</span>`;
+          } else {
+            strip.innerHTML = rows.map((row) => {
+              const cur = Number(row.current_stop_index || 0);
+              const tot = Number(row.total_stops || 0);
+              const isDone = tot > 0 && cur >= tot;
+              const isSel = row.driver_id === activeId;
+              const drv = state.drivers.find((d) => d.id === row.driver_id);
+              const namePart = drv && drv.name ? ` · ${escapeHtml(drv.name.split(' ')[0])}` : '';
+              return `
+                <button type="button" class="live-driver-pill ${isSel ? 'active' : ''}" data-driver-id="${escapeHtml(row.driver_id)}">
+                  <span class="live-status-dot ${isDone ? 'done' : ''}"></span>
+                  <span class="mono">${escapeHtml(row.driver_id)}</span>${namePart}
+                  <span style="opacity:0.75;">(${cur}/${tot})</span>
+                </button>
+              `;
+            }).join('');
+
+            strip.querySelectorAll('.live-driver-pill').forEach((btn) => {
+              btn.addEventListener('click', () => {
+                msgSelect.value = btn.dataset.driverId;
+                state.selectedDriverId = btn.dataset.driverId;
+                renderLiveSection();
+              });
+            });
+          }
+        }
+
+        const validCoords = rows
+          .map((r) => ({ id: r.driver_id, lat: Number(r.lat), lng: Number(r.lng) }))
+          .filter((c) => Number.isFinite(c.lat) && Number.isFinite(c.lng) && (c.lat !== 0 || c.lng !== 0));
+
+        let minLat = 50.95, maxLat = 51.02, minLng = 7.42, maxLng = 7.52;
+        if (validCoords.length >= 2) {
+          minLat = Math.min(...validCoords.map((c) => c.lat));
+          maxLat = Math.max(...validCoords.map((c) => c.lat));
+          minLng = Math.min(...validCoords.map((c) => c.lng));
+          maxLng = Math.max(...validCoords.map((c) => c.lng));
+          const latPad = Math.max((maxLat - minLat) * 0.25, 0.015);
+          const lngPad = Math.max((maxLng - minLng) * 0.25, 0.02);
+          minLat -= latPad; maxLat += latPad; minLng -= lngPad; maxLng += lngPad;
+        }
+
+        stage.querySelectorAll('.driver-node, .radar-empty').forEach((el) => el.remove());
+
+        if (rows.length === 0) {
+          const empty = document.createElement('div');
+          empty.className = 'radar-empty';
+          empty.style.cssText = 'position:absolute; inset:0; display:grid; place-items:center; color:var(--text-muted); padding:20px; text-align:center;';
+          empty.textContent = 'Noch keine Live-GPS-Daten empfangen.';
+          stage.appendChild(empty);
+          if (boundsLabel) boundsLabel.textContent = 'Keine Telemetrie';
         } else {
-          stage.innerHTML = state.driverLive.map((row, idx) => {
-            const leftPct = 22 + ((idx * 27) % 56);
-            const topPct = 24 + ((idx * 23) % 52);
-            const isSelected = row.driver_id === targetDriverId;
-            return `
-              <div class="map-pin ${isSelected ? 'active' : ''}" data-driver-id="${escapeHtml(row.driver_id)}" style="left:${leftPct}%; top:${topPct}%;">
-                <div class="map-pin-dot"></div>
-                <div class="map-pin-label">${escapeHtml(row.driver_id)} • Stopp ${Number(row.current_stop_index || 0)}/${Number(row.total_stops || 0)}</div>
+          if (boundsLabel) {
+            boundsLabel.textContent = validCoords.length > 0
+              ? `Lat ${minLat.toFixed(2)}–${maxLat.toFixed(2)} · Lng ${minLng.toFixed(2)}–${maxLng.toFixed(2)}`
+              : 'Fallback-Raster (ohne GPS)';
+          }
+
+          rows.forEach((row, idx) => {
+            const lat = Number(row.lat);
+            const lng = Number(row.lng);
+            const hasGps = Number.isFinite(lat) && Number.isFinite(lng) && (lat !== 0 || lng !== 0);
+
+            let leftPct, topPct;
+            if (hasGps && validCoords.length >= 2) {
+              leftPct = 16 + ((lng - minLng) / Math.max(maxLng - minLng, 0.0001)) * 68;
+              topPct = 82 - ((lat - minLat) / Math.max(maxLat - minLat, 0.0001)) * 62;
+            } else {
+              leftPct = 22 + ((idx * 27) % 56);
+              topPct = 28 + ((idx * 22) % 48);
+            }
+
+            const cur = Number(row.current_stop_index || 0);
+            const tot = Number(row.total_stops || 0);
+            const isDone = tot > 0 && cur >= tot;
+            const isSelected = row.driver_id === activeId;
+
+            const node = document.createElement('div');
+            node.className = `driver-node ${isDone ? 'done' : ''} ${isSelected ? 'selected' : ''}`;
+            node.style.left = `${leftPct}%`;
+            node.style.top = `${topPct}%`;
+            node.innerHTML = `
+              <div class="driver-node-ring"></div>
+              <div class="driver-node-tag">
+                <strong>${escapeHtml(row.driver_id)}</strong>
+                <span>Stopp ${cur}/${tot}</span>
               </div>
             `;
-          }).join('');
-
-          stage.querySelectorAll('.map-pin').forEach((pin) => {
-            pin.addEventListener('click', () => {
-              msgSelect.value = pin.dataset.driverId;
+            node.addEventListener('click', () => {
+              msgSelect.value = row.driver_id;
+              state.selectedDriverId = row.driver_id;
               renderLiveSection();
             });
+            stage.appendChild(node);
           });
         }
 
-        const liveRow = state.driverLive.find((r) => r.driver_id === targetDriverId);
-        const detailCard = document.getElementById('selectedDriverLiveCard');
+        const liveRow = rows.find((r) => r.driver_id === activeId);
+        if (hintLabel) {
+          hintLabel.textContent = liveRow ? `Aktiv: ${liveRow.driver_id}` : 'Kein Fahrer gewählt';
+        }
+
         if (!liveRow) {
-          detailCard.innerHTML = `<div class="empty-state" style="padding:14px;">Keine Live-Daten für ${escapeHtml(targetDriverId || 'ausgewählten Fahrer')}.</div>`;
-        } else {
-          detailCard.innerHTML = `
-            <div style="border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px; background:var(--bg-canvas); font-size:12.5px;">
-              <div><strong>Aktueller Stopp:</strong> ${escapeHtml(liveRow.current_stop_title || '-')} (${Number(liveRow.current_stop_index || 0)}/${Number(liveRow.total_stops || 0)})</div>
-              <div style="margin-top:4px;"><strong>Adresse:</strong> ${escapeHtml(liveRow.current_stop_address || '-')}</div>
-              <div style="margin-top:4px;"><strong>GPS:</strong> <span class="mono">${escapeHtml(liveRow.gps_text || `${liveRow.lat ?? '-'}, ${liveRow.lng ?? '-'}`)}</span></div>
-              <div style="margin-top:4px;"><strong>Letzte Funk-Nachricht:</strong> <span style="color:#93c5fd;">${escapeHtml(liveRow.driver_message || 'Keine')}</span></div>
+          detailCard.innerHTML = `<div class="empty-state" style="padding:14px; margin-bottom:12px;">Keine Live-Daten für ${escapeHtml(activeId || 'ausgewählten Fahrer')}.</div>`;
+          if (lastMsgBox) lastMsgBox.innerHTML = `<strong>Letzte Funk-Nachricht:</strong> Keine`;
+          return;
+        }
+
+        const curStop = Number(liveRow.current_stop_index || 0);
+        const totStops = Number(liveRow.total_stops || 0);
+        const pct = totStops > 0 ? Math.min(100, Math.round((curStop / totStops) * 100)) : 0;
+        const drv = state.drivers.find((d) => d.id === liveRow.driver_id);
+        const gpsDisplay = liveRow.gps_text || (
+          Number.isFinite(Number(liveRow.lat)) && Number.isFinite(Number(liveRow.lng))
+            ? `${Number(liveRow.lat).toFixed(6)}, ${Number(liveRow.lng).toFixed(6)}`
+            : '—'
+        );
+
+        detailCard.innerHTML = `
+          <div class="telemetry-hero">
+            <div class="telemetry-top">
+              <div>
+                <div style="font-weight:700; font-size:14px;">
+                  ${escapeHtml(liveRow.driver_id)}${drv && drv.name ? ` · ${escapeHtml(drv.name)}` : ''}
+                </div>
+                <div style="font-size:12px; color:var(--text-secondary); margin-top:2px;">
+                  ${escapeHtml(liveRow.current_stop_title || 'Kein aktiver Stopp')}
+                </div>
+              </div>
+              <span class="badge ${totStops > 0 && curStop >= totStops ? 'badge-success' : 'badge-info'} mono">
+                ${curStop}/${totStops} (${pct}%)
+              </span>
             </div>
-          `;
+
+            <div class="progress-track">
+              <div class="progress-fill" style="width:${pct}%;"></div>
+            </div>
+
+            <div class="telemetry-tiles" style="margin-top:12px;">
+              <div class="telemetry-tile">
+                <div class="telemetry-tile-label">Adresse</div>
+                <div class="telemetry-tile-val">${escapeHtml(liveRow.current_stop_address || '—')}</div>
+              </div>
+              <div class="telemetry-tile">
+                <div class="telemetry-tile-label">GPS-Koordinaten</div>
+                <div class="telemetry-tile-val mono">${escapeHtml(gpsDisplay)}</div>
+              </div>
+              <div class="telemetry-tile">
+                <div class="telemetry-tile-label">Tour-Status</div>
+                <div class="telemetry-tile-val">${escapeHtml(liveRow.tour_status || 'Aktiv')}</div>
+              </div>
+              <div class="telemetry-tile">
+                <div class="telemetry-tile-label">Fahrzeug</div>
+                <div class="telemetry-tile-val">${escapeHtml((drv && drv.vehicle) || '—')}</div>
+              </div>
+            </div>
+          </div>
+        `;
+
+        if (lastMsgBox) {
+          lastMsgBox.innerHTML = `<strong>Letzte Funk-Nachricht:</strong> ${escapeHtml(liveRow.driver_message || 'Keine')}`;
         }
       }
 
@@ -2138,7 +2498,8 @@
           renderOverviewSection();
         });
 
-        document.getElementById('messageDriverSelect').addEventListener('change', () => {
+        document.getElementById('messageDriverSelect').addEventListener('change', (e) => {
+          state.selectedDriverId = e.target.value;
           renderLiveSection();
         });
 
